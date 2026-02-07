@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useVerifyPaymentMutation, useSaveOrderMutation } from '@/redux/features/order/orderApi';
 import { notifyError, notifySuccess } from '@/utils/toast';
@@ -14,15 +14,7 @@ const VerifyPayment = () => {
   const [saveOrder, { isLoading: isSaving }] = useSaveOrderMutation();
   const [status, setStatus] = useState('verifying'); // verifying, success, error
 
-  useEffect(() => {
-    // Paystack sends both 'reference' and 'trxref' - use trxref if available, otherwise reference
-    const paymentReference = trxref || reference;
-    if (paymentReference) {
-      handlePaymentVerification(paymentReference);
-    }
-  }, [reference, trxref]);
-
-  const handlePaymentVerification = async (paymentReference) => {
+  const handlePaymentVerification = useCallback(async (paymentReference) => {
     try {
       console.log('Verifying payment with reference:', paymentReference);
       const result = await verifyPayment({ reference: paymentReference }).unwrap();
@@ -103,7 +95,15 @@ const VerifyPayment = () => {
       const errorMessage = error?.data?.message || error?.data?.errorMessages?.[0]?.message || 'Payment verification failed. Please try again.';
       notifyError(errorMessage);
     }
-  };
+  }, [verifyPayment, saveOrder, router]);
+
+  useEffect(() => {
+    // Paystack sends both 'reference' and 'trxref' - use trxref if available, otherwise reference
+    const paymentReference = trxref || reference;
+    if (paymentReference) {
+      handlePaymentVerification(paymentReference);
+    }
+  }, [reference, trxref, handlePaymentVerification]);
 
   return (
     <Wrapper>

@@ -87,7 +87,7 @@ const ProductDetailsPage = ({ query }) => {
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
           <h2 style={{ fontSize: '24px', marginBottom: '15px', color: '#55585B' }}>Product Not Found</h2>
           <p style={{ fontSize: '16px', marginBottom: '30px', color: '#55585B' }}>
-            The product you're looking for doesn't exist or has been removed.
+            The product you&apos;re looking for doesn&apos;t exist or has been removed.
           </p>
           <Link href="/shop">
             <button style={{
