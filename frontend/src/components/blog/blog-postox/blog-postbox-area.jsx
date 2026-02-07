@@ -70,7 +70,7 @@ const BlogPostboxArea = () => {
                   <div style={{ textAlign: 'center', padding: '50px', color: '#888' }}>
                     <p>No blogs found. Please create and publish blogs from the admin panel.</p>
                     <p style={{ fontSize: '14px', marginTop: '10px' }}>
-                      Make sure blogs are set to "Published" status and have the "Blog Postbox" type selected.
+                      Make sure blogs are set to &quot;Published&quot; status and have the &quot;Blog Postbox&quot; type selected.
                     </p>
                   </div>
                 ) : (

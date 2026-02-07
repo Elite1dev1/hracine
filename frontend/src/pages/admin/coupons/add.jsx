@@ -312,7 +312,7 @@ const AddCouponPage = () => {
               <li>Discount will be applied only to products matching the selected product type</li>
               <li>Customers must meet the minimum amount requirement to use this coupon</li>
               <li>The coupon will automatically expire after the end time</li>
-              <li>Inactive coupons won't be available to customers even if not expired</li>
+              <li>Inactive coupons won&apos;t be available to customers even if not expired</li>
             </ul>
           </div>
 

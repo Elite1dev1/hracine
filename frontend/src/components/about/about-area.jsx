@@ -124,8 +124,8 @@ const AboutArea = () => {
                     honor both tradition and innovation.
                   </p>
                   <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#55585B', fontStyle: 'italic' }}>
-                    "We're not just selling products—we're building a community of people who believe in root-deep 
-                    care and the beauty of natural wellness."
+                    &quot;We&apos;re not just selling products—we&apos;re building a community of people who believe in root-deep 
+                    care and the beauty of natural wellness.&quot;
                   </p>
                 </div>
                 <div className="tp-about-founder-btn mt-40">

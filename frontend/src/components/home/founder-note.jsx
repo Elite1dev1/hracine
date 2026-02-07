@@ -43,9 +43,9 @@ const FounderNote = () => {
               </div>
               <div className="tp-founder-note-text">
                 <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#55585B', marginBottom: '25px' }}>
-                  "After years of struggling with scalp issues, I discovered that the secret to beautiful hair 
-                  isn't in the latest trend—it's in nurturing your roots. That's why every product we create 
-                  starts with scalp health."
+                  &quot;After years of struggling with scalp issues, I discovered that the secret to beautiful hair 
+                  isn&apos;t in the latest trend—it&apos;s in nurturing your roots. That&apos;s why every product we create 
+                  starts with scalp health.&quot;
                 </p>
                 <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#55585B', fontStyle: 'italic' }}>
                   Join us on this journey to healthier, happier hair—one ritual at a time.

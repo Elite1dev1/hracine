@@ -170,7 +170,7 @@ const ConsultationArea = () => {
           <div className="row">
             <div className="col-xxl-12 mb-50">
               <h2 className="text-center" style={{ fontSize: '42px', marginBottom: '20px' }}>
-                What's Inside Your Consultation
+                What&apos;s Inside Your Consultation
               </h2>
             </div>
           </div>
@@ -271,7 +271,7 @@ const ConsultationArea = () => {
                     borderRadius: '8px',
                     color: '#155724'
                   }}>
-                    <strong>Success!</strong> Your consultation has been booked. We'll be in touch soon to confirm your appointment.
+                    <strong>Success!</strong> Your consultation has been booked. We&apos;ll be in touch soon to confirm your appointment.
                   </div>
                 )}
                 <h2 className="text-center mb-40" style={{ fontSize: '36px' }}>

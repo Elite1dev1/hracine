@@ -12,10 +12,10 @@ const ContactArea = () => {
               <div className="col-xl-8 col-lg-10">
                 <div className="tp-contact-wrapper text-center mb-50">
                   <h2 className="tp-contact-title" style={{ fontSize: '42px', marginBottom: '20px' }}>
-                    Let's Talk Roots
+                    Let&apos;s Talk Roots
                   </h2>
                   <p style={{ fontSize: '18px', color: '#55585B', maxWidth: '600px', margin: '0 auto 40px' }}>
-                    Have questions about our products or need help with your hair care journey? We're here to help.
+                    Have questions about our products or need help with your hair care journey? We&apos;re here to help.
                   </p>
                 </div>
                 <div className="tp-contact-form-wrapper">
