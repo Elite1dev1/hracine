@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const path = require('path');
 const cors = require("cors");
-const connectDB = require("./config/db");
+const { connectDB } = require("./config/db");
 const { secret } = require("./config/secret");
 const PORT = secret.port || 7000;
 const morgan = require('morgan')
@@ -32,8 +32,10 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// connect database
-connectDB();
+// connect database (async, but don't block serverless function startup)
+connectDB().catch(err => {
+  console.error('Failed to connect to database on startup:', err);
+});
 
 app.use("/api/user", userRoutes);
 app.use("/api/category", categoryRoutes);
