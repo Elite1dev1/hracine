@@ -14,7 +14,7 @@ export const getApiBaseUrl = () => {
       return 'http://localhost:7000';
     }
     // Production (any other domain): use Vercel URL
-    return 'https://shofy-backend-dlt.vercel.app';
+    return 'https://hracine-backend.vercel.app';
   }
   
   // Server-side (SSR): check NODE_ENV
@@ -23,7 +23,7 @@ export const getApiBaseUrl = () => {
   }
   
   // Server-side production: use Vercel URL
-  return 'https://shofy-backend-dlt.vercel.app';
+  return 'https://hracine-backend.vercel.app';
 };
 
 // Export a function that gets called dynamically, not a static value
