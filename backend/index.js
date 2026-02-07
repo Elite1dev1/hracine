@@ -54,11 +54,7 @@ app.use("/api/settings", settingsRoutes);
 // root route
 app.get("/", (req, res) => res.send("Apps worked successfully"));
 
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
-
-// global error handler
-app.use(globalErrorHandler);
-//* handle not found
+//* handle not found (must be before error handler)
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
@@ -72,5 +68,14 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// global error handler (must be last)
+app.use(globalErrorHandler);
+
+// For Vercel: export the app
+// For local development: start the server
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+}
 
 module.exports = app;
