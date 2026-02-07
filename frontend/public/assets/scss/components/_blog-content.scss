@@ -1,0 +1,129 @@
+// Blog Content Styles for Rich Text Editor Output
+.blog-content {
+  line-height: 1.8;
+  color: #555;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.75em;
+  }
+
+  h3 {
+    font-size: 1.5em;
+  }
+
+  h4 {
+    font-size: 1.25em;
+  }
+
+  h5 {
+    font-size: 1.1em;
+  }
+
+  h6 {
+    font-size: 1em;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  ul,
+  ol {
+    margin: 1em 0;
+    padding-left: 2em;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+  }
+
+  blockquote {
+    border-left: 4px solid #3498db;
+    padding-left: 1em;
+    margin: 1.5em 0;
+    font-style: italic;
+    color: #666;
+  }
+
+  a {
+    color: #3498db;
+    text-decoration: underline;
+
+    &:hover {
+      color: #2980b9;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+    border-radius: 8px;
+  }
+
+  code {
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background-color: #f4f4f4;
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1.5em 0;
+
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  // Text alignment
+  [style*="text-align: left"] {
+    text-align: left;
+  }
+
+  [style*="text-align: center"] {
+    text-align: center;
+  }
+
+  [style*="text-align: right"] {
+    text-align: right;
+  }
+
+  [style*="text-align: justify"] {
+    text-align: justify;
+  }
+}

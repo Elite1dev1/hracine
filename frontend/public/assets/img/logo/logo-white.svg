@@ -1,0 +1,21 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular border - two concentric circles -->
+  <circle cx="60" cy="60" r="58" stroke="#ffffff" stroke-width="2"/>
+  <circle cx="60" cy="60" r="56" stroke="#ffffff" stroke-width="1"/>
+  
+  <!-- Letter P - positioned on the left -->
+  <path d="M 25 20 L 25 80 M 25 20 L 45 20 Q 55 20 55 35 Q 55 50 45 50 L 25 50" 
+        stroke="#ffffff" 
+        stroke-width="4" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Letter R - positioned on the right, overlapping with P -->
+  <path d="M 65 20 L 65 80 M 65 20 L 85 20 Q 95 20 95 35 Q 95 45 90 47 M 65 50 L 85 50 M 90 47 L 95 80" 
+        stroke="#ffffff" 
+        stroke-width="4" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>
