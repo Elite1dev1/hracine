@@ -6,14 +6,15 @@ mongoose.set('strictQuery', false);
 // mongodb url
 const MONGO_URI = secret.db_url;
 
-// Connection options for better reliability
+// Connection options for better reliability on serverless
 const connectionOptions = {
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+  serverSelectionTimeoutMS: 15000, // 15s timeout for serverless
   socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-  connectTimeoutMS: 10000, // Give up initial connection after 10s
+  connectTimeoutMS: 15000, // 15s connection timeout
   maxPoolSize: 10, // Maintain up to 10 socket connections
+  minPoolSize: 0, // Allow 0 connections (important for serverless)
   retryWrites: true,
-  w: 'majority'
+  w: 'majority',
 };
 
 let isConnected = false;

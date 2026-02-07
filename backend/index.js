@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const path = require('path');
 const cors = require("cors");
-const { connectDB } = require("./config/db");
+const { connectDB, checkConnection } = require("./config/db");
 const { secret } = require("./config/secret");
 const PORT = secret.port || 7000;
 const morgan = require('morgan')
@@ -32,9 +32,54 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// connect database (async, but don't block serverless function startup)
+// Connect database eagerly (for serverless, connection is reused between invocations)
+// Don't block, but try to establish connection early
 connectDB().catch(err => {
   console.error('Failed to connect to database on startup:', err);
+});
+
+// Middleware to ensure DB connection before API routes (except root)
+// This handles cold starts where connection might not be ready yet
+app.use(async (req, res, next) => {
+  // Skip DB check for root route
+  if (req.path === '/') {
+    return next();
+  }
+  
+  // Check if MongoDB is connected
+  if (checkConnection()) {
+    return next();
+  }
+  
+  // If not connected, try to connect (for serverless cold starts)
+  try {
+    await connectDB();
+    // Give it a moment to establish
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    if (checkConnection()) {
+      return next();
+    }
+    
+    // Still not connected after retry
+    res.status(503).json({
+      success: false,
+      message: 'Database connection not ready. Please try again in a moment.',
+      errorMessages: [{
+        path: req.originalUrl,
+        message: 'Service temporarily unavailable'
+      }]
+    });
+  } catch (err) {
+    res.status(503).json({
+      success: false,
+      message: 'Database connection failed. Please try again.',
+      errorMessages: [{
+        path: req.originalUrl,
+        message: 'Service temporarily unavailable'
+      }]
+    });
+  }
 });
 
 app.use("/api/user", userRoutes);
