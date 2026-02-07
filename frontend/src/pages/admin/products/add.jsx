@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import { 
@@ -45,8 +45,8 @@ const AddProductPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedBrandId, setSelectedBrandId] = useState('');
 
-  const categories = categoriesData?.result || [];
-  const brands = brandsData?.result || [];
+  const categories = useMemo(() => categoriesData?.result || [], [categoriesData]);
+  const brands = useMemo(() => brandsData?.result || [], [brandsData]);
 
   // Auto-fill category parent and children when category is selected
   useEffect(() => {

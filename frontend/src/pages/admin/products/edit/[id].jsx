@@ -66,9 +66,9 @@ const EditProductPage = () => {
 
   // Auto-fill category when selected
   useEffect(() => {
-    if (selectedCategoryId && categories.length > 0) {
+    if (selectedCategoryId && categories.length > 0 && formData) {
       const selectedCategory = categories.find(cat => cat._id === selectedCategoryId);
-      if (selectedCategory && formData) {
+      if (selectedCategory) {
         setFormData(prev => ({
           ...prev,
           parent: selectedCategory.parent,
@@ -80,6 +80,7 @@ const EditProductPage = () => {
         }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryId, categories]);
 
   // Auto-fill brand when selected
@@ -96,6 +97,7 @@ const EditProductPage = () => {
         }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBrandId, brands]);
 
   const handleChange = (e) => {
