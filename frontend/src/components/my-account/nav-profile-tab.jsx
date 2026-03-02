@@ -26,7 +26,7 @@ const NavProfileTab = ({ orderData }) => {
             </div>
           </div>
           <div className="col-md-6">
-            <div className="profile__main-logout text-sm-end">
+            <div className="profile__main-logout text-sm-end d-none d-md-block">
               <a onClick={handleLogout} className="cursor-pointer tp-logout-btn">
                 Logout
               </a>
@@ -35,8 +35,8 @@ const NavProfileTab = ({ orderData }) => {
         </div>
       </div>
       <div className="profile__main-info">
-        <div className="row gx-3">
-          <div className="col-md-3 col-sm-6">
+        <div className="row gx-3 gy-3 profile__main-info-grid">
+          <div className="col-6 col-md-3 col-sm-6">
             <div className="profile__main-info-item">
               <div className="profile__main-info-icon">
                 <span>
@@ -47,7 +47,7 @@ const NavProfileTab = ({ orderData }) => {
               <h4 className="profile__main-info-title">Total Order</h4>
             </div>
           </div>
-          <div className="col-md-3 col-sm-6">
+          <div className="col-6 col-md-3 col-sm-6">
             <div className="profile__main-info-item">
               <div className="profile__main-info-icon">
                 <span>
@@ -58,7 +58,7 @@ const NavProfileTab = ({ orderData }) => {
               <h4 className="profile__main-info-title">Pending Order</h4>
             </div>
           </div>
-          <div className="col-md-3 col-sm-6">
+          <div className="col-6 col-md-3 col-sm-6">
             <div className="profile__main-info-item">
               <div className="profile__main-info-icon">
                 <span>
@@ -71,7 +71,7 @@ const NavProfileTab = ({ orderData }) => {
               <h4 className="profile__main-info-title">Processing Order</h4>
             </div>
           </div>
-          <div className="col-md-3 col-sm-6">
+          <div className="col-6 col-md-3 col-sm-6">
             <div className="profile__main-info-item">
               <div className="profile__main-info-icon">
                 <span>
@@ -85,6 +85,11 @@ const NavProfileTab = ({ orderData }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="profile__main-logout profile__main-logout-mobile d-md-none">
+        <a onClick={handleLogout} className="cursor-pointer tp-logout-btn">
+          Logout
+        </a>
       </div>
     </div>
   );

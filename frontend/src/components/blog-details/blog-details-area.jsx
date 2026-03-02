@@ -7,13 +7,15 @@ import BlogDetailsAuthor from './blog-details-author';
 import BlogDetailsComments from './blog-details-comments';
 import PostboxDetailsNav from './postbox-details-nav';
 import PostboxDetailsTop from './postbox-details-top';
-import shape_line from '@assets/img/blog/details/shape/line.png';
-import shape_line_2 from '@assets/img/blog/details/shape/quote.png';
-import blog_details_big_img from '@assets/img/blog/details/blog-big-1.jpg';
-import blog_details_sm_img from '@assets/img/blog/details/blog-details-sm-1.jpg';
-import social_data from '@/data/social-data';
-
 const BlogDetailsArea = ({blog}) => {
+  const normalizedContent = blog?.content
+    ? blog.content.replace(/\[Your Brand Name\]/gi, "HRACINE")
+    : "";
+  const instagramShare = {
+    link: "https://www.instagram.com",
+    icon: "fa-brands fa-instagram",
+  };
+
   return (
     <section className="tp-postbox-details-area pb-120 pt-95">
       <div className="container">
@@ -50,7 +52,7 @@ const BlogDetailsArea = ({blog}) => {
                 {blog?.content ? (
                   <div 
                     className="blog-content"
-                    dangerouslySetInnerHTML={{ __html: blog.content }} 
+                    dangerouslySetInnerHTML={{ __html: normalizedContent }} 
                   />
                 ) : (
                   <p>No content available.</p>
@@ -71,13 +73,11 @@ const BlogDetailsArea = ({blog}) => {
                       </div>
                     </div>
                     <div className="col-xl-4 col-lg-6">
-                      <div className="tp-postbox-details-share text-md-end">
+                      <div className="tp-postbox-details-share">
                         <span>Share:</span>
-                        {social_data.map((s) => (
-                          <a href={s.link} className="me-1" target="_blank" key={s.id}>
-                            <i className={s.icon}></i>
-                          </a>
-                        ))}
+                        <a href={instagramShare.link} className="me-1" target="_blank" rel="noreferrer">
+                          <i className={instagramShare.icon}></i>
+                        </a>
                       </div>
                     </div>
                   </div>

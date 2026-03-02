@@ -45,13 +45,16 @@
     }
     &__wrapper{
         position: relative;
-        padding: 25px 20px 145px;
+        padding: 25px 20px 145px 10px;
         z-index: 1;
         min-height: 100%;
 
         @media #{$xs}{
-           padding: 20px;
+           padding: 20px 18px 20px 8px;
         }
+    }
+    &__logo{
+        margin-left: -2px;
     }
     &__close{
         position: absolute;

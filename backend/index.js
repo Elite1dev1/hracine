@@ -6,7 +6,7 @@ const cors = require("cors");
 const { connectDB, checkConnection } = require("./config/db");
 const { secret } = require("./config/secret");
 const PORT = secret.port || 7000;
-const morgan = require('morgan')
+const morgan = require('morgan');
 // error handler
 const globalErrorHandler = require("./middleware/global-error-handler");
 // routes
@@ -25,6 +25,7 @@ const consultationRoutes = require("./routes/consultation.routes");
 // const uploadRouter = require('./routes/uploadFile.route');
 const cloudinaryRoutes = require("./routes/cloudinary.routes");
 const settingsRoutes = require("./routes/settings.routes");
+const newsletterRoutes = require("./routes/newsletter.routes");
 
 // middleware
 app.use(cors());
@@ -54,8 +55,8 @@ app.use(async (req, res, next) => {
   // If not connected, try to connect (for serverless cold starts)
   try {
     await connectDB();
-    // Give it a moment to establish
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Give it a moment to establish (increased timeout for slow connections)
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     if (checkConnection()) {
       return next();
@@ -97,6 +98,7 @@ app.use("/api/blog", blogRoutes);
 app.use("/api/blog-comment", blogCommentRoutes);
 app.use("/api/consultation", consultationRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 // root route
 app.get("/", (req, res) => res.send("Apps worked successfully"));

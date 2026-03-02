@@ -130,7 +130,7 @@ const AboutArea = () => {
                 </div>
                 <div className="tp-about-founder-btn mt-40">
                   <Link href="/contact" className="tp-btn tp-btn-2">
-                    Get In Touch <ArrowRightLong />
+                    Join the Roots & Rituals Tribe <ArrowRightLong />
                   </Link>
                 </div>
               </div>

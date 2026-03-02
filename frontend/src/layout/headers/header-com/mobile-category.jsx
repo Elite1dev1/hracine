@@ -60,23 +60,34 @@ const MobileCategory = ({ isCategoryActive, categoryType }) => {
   if (!isLoading && !isError && categories?.result?.length > 0) {
     const category_items = categories.result;
     content = category_items.map((item) => (
-      <li className="has-dropdown" key={item._id}>
-        <a className="cursor-pointer">
-          {item.img && (
-            <span>
-              <Image src={item.img} alt="cate img" width={50} height={50} />
-            </span>
-          )}
-          {item.parent}
+      <li className={`has-dropdown ${isActiveSubMenu === item.parent ? 'dropdown-opened' : ''}`} key={item._id}>
+        <a 
+          className={`cursor-pointer ${isActiveSubMenu === item.parent ? 'expanded' : ''}`}
+          onClick={() => item.children ? handleOpenSubMenu(item.parent) : handleCategoryRoute(item.parent, "parent")}
+        >
+          <span className="tp-category-item-content">
+            {item.img && (
+              <span className="tp-category-icon">
+                <Image src={item.img} alt="cate img" width={24} height={24} />
+              </span>
+            )}
+            <span className="tp-category-text">{item.parent}</span>
+          </span>
           {item.children && (
-            <button onClick={()=> handleOpenSubMenu(item.parent)} className="dropdown-toggle-btn">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenSubMenu(item.parent);
+              }} 
+              className={`dropdown-toggle-btn ${isActiveSubMenu === item.parent ? 'dropdown-opened' : ''}`}
+            >
               <i className="fa-regular fa-angle-right"></i>
             </button>
           )}
         </a>
 
         {item.children && (
-          <ul className={`tp-submenu ${isActiveSubMenu === item.parent ? 'active':''}`}>
+          <ul className={`tp-submenu ${isActiveSubMenu === item.parent ? 'active' : ''}`}>
             {item.children.map((child, i) => (
               <li
                 key={i}

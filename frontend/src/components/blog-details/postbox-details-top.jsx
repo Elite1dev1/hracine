@@ -2,21 +2,20 @@ import React from "react";
 import { Comment, Date, UserTwo } from "@/svg";
 
 const PostboxDetailsTop = ({blog}) => {
-  const {category,title,date,comments,author} = blog || {};
+  const {title,date,comments,author} = blog || {};
+  const displayAuthor =
+    !author || author.trim().toLowerCase() === "blog author"
+      ? "HRACINE Team"
+      : author;
   return ( 
     <div className="tp-postbox-details-top">
-      <div className="tp-postbox-details-category">
-        <span>
-          <a href="#" className="text-capitalize">{category}</a>
-        </span>
-      </div>
       <h3 className="tp-postbox-details-title">
         {title}
       </h3>
       <div className="tp-postbox-details-meta mb-50">
         <span data-meta="author">
           <UserTwo />
-          By <a href="#">{" "}{author}</a>
+          By <a href="#">{" "}{displayAuthor}</a>
         </span>
         <span>
           <Date />

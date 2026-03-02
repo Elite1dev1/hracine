@@ -530,12 +530,92 @@
                 &.active{
                     display: block;
                 }
-                & li.has-dropdown a > span > img {
-                    width: 25px;
-                    height: 25px;
-                    object-fit: cover;
-                    display: inline-block;
-                    margin-right: 10px;
+                & li.has-dropdown {
+                    & > a {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 12px 20px;
+                        padding-right: 50px;
+                        position: relative;
+                        
+                        .tp-category-item-content {
+                            display: flex;
+                            align-items: center;
+                            flex: 1;
+                            gap: 12px;
+                            
+                            .tp-category-icon {
+                                display: flex;
+                                align-items: center;
+                                flex-shrink: 0;
+                                
+                                img {
+                                    width: 24px;
+                                    height: 24px;
+                                    object-fit: cover;
+                                }
+                            }
+                            
+                            .tp-category-text {
+                                font-size: 16px;
+                                color: var(--tp-common-black);
+                                font-weight: 400;
+                            }
+                        }
+                        
+                        .dropdown-toggle-btn {
+                            position: absolute;
+                            right: 20px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 30px;
+                            height: 30px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: 1px solid rgba(0, 0, 0, 0.12);
+                            background: transparent;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            
+                            i {
+                                font-size: 14px;
+                                color: #7F8387;
+                                transition: transform 0.3s ease;
+                            }
+                            
+                            &.dropdown-opened {
+                                background-color: var(--tp-theme-primary);
+                                border-color: var(--tp-theme-primary);
+                                
+                                i {
+                                    color: var(--tp-common-white);
+                                    transform: rotate(90deg);
+                                }
+                            }
+                            
+                            &:hover {
+                                background-color: var(--tp-theme-primary);
+                                border-color: var(--tp-theme-primary);
+                                
+                                i {
+                                    color: var(--tp-common-white);
+                                }
+                            }
+                        }
+                        
+                        &.expanded {
+                            .tp-category-text {
+                                color: var(--tp-theme-primary);
+                            }
+                        }
+                    }
+                    
+                    &:not(:last-child) > a {
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { clearCart } from '@/redux/features/cartSlice';
 import CartCheckout from './cart-checkout';
 import CartItem from './cart-item';
+import CartItemMobile from './cart-item-mobile';
 
 const CartArea = () => {
   const { cart_products } = useSelector((state) => state.cart);
@@ -22,7 +23,10 @@ const CartArea = () => {
           {cart_products.length > 0 &&
             <div className="row">
               <div className="col-xl-9 col-lg-8">
-                <div className="tp-cart-list mb-25 mr-30">
+                <div className="tp-cart-list mb-25 mr-30 d-none d-md-block">
+                  <div className="tp-cart-scroll-hint d-lg-none">
+                    Swipe to see more &rarr;
+                  </div>
                   <table className="table">
                     <thead>
                       <tr>
@@ -38,6 +42,11 @@ const CartArea = () => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+                <div className="tp-cart-mobile-list mb-25 d-md-none">
+                  {cart_products.map((item, i) => (
+                    <CartItemMobile key={i} product={item} />
+                  ))}
                 </div>
                 <div className="tp-cart-bottom">
                   <div className="row align-items-end">
@@ -55,7 +64,7 @@ const CartArea = () => {
                       </div> */}
                     </div>
                     <div className="col-xl-6 col-md-4">
-                      <div className="tp-cart-update text-md-end mr-30">
+                      <div className="tp-cart-update text-center">
                         <button onClick={() => dispatch(clearCart())} type="button" className="tp-cart-update-btn">Clear Cart</button>
                       </div>
                     </div>

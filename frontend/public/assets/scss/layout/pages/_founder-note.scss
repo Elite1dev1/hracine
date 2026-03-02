@@ -1,0 +1,42 @@
+@use '../../utils' as *;
+
+/*----------------------------------------*/
+/*  Founder Note Section
+/*----------------------------------------*/
+
+.tp-founder-note-area {
+    background-color: #22160E;
+    
+    .tp-founder-note-content {
+        .tp-section-title-pre {
+            color: #E8E8E8 !important;
+        }
+        
+        .tp-section-title {
+            color: #FFFFFF !important;
+        }
+        
+        .tp-founder-note-text {
+            p {
+                color: #E8E8E8 !important;
+            }
+        }
+        
+        .tp-founder-note-btn {
+            .tp-btn.tp-btn-2 {
+                background-color: #FFFFFF !important;
+                color: #22160E !important;
+                border-color: #FFFFFF !important;
+                
+                &:hover {
+                    background-color: #F5F5F5 !important;
+                    color: #22160E !important;
+                }
+                
+                svg {
+                    fill: #22160E !important;
+                }
+            }
+        }
+    }
+}

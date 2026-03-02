@@ -6,6 +6,8 @@
 
 
 .#{$theme-prifix}-checkout{
+    $checkout-field-radius: 10px;
+
     &-verify{
         &-item{
             margin-bottom: 40px;
@@ -48,16 +50,28 @@
         line-height: 50px;
         padding: 0 30px;
         text-align: center;
+        border-radius: 10px;
         &:hover{
             background-color: var(--tp-common-black);
             color: var(--tp-common-white);
+        }
+
+        @media #{$sm, $xs}{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            padding: 0 30px !important;
         }
     }
     &-input{
         margin-bottom: 20px;
         & label{
+            display: block;
             font-weight: 500;
             color: var(--tp-common-black);
+            text-align: left;
+            margin-bottom: 10px;
 
             & span{
                 color: red;
@@ -70,6 +84,8 @@
             border: 1px solid #D5D8DB;
             color: var(--tp-common-black);
             height: 50px;
+            border-radius: $checkout-field-radius;
+            padding: 0 16px;
 
             &:focus{
                 border-color: var(--tp-common-black);
@@ -78,19 +94,20 @@
         & textarea{
             height: 200px;
             resize: none;
+            padding: 14px 16px;
         }
 
         & .nice-select{
             height: 50px;
             line-height: 48px;
-            border-radius: 0;
+            border-radius: $checkout-field-radius;
             border: 1px solid #D5D8DB;
             color: var(--tp-common-black);
             float: none;
-            padding: 0 26px;
+            padding: 0 44px 0 16px;
 
             &::after{
-                right: 26px;
+                right: 16px;
             }
 
             &.open{
@@ -101,7 +118,7 @@
 
             & .list{
                 margin-top: 0;
-                border-radius: 0;
+                border-radius: $checkout-field-radius;
                 transform-origin: center center;
                 @include transform(scale(.9) translateY(0px));
                 width: 100%;
@@ -326,6 +343,30 @@
                 line-height: 1.57;
                 color: #55585B;
                 margin-bottom: 0;
+            }
+        }
+
+        @media #{$sm, $xs}{
+            text-align: left !important;
+
+            &-item{
+                text-align: left !important;
+
+                & label{
+                    display: block;
+                    width: 100%;
+                    text-align: left !important;
+                    line-height: 1.6;
+                    padding-left: 30px;
+
+                    &::after{
+                        top: 4px;
+                    }
+
+                    &::before{
+                        top: 7px;
+                    }
+                }
             }
         }
     }

@@ -84,7 +84,7 @@
             & input{
                 border: 1px solid #E0E2E3;
                 height: 50px;
-                padding-right: 50px;
+                padding-right: 64px;
                 font-size: 16px;
 
                 @include tp-placeholder{
@@ -95,10 +95,22 @@
             & button{
                 position: absolute;
                 top: 50%;
-                right: 25px;
+                right: 0;
+                width: 54px;
+                height: 50px;
+                border-left: 1px solid #E0E2E3;
+                @include flexbox();
+                align-items: center;
+                justify-content: center;
                 color: var(--tp-common-black);
                 font-size: 16px;
                 @extend %translateY1_2;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 54px !important;
+                display: flex !important;
+                text-align: center !important;
+                z-index: 2;
                 & svg{
                     @extend %tp-svg-y-2;
                 }
@@ -144,6 +156,33 @@
                 line-height: 1.5;
                 margin-bottom: 20px;
             }
+        }
+    }
+}
+
+@media #{$sm, $xs} {
+    .tp-sidebar-wrapper {
+        margin-top: 35px;
+    }
+
+    .tp-sidebar-search-input {
+        & input {
+            height: 52px;
+            font-size: 15px;
+        }
+
+        & button {
+            height: 52px;
+            width: 56px;
+            right: 0;
+            max-width: 56px !important;
+            min-width: 56px !important;
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
         }
     }
 }

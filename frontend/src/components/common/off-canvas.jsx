@@ -3,14 +3,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 // internal
 import { CloseTwo } from '@/svg';
-import logo from '@assets/img/logo/HRACIN.svg';
+import logo from '@assets/img/logo/favicon.png';
 import contact_img from '@assets/img/icon/contact.png';
 import language_img from '@assets/img/icon/language-flag.png';
-import MobileCategory from '@/layout/headers/header-com/mobile-category';
 import MobileMenus from './mobile-menus';
 
 const OffCanvas = ({ isOffCanvasOpen, setIsCanvasOpen,categoryType = "electronics" }) => {
-  const [isCategoryActive, setIsCategoryActive] = useState(false);
   const [isCurrencyActive, setIsCurrencyActive] = useState(false);
   const [isLanguageActive, setIsLanguageActive] = useState(false);
 
@@ -37,19 +35,23 @@ const OffCanvas = ({ isOffCanvasOpen, setIsCanvasOpen,categoryType = "electronic
             <div className="offcanvas__top mb-70 d-flex justify-content-between align-items-center">
               <div className="offcanvas__logo logo">
                 <Link href="/">
-                  <Image src={logo} alt="logo" width={120} height={120} style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} />
+                  <Image 
+                    src={logo} 
+                    alt="logo" 
+                    width={100} 
+                    height={100} 
+                    style={{ width: 'auto', height: 'auto', maxWidth: '100px', maxHeight: '100px' }}
+                    className="d-none d-sm-block"
+                  />
+                  <Image 
+                    src={logo} 
+                    alt="logo" 
+                    width={50} 
+                    height={50} 
+                    style={{ width: 'auto', height: 'auto', maxWidth: '50px', maxHeight: '50px' }}
+                    className="d-block d-sm-none"
+                  />
                 </Link>
-              </div>
-            </div>
-            <div className="offcanvas__category pb-40">
-              <button onClick={() => setIsCategoryActive(!isCategoryActive)} className="tp-offcanvas-category-toggle">
-                <i className="fa-solid fa-bars"></i>
-                All Categories
-              </button>
-              <div className="tp-category-mobile-menu">
-                <nav className={`tp-category-menu-content ${isCategoryActive ? "active" : ""}`}>
-                  <MobileCategory categoryType={categoryType} isCategoryActive={isCategoryActive} />
-                </nav>
               </div>
             </div>
             <div className="tp-main-menu-mobile fix d-lg-none mb-40">

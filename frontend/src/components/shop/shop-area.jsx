@@ -1,19 +1,22 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import Pagination from "@/ui/Pagination";
 import ProductItem from "../products/fashion/product-item";
+import ProductItemMobile from "../products/fashion/product-item-mobile";
 import CategoryFilter from "./shop-filter/category-filter";
-import ColorFilter from "./shop-filter/color-filter";
 import PriceFilter from "./shop-filter/price-filter";
-import ProductBrand from "./shop-filter/product-brand";
 import StatusFilter from "./shop-filter/status-filter";
 import TopRatedProducts from "./shop-filter/top-rated-products";
 import ShopListItem from "./shop-list-item";
 import ShopTopLeft from "./shop-top-left";
 import ShopTopRight from "./shop-top-right";
 import ResetButton from "./shop-filter/reset-button";
+import MobileFilterChips from "./mobile-filter-chips";
 
 const ShopArea = ({ all_products, products, otherProps }) => {
   const {priceFilterValues,selectHandleFilter,currPage,setCurrPage} = otherProps;
+  const router = useRouter();
+  const { query } = router;
   const [filteredRows, setFilteredRows] = useState(products);
   const [pageStart, setPageStart] = useState(0);
   const [countOfPage, setCountOfPage] = useState(12);
@@ -28,12 +31,25 @@ const ShopArea = ({ all_products, products, otherProps }) => {
   const maxPrice = all_products.reduce((max, product) => {
     return product.price > max ? product.price : max;
   }, 0);
+
+  // Count active filters from URL query
+  const countActiveFilters = () => {
+    let count = 0;
+    if (query.category) count++;
+    if (query.subCategory) count++;
+    if (query.status) count++;
+    if (query.minPrice || query.maxPrice) count++;
+    return count;
+  };
+
+
   return (
     <>
       <section className="tp-shop-area pb-120">
         <div className="container">
           <div className="row">
-            <div className="col-xl-3 col-lg-4">
+            {/* Desktop Sidebar - Hidden on Mobile */}
+            <div className="col-xl-3 col-lg-4 tp-shop-sidebar-desktop">
               <div className="tp-shop-sidebar mr-10">
                 {/* filter */}
                 <PriceFilter
@@ -44,19 +60,16 @@ const ShopArea = ({ all_products, products, otherProps }) => {
                 <StatusFilter setCurrPage={setCurrPage} />
                 {/* categories */}
                 <CategoryFilter setCurrPage={setCurrPage} />
-                {/* color */}
-                <ColorFilter setCurrPage={setCurrPage} />
                 {/* product rating */}
                 <TopRatedProducts />
-                {/* brand */}
-                <ProductBrand setCurrPage={setCurrPage} />
                 {/* reset filter */}
                 <ResetButton/>
               </div>
             </div>
             <div className="col-xl-9 col-lg-8">
               <div className="tp-shop-main-wrapper">
-                <div className="tp-shop-top mb-45">
+                {/* Desktop Top Bar - Hidden on Mobile */}
+                <div className="tp-shop-top mb-45 tp-shop-top-desktop">
                   <div className="row">
                     <div className="col-xl-6">
                       <ShopTopLeft
@@ -76,6 +89,10 @@ const ShopArea = ({ all_products, products, otherProps }) => {
                     </div>
                   </div>
                 </div>
+
+                {/* Mobile Filter Chips */}
+                <MobileFilterChips />
+
                 {products.length === 0 && <h2>No products found</h2>}
                 {products.length > 0 && (
                   <div className="tp-shop-items-wrapper tp-shop-item-primary">
@@ -87,7 +104,8 @@ const ShopArea = ({ all_products, products, otherProps }) => {
                         aria-labelledby="grid-tab"
                         tabIndex="0"
                       >
-                        <div className="row">
+                        {/* Desktop Grid */}
+                        <div className="row tp-shop-grid-desktop">
                           {filteredRows
                             .slice(pageStart, pageStart + countOfPage)
                             .map((item) => (
@@ -97,6 +115,15 @@ const ShopArea = ({ all_products, products, otherProps }) => {
                               >
                                 <ProductItem product={item} />
                               </div>
+                            ))}
+                        </div>
+
+                        {/* Mobile Grid - 2 columns */}
+                        <div className="tp-shop-grid-mobile">
+                          {filteredRows
+                            .slice(pageStart, pageStart + countOfPage)
+                            .map((item) => (
+                              <ProductItemMobile key={item._id} product={item} />
                             ))}
                         </div>
                       </div>
@@ -140,6 +167,7 @@ const ShopArea = ({ all_products, products, otherProps }) => {
           </div>
         </div>
       </section>
+
     </>
   );
 };

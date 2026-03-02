@@ -18,6 +18,9 @@ const useCheckoutSubmit = () => {
   const { data: offerCoupons, isError, isLoading } = useGetOfferCouponsQuery();
   // settings for free shipping threshold
   const { data: settingsData } = useGetSettingsQuery();
+  const freeShippingThreshold = settingsData?.data?.freeShippingThreshold || 200;
+  const todayDeliveryPrice = settingsData?.data?.todayDeliveryPrice || 60;
+  const sevenDayDeliveryPrice = settingsData?.data?.sevenDayDeliveryPrice || 20;
   // addOrder
   const [saveOrder, {}] = useSaveOrderMutation();
   // initializePayment (Paystack)
@@ -80,13 +83,12 @@ const useCheckoutSubmit = () => {
 
   // Auto-apply free shipping when customer qualifies
   useEffect(() => {
-    const freeShippingThreshold = settingsData?.data?.freeShippingThreshold || 200;
     if (total >= freeShippingThreshold) {
       setShippingCost(0);
       // Set shipping option to free shipping
       setValue("shippingOption", "free_shipping");
     }
-  }, [total, settingsData, setValue]);
+  }, [total, freeShippingThreshold, setValue]);
 
   //calculate total and discount value
   useEffect(() => {
@@ -194,9 +196,14 @@ const useCheckoutSubmit = () => {
     setIsCheckoutSubmit(true);
     setPaymentError("");
 
-    // Determine final shipping cost (0 if qualifies for free shipping)
-    const freeShippingThreshold = settingsData?.data?.freeShippingThreshold || 200;
-    const finalShippingCost = total >= freeShippingThreshold ? 0 : shippingCost;
+    // Determine final shipping cost from selected option (or 0 if qualifies for free shipping)
+    const selectedShippingCost =
+      data.shippingOption === "flat_shipping"
+        ? todayDeliveryPrice
+        : data.shippingOption === "flat_rate"
+        ? sevenDayDeliveryPrice
+        : shippingCost;
+    const finalShippingCost = total >= freeShippingThreshold ? 0 : selectedShippingCost;
     const finalShippingOption = total >= freeShippingThreshold ? "free_shipping" : data.shippingOption;
 
     let orderInfo = {

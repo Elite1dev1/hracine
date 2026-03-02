@@ -232,7 +232,7 @@ export const adminApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["AdminSettings"],
+      invalidatesTags: ["AdminSettings", "Settings"],
     }),
 
     // Public settings (for frontend to get free shipping threshold)

@@ -148,10 +148,14 @@
                             }
                         }
                         &-shipping{
-                            & span{
+                            .tp-order-info-list-shipping-option{
+                                &:not(:last-child){
+                                    margin-bottom: 10px;
+                                }
+
                                 & input{
                                     display: none;
-                
+
                                     &:checked{
                                         & ~ label{
                                             &::after{
@@ -164,24 +168,25 @@
                                         }
                                     }
                                 }
-                                & label{
-                                    font-size: 14px;
-                                    position: relative;
-                                    padding-right: 27px;
 
-                                    & span{
-                                        color: var(--tp-theme-primary);
-                                    }
+                                & label{
+                                    width: 100%;
+                                    font-size: 14px;
+                                    line-height: 1.45;
+                                    position: relative;
+                                    display: block;
+                                    text-align: left;
+                                    padding-right: 27px;
 
                                     &:hover{
                                         cursor: pointer;
                                     }
-                
+
                                     &::after{
                                         position: absolute;
                                         content: '';
                                         right: 0;
-                                        top: 5px;
+                                        top: 2px;
                                         width: 16px;
                                         height: 16px;
                                         border-radius: 50%;
@@ -192,7 +197,7 @@
                                         position: absolute;
                                         content: '';
                                         right: 4px;
-                                        top: 9px;
+                                        top: 6px;
                                         width: 8px;
                                         height: 8px;
                                         border-radius: 50%;
@@ -201,6 +206,36 @@
                                         opacity: 0;
                                         @include tp-transition(all, .2s);
                                     }
+                                }
+                            }
+
+                            .tp-order-info-list-shipping-price{
+                                color: var(--tp-theme-primary);
+                            }
+
+                            .tp-order-info-list-shipping-free{
+                                color: #2ecc71;
+                                font-weight: 700;
+                            }
+
+                            @media #{$xs}{
+                                flex-direction: column;
+                                align-items: flex-start;
+                                gap: 10px;
+
+                                .tp-order-info-list-shipping-item{
+                                    width: 100%;
+                                    margin-left: 0;
+                                    align-items: stretch !important;
+                                }
+
+                                .tp-order-info-list-shipping-option{
+                                    width: 100%;
+                                }
+
+                                .tp-order-info-list-shipping-price{
+                                    white-space: nowrap;
+                                    font-weight: 500;
                                 }
                             }
                         }

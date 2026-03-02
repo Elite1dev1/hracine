@@ -9,6 +9,12 @@
   &-item {
     padding: 20px 20px;
     border: 1px solid var(--tp-border-primary);
+    border-radius: 10px;
+    background: linear-gradient(
+      180deg,
+      rgba($color: #c47070, $alpha: 0.06) 0%,
+      rgba($color: #ffffff, $alpha: 1) 45%
+    );
     &-left {
       flex: 0 0 68%;
     }
@@ -39,6 +45,7 @@
     font-size: 17px;
     margin-bottom: 3px;
     font-weight: 500;
+    color: var(--tp-common-black);
   }
   &-content {
     @media #{$xs} {
@@ -47,20 +54,29 @@
   }
   &-countdown {
     & ul {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       & li {
         list-style: none;
         font-size: 12px;
         color: var(--tp-common-black);
-        display: inline-block;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
         padding: 0 12px;
         position: relative;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
         &:first-child {
           padding-left: 0;
         }
         & span {
           display: block;
           line-height: 1;
+          margin-bottom: 3px;
+          font-weight: 600;
+          color: var(--tp-theme-accent);
         }
 
         &:not(:last-child) {
@@ -82,7 +98,7 @@
     font-size: 18px;
     font-weight: 600;
     & span {
-      color: #ff2400;
+      color: var(--tp-theme-accent);
       margin-right: 3px;
     }
   }
@@ -90,12 +106,13 @@
     & h4 {
       font-weight: 400;
       font-size: 14px;
+      margin-bottom: 0;
 
       & span {
-        color: #ff2400;
+        color: var(--tp-theme-accent);
       }
       & span.active {
-        color: green;
+        color: var(--tp-theme-green);
       }
     }
 
@@ -115,15 +132,23 @@
     }
   }
   &-date {
+    & button {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      line-height: 1;
+    }
+
     & span {
       display: inline-block;
-      background-color: rgba($color: #008080, $alpha: 0.1);
-      border: 2px dashed rgba($color: #008080, $alpha: 0.4);
+      background-color: rgba($color: #c47070, $alpha: 0.08);
+      border: 2px dashed rgba($color: #c47070, $alpha: 0.55);
       padding: 6px 30px;
       font-size: 15px;
-      color: #008080;
+      color: var(--tp-theme-primary);
       font-weight: 600;
       letter-spacing: 1px;
+      border-radius: 6px;
     }
   }
 
@@ -251,5 +276,115 @@
         }
       }
     }
+  }
+}
+
+@media #{$sm, $xs} {
+  .tp-coupon-area {
+    overflow-x: hidden;
+  }
+
+  .tp-coupon-item {
+    padding: 16px;
+    display: block !important;
+    overflow: hidden;
+  }
+
+  .tp-coupon-item-left,
+  .tp-coupon-item-right {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .tp-coupon-item-right {
+    padding-left: 0 !important;
+    margin-top: 14px;
+  }
+
+  .tp-coupon-border {
+    display: none;
+  }
+
+  .tp-coupon-thumb {
+    margin-bottom: 12px;
+
+    & img {
+      margin-right: 0;
+      border-radius: 8px;
+    }
+  }
+
+  .tp-coupon-content {
+    margin-top: 0;
+  }
+
+  .tp-coupon-title,
+  .tp-coupon-offer {
+    text-align: center;
+  }
+
+  .tp-coupon-countdown ul {
+    justify-content: center;
+    gap: 8px 2px;
+    margin-bottom: 0;
+  }
+
+  .tp-coupon-countdown ul li {
+    min-width: 56px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .tp-coupon-status {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tp-coupon-info-details span {
+    margin-left: 2px;
+  }
+
+  .tp-coupon-info-details {
+    width: 100%;
+  }
+
+  .tp-coupon-info-tooltip {
+    position: static;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    visibility: visible;
+    opacity: 1;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba($color: #c47070, $alpha: 0.25);
+    border-radius: 8px;
+    box-shadow: none;
+    background-color: rgba($color: #c47070, $alpha: 0.05);
+
+    &::after {
+      display: none;
+    }
+
+    & p {
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: center;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .tp-coupon-date {
+    text-align: center;
+  }
+
+  .tp-coupon-date span {
+    min-width: 130px;
+    padding: 8px 20px;
   }
 }

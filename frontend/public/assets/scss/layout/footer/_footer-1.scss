@@ -4,6 +4,11 @@
 /*  6.1 Footer Style 1
 /*----------------------------------------*/
 
+// Footer area background
+.#{$theme-prifix}-footer-area {
+    background-color: #D28669;
+}
+
 //footer widget style
 .#{$theme-prifix}-footer-widget{
     &-title{
@@ -24,7 +29,7 @@
                     @extend %tp-ff-roboto;
                     font-weight: 500;
                     font-size: 14px;
-                    color: var(--tp-text-2);
+                    color: var(--tp-common-black);
                     position: relative;
                     padding-left: 10px;
                     &::after{
@@ -34,7 +39,7 @@
                         top: 6px;
                         width: 3px;
                         height: 3px;
-                        background-color: var(--tp-text-2);
+                        background-color: var(--tp-common-black);
                         border-radius: 50%;
                         @extend %tp-transition;
                     }

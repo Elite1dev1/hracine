@@ -4,6 +4,9 @@
 /*----------------------------------------*/
 
 .#{$theme-prifix}-header{
+    &-area{
+        background-color: #C47070;
+    }
     $self : &;
     &-top{
         &-border{
@@ -256,4 +259,158 @@
             }
         }
     }
+}
+
+// Override sticky header background to match navbar - prevent white background
+// Using very specific selectors to override header-1 styles
+.tp-header-sticky.header-sticky,
+.tp-header-bottom-2.tp-header-sticky.header-sticky,
+#header-sticky.tp-header-bottom-2.tp-header-sticky.header-sticky,
+.tp-header-area .tp-header-bottom-2.tp-header-sticky.header-sticky,
+header .tp-header-bottom-2.tp-header-sticky.header-sticky,
+.tp-header-style-darkRed .tp-header-bottom-2.tp-header-sticky.header-sticky {
+    background-color: #C47070 !important;
+    background: #C47070 !important;
+    background-image: none !important;
+}
+
+// Mobile header hide/show on scroll - always fixed on mobile
+.tp-header-bottom-2 {
+    background-color: #D28669;
+    
+    @media #{$xs, $sm, $md} {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 999;
+        background-color: #D28669;
+        box-shadow: 0px 2px 6px rgba(1, 15, 28, 0.16);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        
+        &.header-visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        &.header-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+    
+    // Ensure sticky state also has correct background
+    &.header-sticky {
+        background-color: #C47070 !important;
+        
+        @media #{$xs, $sm, $md} {
+            background-color: #D28669 !important;
+        }
+    }
+}
+
+// Filter button in header (mobile only)
+.tp-header-filter-btn {
+    @media #{$xs, $sm, $md} {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    
+    @media #{$lg, $xl} {
+        display: none;
+    }
+}
+
+// Mobile navbar spacing adjustments
+@media #{$xs, $sm, $md} {
+    .tp-header-bottom-2 {
+        // Reduce container padding for tighter layout
+        .container {
+            padding-right: 12px !important;
+            padding-left: 10px !important; // Match product card left padding (16px)
+        }
+        
+        .tp-header-bottom-right {
+            padding-left: 0 !important;
+            
+            .tp-header-action {
+                margin-left: 0 !important;
+                gap: 8px; // Tight, consistent spacing between icons
+                
+                .tp-header-action-item {
+                    margin-right: 0 !important;
+                    margin-left: 0 !important;
+                    
+                    // Ensure minimum touch target (40-44px)
+                    .tp-header-action-btn {
+                        min-width: 44px;
+                        min-height: 44px;
+                        padding: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+                
+                // Hamburger menu - shift left slightly for balance
+                .tp-header-hamburger {
+                    margin-right: 0 !important;
+                    margin-left: -4px;
+                }
+            }
+        }
+        
+        // Logo column - align with product card grid (16px from left edge)
+        .col-xl-2.col-lg-5.col-md-5.col-sm-4.col-6 {
+            padding-left: 0 !important; // Remove column padding, container handles alignment
+        }
+        
+        // Right column - reduce right padding, shift icons closer to edge
+        .col-xl-5.col-lg-7.col-md-7.col-sm-8.col-6 {
+            padding-right: 0 !important;
+        }
+    }
+
+    // Non-home pages: move logo slightly further left, keep icon cluster unchanged.
+    .tp-header-area.tp-header-non-home {
+        .tp-header-bottom-2 {
+            .container {
+                padding-left: 10px !important;
+            }
+
+            .logo {
+                margin-left: 15px !important;
+                display: flex;
+                justify-content: flex-start;
+
+                a {
+                    display: inline-flex;
+                    justify-content: flex-start;
+                }
+
+                img {
+                    margin-left: 0 !important;
+                    margin-right: auto !important;
+                }
+            }
+        }
+    }
+}
+
+// Global override for sticky header - must be at the end to override all other styles
+body .tp-header-area .tp-header-bottom-2.tp-header-sticky.header-sticky,
+body #header-sticky.tp-header-bottom-2.tp-header-sticky.header-sticky,
+html body .tp-header-style-darkRed .tp-header-bottom-2.tp-header-sticky.header-sticky {
+    background-color: #C47070 !important;
+    background: #C47070 !important;
+    background-image: none !important;
 }

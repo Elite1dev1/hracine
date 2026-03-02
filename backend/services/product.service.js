@@ -56,12 +56,12 @@ exports.getProductTypeService = async (req) => {
       .limit(8)
       .populate("reviews");
   } else if (query.comingSoon === "true") {
-    // Get products marked as coming soon from ALL product types
+    // Get products marked as free shipping on orders above #25,000 from ALL product types
     products = await Product.find({
       comingSoon: true,
     }).populate("reviews");
     
-    // Fallback: If no coming soon products, return random products from all types
+    // Fallback: If no free shipping on orders above #25,000 products, return random products from all types
     if (products.length === 0) {
       const allProducts = await Product.find({}).populate("reviews");
       // Shuffle and return up to 4 random products

@@ -138,3 +138,19 @@
         }
     }
 }
+
+@media #{$sm, $xs} {
+    .breadcrumb__area {
+        &.pt-150 {
+            padding-top: 95px !important;
+        }
+
+        &.pb-150 {
+            padding-bottom: 70px !important;
+        }
+    }
+
+    .breadcrumb__title {
+        font-size: 36px;
+    }
+}

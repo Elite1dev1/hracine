@@ -1,6 +1,18 @@
 const { secret } = require("../config/secret");
 const https = require("https");
 const Order = require("../model/Order");
+const Settings = require("../model/Settings");
+
+const getActivePaystackSecretKey = async () => {
+  const settings = await Settings.getSettings();
+  const paystackMode = settings?.paystackMode === "live" ? "live" : "test";
+  const configuredKey =
+    paystackMode === "live"
+      ? settings?.paystackLiveApiKey
+      : settings?.paystackTestApiKey;
+
+  return configuredKey || secret.paystack_secret_key || "";
+};
 
 // initialize-payment (Paystack)
 exports.initializePayment = async (req, res, next) => {
@@ -15,7 +27,8 @@ exports.initializePayment = async (req, res, next) => {
       });
     }
     
-    if (!secret.paystack_secret_key) {
+    const activePaystackSecretKey = await getActivePaystackSecretKey();
+    if (!activePaystackSecretKey) {
       console.error("Paystack secret key is not configured");
       return res.status(500).json({
         success: false,
@@ -49,7 +62,7 @@ exports.initializePayment = async (req, res, next) => {
       path: "/transaction/initialize",
       method: "POST",
       headers: {
-        Authorization: `Bearer ${secret.paystack_secret_key}`,
+        Authorization: `Bearer ${activePaystackSecretKey}`,
         "Content-Type": "application/json",
       },
     };
@@ -127,7 +140,8 @@ exports.verifyPayment = async (req, res, next) => {
       });
     }
     
-    if (!secret.paystack_secret_key) {
+    const activePaystackSecretKey = await getActivePaystackSecretKey();
+    if (!activePaystackSecretKey) {
       console.error("Paystack secret key is not configured");
       return res.status(500).json({
         success: false,
@@ -143,7 +157,7 @@ exports.verifyPayment = async (req, res, next) => {
       path: `/transaction/verify/${reference}`,
       method: "GET",
       headers: {
-        Authorization: `Bearer ${secret.paystack_secret_key}`,
+        Authorization: `Bearer ${activePaystackSecretKey}`,
       },
     };
 

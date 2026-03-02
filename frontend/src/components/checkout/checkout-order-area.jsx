@@ -20,6 +20,8 @@ const CheckoutOrderArea = ({ checkoutData }) => {
   const { total } = useCartInfo();
   const { data: settingsData, isLoading: isLoadingSettings } = useGetSettingsQuery();
   const freeShippingThreshold = settingsData?.data?.freeShippingThreshold || 200;
+  const todayDeliveryPrice = settingsData?.data?.todayDeliveryPrice || 60;
+  const sevenDayDeliveryPrice = settingsData?.data?.sevenDayDeliveryPrice || 20;
   const qualifiesForFreeShipping = total >= freeShippingThreshold;
   return (
     <div className="tp-checkout-place white-bg">
@@ -46,9 +48,9 @@ const CheckoutOrderArea = ({ checkoutData }) => {
           {/*  shipping - only show if not qualified for free shipping */}
           {!qualifiesForFreeShipping && !isLoadingSettings && (
             <li className="tp-order-info-list-shipping">
-              <span>Shipping</span>
+              <span className="tp-order-info-list-shipping-title">Shipping</span>
               <div className="tp-order-info-list-shipping-item d-flex flex-column align-items-end">
-                <span>
+                <div className="tp-order-info-list-shipping-option">
                   <input
                     {...register(`shippingOption`, {
                       required: !qualifiesForFreeShipping ? `Shipping Option is required!` : false,
@@ -57,16 +59,16 @@ const CheckoutOrderArea = ({ checkoutData }) => {
                     type="radio"
                     name="shippingOption"
                     value="flat_shipping"
+                    onChange={() => handleShippingCost(todayDeliveryPrice)}
                   />
                   <label
-                    onClick={() => handleShippingCost(60)}
                     htmlFor="flat_shipping"
                   >
-                    Delivery: Today Cost :<span>{formatCurrency(60)}</span>
+                    Delivery: Today{" "}
+                    <span className="tp-order-info-list-shipping-price">{formatCurrency(todayDeliveryPrice)}</span>
                   </label>
-                  <ErrorMsg msg={errors?.shippingOption?.message} />
-                </span>
-                <span>
+                </div>
+                <div className="tp-order-info-list-shipping-option">
                   <input
                     {...register(`shippingOption`, {
                       required: !qualifiesForFreeShipping ? `Shipping Option is required!` : false,
@@ -75,15 +77,16 @@ const CheckoutOrderArea = ({ checkoutData }) => {
                     type="radio"
                     name="shippingOption"
                     value="flat_rate"
+                    onChange={() => handleShippingCost(sevenDayDeliveryPrice)}
                   />
                   <label
-                    onClick={() => handleShippingCost(20)}
                     htmlFor="flat_rate"
                   >
-                    Delivery: 7 Days Cost: <span>{formatCurrency(20)}</span>
+                    Delivery: 7 Days{" "}
+                    <span className="tp-order-info-list-shipping-price">{formatCurrency(sevenDayDeliveryPrice)}</span>
                   </label>
-                  <ErrorMsg msg={errors?.shippingOption?.message} />
-                </span>
+                </div>
+                <ErrorMsg msg={errors?.shippingOption?.message} />
               </div>
             </li>
           )}
@@ -91,9 +94,9 @@ const CheckoutOrderArea = ({ checkoutData }) => {
           {/* Free shipping message when qualified */}
           {qualifiesForFreeShipping && !isLoadingSettings && (
             <li className="tp-order-info-list-shipping">
-              <span>Shipping</span>
+              <span className="tp-order-info-list-shipping-title">Shipping</span>
               <div className="tp-order-info-list-shipping-item d-flex flex-column align-items-end">
-                <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                <span className="tp-order-info-list-shipping-free">
                   Free Shipping
                 </span>
               </div>

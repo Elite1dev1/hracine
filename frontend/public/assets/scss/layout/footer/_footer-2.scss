@@ -38,12 +38,12 @@
                             @extend %tp-ff-jost;
                             font-size: 15px;
                             font-weight: 400;
-                            color: var(--tp-text-2);
+                            color: var(--tp-common-black);
                             &::after{
                                 top: 9px;
                                 width: 3px;
                                 height: 3px;
-                                background-color: var(--tp-text-2);
+                                background-color: var(--tp-common-black);
                             }
                             &:hover{
                                 color: var(--tp-theme-secondary);

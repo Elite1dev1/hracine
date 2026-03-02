@@ -108,33 +108,77 @@ const VerifyPayment = () => {
   return (
     <Wrapper>
       <HeaderTwo style_2={true} />
-      <section className="tp-checkout-area pb-120" style={{ backgroundColor: '#EFF1F5', minHeight: '60vh' }}>
+      <section className="tp-checkout-area pb-120" style={{ 
+        backgroundColor: '#EFF1F5', 
+        minHeight: '60vh',
+        paddingTop: 'clamp(40px, 8vw, 80px)',
+        paddingBottom: 'clamp(40px, 8vw, 80px)'
+      }}>
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-md-6">
-              <div className="text-center pt-50 pb-50">
+            <div className="col-md-6 col-12">
+              <div className="text-center pt-50 pb-50" style={{
+                paddingTop: 'clamp(30px, 5vw, 50px)',
+                paddingBottom: 'clamp(30px, 5vw, 50px)',
+                textAlign: 'center'
+              }}>
                 {status === 'verifying' && (
                   <>
                     <ClipLoader size={50} color="#3498db" />
-                    <h3 className="mt-4">Verifying Payment...</h3>
-                    <p>Please wait while we verify your payment.</p>
+                    <h3 className="mt-4" style={{ 
+                      fontSize: 'clamp(20px, 4vw, 24px)',
+                      textAlign: 'center'
+                    }}>Verifying Payment...</h3>
+                    <p style={{ 
+                      fontSize: 'clamp(14px, 2.5vw, 16px)',
+                      textAlign: 'center'
+                    }}>Please wait while we verify your payment.</p>
                   </>
                 )}
                 {status === 'success' && (
                   <>
-                    <div style={{ fontSize: '64px', color: '#27ae60', marginBottom: '20px' }}>✓</div>
-                    <h3 className="text-success">Payment Successful!</h3>
-                    <p>Your order has been confirmed. Redirecting to order details...</p>
+                    <div style={{ 
+                      fontSize: 'clamp(48px, 10vw, 64px)', 
+                      color: '#27ae60', 
+                      marginBottom: '20px',
+                      textAlign: 'center'
+                    }}>✓</div>
+                    <h3 className="text-success" style={{ 
+                      fontSize: 'clamp(20px, 4vw, 24px)',
+                      textAlign: 'center'
+                    }}>Payment Successful!</h3>
+                    <p style={{ 
+                      fontSize: 'clamp(14px, 2.5vw, 16px)',
+                      textAlign: 'center'
+                    }}>Your order has been confirmed. Redirecting to order details...</p>
                   </>
                 )}
                 {status === 'error' && (
                   <>
-                    <div style={{ fontSize: '64px', color: '#e74c3c', marginBottom: '20px' }}>✗</div>
-                    <h3 className="text-danger">Payment Verification Failed</h3>
-                    <p>There was an issue verifying your payment. Please contact support or try again.</p>
+                    <div style={{ 
+                      fontSize: 'clamp(48px, 10vw, 64px)', 
+                      color: '#e74c3c', 
+                      marginBottom: '20px',
+                      textAlign: 'center'
+                    }}>✗</div>
+                    <h3 className="text-danger" style={{ 
+                      fontSize: 'clamp(20px, 4vw, 24px)',
+                      textAlign: 'center'
+                    }}>Payment Verification Failed</h3>
+                    <p style={{ 
+                      fontSize: 'clamp(14px, 2.5vw, 16px)',
+                      textAlign: 'center',
+                      marginBottom: '20px'
+                    }}>There was an issue verifying your payment. Please contact support or try again.</p>
                     <button
                       onClick={() => router.push('/checkout')}
                       className="tp-checkout-btn mt-3"
+                      style={{
+                        width: '100%',
+                        maxWidth: '100%',
+                        padding: '12px 20px',
+                        fontSize: 'clamp(14px, 2.5vw, 16px)'
+                      }}
                     >
                       Return to Checkout
                     </button>

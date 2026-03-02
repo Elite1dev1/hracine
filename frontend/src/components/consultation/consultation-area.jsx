@@ -139,13 +139,13 @@ const ConsultationArea = () => {
           <div className="row align-items-center">
             <div className="col-xl-6 col-lg-6">
               <div className="tp-consultation-hero-content pr-50">
-                <h1 style={{ fontSize: '48px', marginBottom: '20px', fontWeight: '700', color: '#22160E' }}>
+                <h1 style={{ fontSize: 'clamp(32px, 6vw, 48px)', marginBottom: '16px', fontWeight: '700', color: '#22160E' }}>
                   Rooted Consultations
                 </h1>
-                <p style={{ fontSize: '20px', lineHeight: '1.8', color: '#55585B', marginBottom: '40px' }}>
+                <p style={{ fontSize: 'clamp(15px, 3.2vw, 20px)', lineHeight: '1.7', color: '#55585B', marginBottom: '28px' }}>
                   A personalized scalp + hair routine designed just for you.
                 </p>
-                <a href="#booking-form" className="tp-btn tp-btn-2" style={{ padding: '15px 40px', fontSize: '16px' }}>
+                <a href="#booking-form" className="tp-btn tp-btn-2 tp-consultation-hero-cta" style={{ padding: '12px 28px', fontSize: '15px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   Book My Consultation
                   {" "} <ArrowRightLong />
                 </a>
@@ -156,7 +156,8 @@ const ConsultationArea = () => {
                 <Image 
                   src={consultation_img} 
                   alt="Consultation" 
-                  style={{ borderRadius: '8px', width: '100%', height: 'auto' }}
+                  className="tp-consultation-hero-main-image"
+                  style={{ borderRadius: '14px', width: '100%', maxWidth: '520px', height: 'auto' }}
                 />
               </div>
             </div>
@@ -165,11 +166,11 @@ const ConsultationArea = () => {
       </section>
 
       {/* What's Inside Section */}
-      <section className="tp-consultation-whats-inside pt-100 pb-100">
+      <section className="tp-consultation-whats-inside pt-100 pb-100" style={{ backgroundColor: '#22160E' }}>
         <div className="container">
           <div className="row">
             <div className="col-xxl-12 mb-50">
-              <h2 className="text-center" style={{ fontSize: '42px', marginBottom: '20px' }}>
+              <h2 className="text-center" style={{ fontSize: 'clamp(28px, 5vw, 42px)', marginBottom: '16px', color: '#fff' }}>
                 What&apos;s Inside Your Consultation
               </h2>
             </div>
@@ -178,26 +179,26 @@ const ConsultationArea = () => {
             {services.map((service) => (
               <div key={service.id} className="col-xl-3 col-lg-6 col-md-6 mb-30">
                 <div className="tp-consultation-service-card text-center" style={{ 
-                  padding: '40px 25px', 
+                  padding: 'clamp(18px, 4vw, 36px) clamp(14px, 3vw, 24px)', 
                   backgroundColor: '#fff',
-                  borderRadius: '8px',
+                  borderRadius: '14px',
                   boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
                   height: '100%'
                 }}>
-                  <div className="tp-consultation-service-icon mb-25" style={{ fontSize: '50px' }}>
+                  <div className="tp-consultation-service-icon mb-25" style={{ fontSize: 'clamp(28px, 7vw, 50px)' }}>
                     {service.icon}
                   </div>
                   <h3 style={{ 
-                    fontSize: '22px', 
-                    marginBottom: '15px',
+                    fontSize: 'clamp(16px, 3.2vw, 22px)', 
+                    marginBottom: '12px',
                     fontWeight: '600',
                     color: '#22160E'
                   }}>
                     {service.title}
                   </h3>
                   <p style={{ 
-                    fontSize: '16px', 
-                    lineHeight: '1.7', 
+                    fontSize: 'clamp(13px, 2.6vw, 16px)', 
+                    lineHeight: '1.6', 
                     color: '#55585B',
                     margin: 0
                   }}>
@@ -215,7 +216,7 @@ const ConsultationArea = () => {
         <div className="container">
           <div className="row">
             <div className="col-xxl-12 mb-50">
-              <h2 className="text-center" style={{ fontSize: '42px', marginBottom: '50px' }}>
+              <h2 className="text-center" style={{ fontSize: 'clamp(26px, 4.5vw, 42px)', marginBottom: '40px' }}>
                 How the Consultation Works
               </h2>
             </div>
@@ -253,14 +254,14 @@ const ConsultationArea = () => {
       </section>
 
       {/* Booking Form Section */}
-      <section id="booking-form" className="tp-consultation-booking-area pt-100 pb-100">
+      <section id="booking-form" className="tp-consultation-booking-area pt-100 pb-100" style={{ backgroundColor: '#22160E' }}>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-xl-8 col-lg-10">
               <div className="tp-consultation-booking-wrapper" style={{ 
                 padding: '60px 40px',
                 backgroundColor: '#fff',
-                borderRadius: '8px',
+                borderRadius: '16px',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
               }}>
                 {showSuccess && (
@@ -293,7 +294,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px'
                         }}
                       />
@@ -312,7 +313,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px'
                         }}
                       />
@@ -330,7 +331,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px'
                         }}
                       />
@@ -348,7 +349,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px',
                           backgroundColor: '#fff'
                         }}
@@ -376,7 +377,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px',
                           backgroundColor: '#fff'
                         }}
@@ -406,7 +407,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px'
                         }}
                       />
@@ -424,7 +425,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px',
                           backgroundColor: '#fff'
                         }}
@@ -448,7 +449,7 @@ const ConsultationArea = () => {
                           width: '100%',
                           padding: '12px 15px',
                           border: '1px solid #EAEBED',
-                          borderRadius: '4px',
+                          borderRadius: '14px',
                           fontSize: '16px',
                           resize: 'vertical'
                         }}
@@ -458,8 +459,8 @@ const ConsultationArea = () => {
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="tp-btn tp-btn-2"
-                        style={{ padding: '15px 50px', fontSize: '16px' }}
+                        className="tp-btn tp-btn-2 tp-consultation-booking-submit"
+                        style={{ padding: '14px 40px', fontSize: '15px', borderRadius: '999px' }}
                       >
                         {isLoading ? 'Booking...' : 'Book My Consultation'}
                         {" "} <ArrowRightLong />
@@ -528,6 +529,58 @@ const ConsultationArea = () => {
           </div>
         </div>
       </section>
+      <style jsx>{`
+        .tp-consultation-hero-image {
+          display: flex;
+          justify-content: center;
+        }
+
+        .tp-consultation-booking-wrapper :global(input),
+        .tp-consultation-booking-wrapper :global(select),
+        .tp-consultation-booking-wrapper :global(textarea),
+        .tp-consultation-booking-wrapper :global(button) {
+          border-radius: 14px;
+        }
+
+        @media (max-width: 767px) {
+          .tp-consultation-hero-content {
+            text-align: center;
+            padding-right: 0 !important;
+          }
+
+          .tp-consultation-hero-cta {
+            margin: 0 auto;
+            padding: 11px 22px !important;
+            font-size: 14px !important;
+          }
+
+          .tp-consultation-hero-main-image {
+            max-width: 300px !important;
+            margin: 26px auto 0;
+          }
+
+          .tp-consultation-hero-area :global(.container),
+          .tp-consultation-whats-inside :global(.container),
+          .tp-consultation-process-area :global(.container),
+          .tp-consultation-booking-area :global(.container) {
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+
+          .tp-consultation-booking-wrapper {
+            padding: 28px 18px !important;
+          }
+
+          .tp-consultation-whats-inside :global(.col-xl-3.col-lg-6.col-md-6.mb-30) {
+            margin-bottom: 16px !important;
+          }
+
+          .tp-consultation-booking-submit {
+            padding: 12px 24px !important;
+            font-size: 14px !important;
+          }
+        }
+      `}</style>
     </>
   );
 };

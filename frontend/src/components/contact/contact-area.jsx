@@ -29,17 +29,11 @@ const ContactArea = () => {
                     </a>
                   </p>
                   <div className="tp-contact-social-icon" style={{ marginTop: '30px' }}>
-                    <a href="#" style={{ margin: '0 10px', fontSize: '24px', color: '#55585B' }}>
-                      <i className="fa-brands fa-facebook-f"></i>
-                    </a>
-                    <a href="#" style={{ margin: '0 10px', fontSize: '24px', color: '#55585B' }}>
+                    <a href="#" style={{ margin: '0 10px' }}>
                       <i className="fa-brands fa-instagram"></i>
                     </a>
-                    <a href="#" style={{ margin: '0 10px', fontSize: '24px', color: '#55585B' }}>
+                    <a href="#" style={{ margin: '0 10px' }}>
                       <i className="fa-brands fa-twitter"></i>
-                    </a>
-                    <a href="#" style={{ margin: '0 10px', fontSize: '24px', color: '#55585B' }}>
-                      <i className="fa-brands fa-pinterest"></i>
                     </a>
                   </div>
                 </div>

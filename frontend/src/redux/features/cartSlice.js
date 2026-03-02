@@ -50,13 +50,17 @@ export const cartSlice = createSlice({
           : (state.orderQuantity = 1);
     },
     quantityDecrement: (state, { payload }) => {
-      state.cart_products.map((item) => {
-        if (item._id === payload._id) {
-          if (item.orderQuantity > 1) {
-            item.orderQuantity = item.orderQuantity - 1;
-          }
+      state.cart_products = state.cart_products.filter((item) => {
+        if (item._id !== payload._id) {
+          return true;
         }
-        return { ...item };
+
+        if (item.orderQuantity > 1) {
+          item.orderQuantity = item.orderQuantity - 1;
+          return true;
+        }
+
+        return false;
       });
       setLocalStorage("cart_products", state.cart_products);
     },

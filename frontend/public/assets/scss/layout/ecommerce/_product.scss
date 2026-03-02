@@ -782,4 +782,51 @@ product all slider
     }
 }
 
+// Mobile toast optimizations
+@media #{$xs, $sm, $md} {
+    .Toastify__toast-container {
+        width: calc(100% - 32px) !important;
+        max-width: calc(100% - 32px) !important;
+        left: 16px !important;
+        right: 16px !important;
+        padding: 0 !important;
+    }
+
+    .Toastify__toast {
+        min-height: 44px !important;
+        padding: 10px 14px !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        border-radius: 6px !important;
+        margin-bottom: 10px !important;
+        
+        .Toastify__toast-body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+            display: flex !important;
+            align-items: center !important;
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+        }
+
+        .Toastify__toast-icon {
+            width: 18px !important;
+            height: 18px !important;
+            margin-right: 8px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .Toastify__close-button {
+            width: 18px !important;
+            height: 18px !important;
+            opacity: 0.8 !important;
+            margin-left: 8px !important;
+            flex-shrink: 0 !important;
+        }
+    }
+}
+
 

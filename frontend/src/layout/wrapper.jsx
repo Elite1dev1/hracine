@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 // internal
 import BackToTopCom from "@/components/common/back-to-top";
 import ProductModal from "@/components/common/product-modal";
+import NewsletterModal from "@/components/common/newsletter-modal";
 import {
   get_cart_products,
   initialOrderQuantity,
@@ -37,10 +38,24 @@ const Wrapper = ({ children }) => {
     <div id="wrapper">
       {children}
       <BackToTopCom />
-      <ToastContainer />
+      <ToastContainer 
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover={false}
+        className="tp-toast-container"
+      />
       {/* product modal start */}
       {productItem && <ProductModal />}
       {/* product modal end */}
+      {/* newsletter modal start */}
+      <NewsletterModal />
+      {/* newsletter modal end */}
     </div>
   );
 };

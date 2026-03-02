@@ -17,7 +17,8 @@
             -webkit-animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
             animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
             box-shadow: 0px 2px 6px rgba(1, 15, 28, 0.16);
-            background: var(--tp-common-white);
+            background: #C47070 !important;
+            background-color: #C47070 !important;
         }
         &-area{
             position: fixed;
@@ -48,6 +49,8 @@
                 opacity: 1;
                 -webkit-animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
                 animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
+                background: #C47070 !important;
+                background-color: #C47070 !important;
             }
         }
     }
@@ -234,7 +237,7 @@
                 font-size: 12px;
                 font-weight: 500;
                 display: inline-block;
-                color: var(--tp-text-1);
+                color: #000000 !important;
                 line-height: 1;
             }
         }
@@ -244,6 +247,13 @@
             font-weight: 500;
             margin-bottom: 0;
             line-height: 1;
+            & a{
+                color: #000000 !important;
+                &:hover{
+                    color: #000000 !important;
+                    opacity: 0.8;
+                }
+            }
         }
     }
     &-main{

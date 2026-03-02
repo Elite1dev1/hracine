@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // internal
-import logo from '@assets/img/logo/HRACIN.svg';
+import logo from '@assets/img/logo/favicon.png';
 import { CartTwo, Menu, Search, Wishlist } from '@/svg';
 import Menus from './header-com/menus';
 import useSticky from '@/hooks/use-sticky';
@@ -30,8 +30,30 @@ const HeaderThree = () => {
                 <div className="col-xl-2 col-lg-2 col-6">
                   <div className="logo">
                     <Link href="/">
-                      <Image className="logo-light" src={logo} alt="logo" width={120} height={120} style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} />
-                      <Image className="logo-dark" src={logo} alt="logo" width={120} height={120} style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} />
+                      <Image 
+                        className="logo-light d-none d-md-block" 
+                        src={logo} 
+                        alt="logo" 
+                        width={120} 
+                        height={120} 
+                        style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} 
+                      />
+                      <Image 
+                        className="logo-dark d-none d-md-block" 
+                        src={logo} 
+                        alt="logo" 
+                        width={120} 
+                        height={120} 
+                        style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} 
+                      />
+                      <Image 
+                        className="d-block d-md-none" 
+                        src={logo} 
+                        alt="logo" 
+                        width={50} 
+                        height={50} 
+                        style={{ width: 'auto', height: 'auto', maxWidth: '50px', maxHeight: '50px' }} 
+                      />
                     </Link>
                   </div>
                 </div>

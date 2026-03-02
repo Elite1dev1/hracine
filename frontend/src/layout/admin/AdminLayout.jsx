@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminLayout = ({ children }) => {
   const router = useRouter();
@@ -42,6 +44,9 @@ const AdminLayout = ({ children }) => {
     { name: 'Orders', icon: '🛒', path: '/admin/orders' },
     { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
     { name: 'Blogs', icon: '📝', path: '/admin/blogs' },
+    { name: 'Marketing', icon: '📧', path: '/admin/marketing', submenu: [
+      { name: 'Newsletter Subscribers', path: '/admin/newsletter' },
+    ]},
     { name: 'Settings', icon: '⚙️', path: '/admin/settings' },
   ];
 
@@ -63,7 +68,7 @@ const AdminLayout = ({ children }) => {
         <div style={{ padding: '20px', borderBottom: '1px solid #34495e', display: 'flex', alignItems: 'center', gap: '10px' }}>
           {sidebarOpen && (
             <Image 
-              src="/assets/img/logo/HRACIN.svg" 
+              src="/assets/img/logo/favicon.png" 
               alt="Logo" 
               width={40} 
               height={40}
@@ -75,26 +80,57 @@ const AdminLayout = ({ children }) => {
           </h3>
         </div>
         <nav style={{ padding: '10px 0' }}>
-          {menuItems.map((item) => (
-            <Link 
-              key={item.path} 
-              href={item.path}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '15px 20px',
-                color: router.pathname === item.path || router.pathname.startsWith(item.path + '/') ? '#3498db' : 'white',
-                textDecoration: 'none',
-                backgroundColor: router.pathname === item.path || router.pathname.startsWith(item.path + '/') ? '#34495e' : 'transparent',
-                borderLeft: router.pathname === item.path || router.pathname.startsWith(item.path + '/') ? '4px solid #3498db' : '4px solid transparent',
-              }}
-            >
-              <span style={{ fontSize: '20px', marginRight: sidebarOpen ? '10px' : '0', minWidth: '20px' }}>
-                {item.icon}
-              </span>
-              {sidebarOpen && <span>{item.name}</span>}
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = router.pathname === item.path || 
+              router.pathname.startsWith(item.path + '/') ||
+              (item.submenu && item.submenu.some(sub => router.pathname === sub.path || router.pathname.startsWith(sub.path + '/')));
+            
+            return (
+              <div key={item.path}>
+                <Link 
+                  href={item.submenu ? item.submenu[0].path : item.path}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '15px 20px',
+                    color: isActive ? '#3498db' : 'white',
+                    textDecoration: 'none',
+                    backgroundColor: isActive ? '#34495e' : 'transparent',
+                    borderLeft: isActive ? '4px solid #3498db' : '4px solid transparent',
+                  }}
+                >
+                  <span style={{ fontSize: '20px', marginRight: sidebarOpen ? '10px' : '0', minWidth: '20px' }}>
+                    {item.icon}
+                  </span>
+                  {sidebarOpen && <span>{item.name}</span>}
+                </Link>
+                {sidebarOpen && item.submenu && isActive && (
+                  <div style={{ paddingLeft: '20px', backgroundColor: '#1a252f' }}>
+                    {item.submenu.map((subItem) => {
+                      const isSubActive = router.pathname === subItem.path || router.pathname.startsWith(subItem.path + '/');
+                      return (
+                        <Link
+                          key={subItem.path}
+                          href={subItem.path}
+                          style={{
+                            display: 'block',
+                            padding: '10px 20px',
+                            color: isSubActive ? '#3498db' : '#bdc3c7',
+                            textDecoration: 'none',
+                            fontSize: '14px',
+                            borderLeft: isSubActive ? '3px solid #3498db' : '3px solid transparent',
+                            paddingLeft: isSubActive ? '17px' : '20px',
+                          }}
+                        >
+                          {subItem.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
         <div style={{ padding: '20px', borderTop: '1px solid #34495e', marginTop: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -168,6 +204,18 @@ const AdminLayout = ({ children }) => {
           {children}
         </div>
       </main>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover={false}
+        className="tp-toast-container"
+      />
     </div>
   );
 };

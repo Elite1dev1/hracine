@@ -6,7 +6,7 @@ import { handleFilterSidebarClose } from "@/redux/features/shop-filter-slice";
 const StatusFilter = ({setCurrPage,shop_right=false}) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const status = ["On sale", "In Stock"];
+  const status = ["On Sale", "In Stock"];
 
   // handle status route 
   const handleStatusRoute = (status) => {

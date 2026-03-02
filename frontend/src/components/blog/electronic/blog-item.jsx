@@ -10,7 +10,13 @@ const BlogItem = ({blog}) => {
     <div className="tp-blog-item mb-30">
       <div className="tp-blog-thumb p-relative fix">
         <Link href={`/blog-details/${blogIdentifier}`}>
-          <Image src={blog.img} alt="blog img" style={{width:'100%',height:'100%'}} />
+          <Image 
+            src={blog.img} 
+            alt="blog img" 
+            width={600} 
+            height={400} 
+            style={{width:'100%',height:'100%',objectFit:'cover'}} 
+          />
         </Link>
         <div className="tp-blog-meta tp-blog-meta-date">
           <span>{blog.date}</span>

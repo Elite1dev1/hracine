@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 // internal
 import Menus from "./header-com/menus";
 import useSticky from "@/hooks/use-sticky";
-import logo from "@assets/img/logo/HRACIN.svg";
+import logo from "@assets/img/logo/favicon.png";
 import useCartInfo from "@/hooks/use-cart-info";
 import OffCanvas from "@/components/common/off-canvas";
 import { openCartMini } from "@/redux/features/cartSlice";
@@ -14,7 +14,7 @@ import HeaderTopRight from "./header-com/header-top-right";
 import HeaderMainRight from "./header-com/header-main-right";
 import CartMiniSidebar from "@/components/common/cart-mini-sidebar";
 import HeaderSearchForm from "@/components/forms/header-search-form";
-import { CartTwo, CategoryMenu, Compare, Menu, Phone, ShippingCar, Wishlist } from "@/svg";
+import { CartTwo, CategoryMenu, Compare, Menu, ShippingCar, Wishlist } from "@/svg";
 import { formatCurrency } from "@/utils/currency";
 
 const Header = () => {
@@ -37,7 +37,7 @@ const Header = () => {
                     <span>
                       <ShippingCar />
                     </span>
-                    <p>Fast and secure delivery across Nigeria</p>
+                    <p>Free shipping on orders over ₦25,500</p>
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -50,13 +50,45 @@ const Header = () => {
           </div>
 
           {/* header main start */}
-          <div className="tp-header-main tp-header-sticky">
+          <div 
+            className="tp-header-main tp-header-sticky"
+            style={sticky ? { backgroundColor: '#C47070', background: '#C47070' } : {}}
+          >
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-xl-2 col-lg-2 col-md-4 col-6">
-                  <div className="logo">
-                    <Link href="/">
-                      <Image src={logo} alt="logo" width={120} height={120} style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} />
+                  <div className="logo" style={{ display: 'flex', alignItems: 'center', padding: '5px 0' }}>
+                    <Link href="/" style={{ display: 'block' }}>
+                      <Image 
+                        src={logo} 
+                        alt="logo" 
+                        width={100} 
+                        height={100} 
+                        style={{ 
+                          width: 'auto', 
+                          height: 'auto', 
+                          maxWidth: '100px',
+                          maxHeight: '100px',
+                          objectFit: 'contain',
+                          display: 'block'
+                        }} 
+                        className="d-none d-md-block"
+                      />
+                      <Image 
+                        src={logo} 
+                        alt="logo" 
+                        width={50} 
+                        height={50} 
+                        style={{ 
+                          width: 'auto', 
+                          height: 'auto', 
+                          maxWidth: '50px',
+                          maxHeight: '50px',
+                          objectFit: 'contain',
+                          display: 'block'
+                        }} 
+                        className="d-block d-md-none"
+                      />
                     </Link>
                   </div>
                 </div>
@@ -104,15 +136,9 @@ const Header = () => {
                   </div>
                   <div className="col-xl-3 col-lg-3">
                     <div className="tp-header-contact d-flex align-items-center justify-content-end">
-                      <div className="tp-header-contact-icon">
-                        <span>
-                          <Phone />
-                        </span>
-                      </div>
                       <div className="tp-header-contact-content">
-                        <h5>Hotline:</h5>
                         <p>
-                          <a href="tel:+234-708-092-6022">+(234) 7080926022</a>
+                          <Link href="/contact">Contact</Link>
                         </p>
                       </div>
                     </div>
@@ -125,14 +151,47 @@ const Header = () => {
       </header>
 
       {/* sticky header start */}
-      <div id="header-sticky-2" className={`tp-header-sticky-area ${sticky ? 'header-sticky-2' : ''}`}>
+      <div 
+        id="header-sticky-2" 
+        className={`tp-header-sticky-area ${sticky ? 'header-sticky-2' : ''}`}
+        style={sticky ? { backgroundColor: '#C47070', background: '#C47070' } : {}}
+      >
         <div className="container">
           <div className="tp-mega-menu-wrapper p-relative">
             <div className="row align-items-center">
               <div className="col-xl-3 col-lg-3 col-md-3 col-6">
-                <div className="logo">
-                  <Link href="/">
-                    <Image src={logo} alt="logo" width={120} height={120} style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} />
+                <div className="logo" style={{ display: 'flex', alignItems: 'center', padding: '5px 0' }}>
+                  <Link href="/" style={{ display: 'block' }}>
+                    <Image 
+                      src={logo} 
+                      alt="logo" 
+                      width={100} 
+                      height={100} 
+                      style={{ 
+                        width: 'auto', 
+                        height: 'auto', 
+                        maxWidth: '100px',
+                        maxHeight: '100px',
+                        objectFit: 'contain',
+                        display: 'block'
+                      }} 
+                      className="d-none d-md-block"
+                    />
+                    <Image 
+                      src={logo} 
+                      alt="logo" 
+                      width={50} 
+                      height={50} 
+                      style={{ 
+                        width: 'auto', 
+                        height: 'auto', 
+                        maxWidth: '50px',
+                        maxHeight: '50px',
+                        objectFit: 'contain',
+                        display: 'block'
+                      }} 
+                      className="d-block d-md-none"
+                    />
                   </Link>
                 </div>
               </div>

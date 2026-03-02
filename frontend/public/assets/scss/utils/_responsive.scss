@@ -1,0 +1,681 @@
+@use 'colors' as *;
+@use 'breakpoints' as *;
+
+/*----------------------------------------*/
+/*  Responsive Typography & Layout
+/*----------------------------------------*/
+
+// Fluid Typography using clamp()
+:root {
+  // Headings with fluid typography
+  --fluid-h1: clamp(28px, 4vw + 1rem, 56px);
+  --fluid-h2: clamp(24px, 3.5vw + 1rem, 48px);
+  --fluid-h3: clamp(20px, 3vw + 1rem, 36px);
+  --fluid-h4: clamp(18px, 2.5vw + 1rem, 28px);
+  --fluid-h5: clamp(16px, 2vw + 1rem, 22px);
+  --fluid-h6: clamp(14px, 1.5vw + 1rem, 18px);
+  --fluid-body: clamp(14px, 1vw + 0.5rem, 16px);
+  --fluid-small: clamp(12px, 0.8vw + 0.5rem, 14px);
+}
+
+// Apply fluid typography to headings
+h1 {
+  font-size: var(--fluid-h1);
+}
+
+h2 {
+  font-size: var(--fluid-h2);
+}
+
+h3 {
+  font-size: var(--fluid-h3);
+}
+
+h4 {
+  font-size: var(--fluid-h4);
+}
+
+h5 {
+  font-size: var(--fluid-h5);
+}
+
+h6 {
+  font-size: var(--fluid-h6);
+}
+
+body {
+  font-size: var(--fluid-body);
+}
+
+p {
+  font-size: var(--fluid-body);
+}
+
+// Center text on mobile
+@media #{$xs, $sm} {
+  h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+  }
+  
+  p {
+    text-align: center;
+  }
+  
+  // Center container content on mobile
+  .container {
+    text-align: center;
+  }
+}
+
+// Responsive spacing
+@media #{$xs} {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  // Reduce padding on mobile
+  .pt-95, .pb-95 {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .pt-115, .pb-115 {
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+  }
+}
+
+@media #{$sm} {
+  .pt-95, .pb-95 {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+  
+  .pt-115, .pb-115 {
+    padding-top: 70px !important;
+    padding-bottom: 70px !important;
+  }
+}
+
+// Footer responsive styles
+@media #{$xs, $sm} {
+  .tp-footer-logo {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    
+    a {
+      display: inline-block;
+    }
+    
+    img {
+      max-width: 80px !important;
+      height: auto !important;
+    }
+  }
+  
+  .tp-footer-desc {
+    text-align: center;
+    font-size: clamp(14px, 2vw, 16px) !important;
+    margin-bottom: 20px;
+  }
+  
+  .tp-footer-widget {
+    text-align: center;
+    margin-bottom: 30px !important;
+    
+    &-title {
+      text-align: center;
+      font-size: clamp(16px, 2.5vw, 20px) !important;
+      margin-bottom: 15px;
+    }
+    
+    &-content {
+      ul {
+        display: inline-block;
+        text-align: left;
+      }
+    }
+  }
+  
+  .tp-footer-social {
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .tp-footer-bottom-wrapper {
+    text-align: center;
+    
+    .row {
+      flex-direction: column;
+      
+      .col-md-6 {
+        width: 100%;
+        text-align: center !important;
+      }
+    }
+  }
+  
+  // Hide payment methods on mobile
+  .tp-footer-payment {
+    display: none !important;
+  }
+  
+  // Hide tagline/description on mobile
+  .tp-footer-desc {
+    display: none !important;
+  }
+  
+  // Hide subscription form on mobile
+  .tp-footer-subscribe-form {
+    display: none !important;
+  }
+  
+  // Hide subscription description text on mobile
+  .tp-footer-subscribe p {
+    display: none !important;
+  }
+  
+  // Hide "Follow Us On" heading on mobile
+  .tp-footer-social-title-4 {
+    display: none !important;
+  }
+}
+
+@media #{$md} {
+  .tp-footer-logo {
+    img {
+      max-width: 100px !important;
+    }
+  }
+}
+
+// Offcanvas/Hamburger menu logo
+@media #{$xs, $sm} {
+  .offcanvas__logo {
+    display: flex;
+    justify-content: center;
+    
+    a {
+      display: inline-block;
+    }
+    
+    img {
+      max-width: 80px !important;
+      height: auto !important;
+    }
+  }
+}
+
+// Responsive alignment for all sections
+@media #{$xs, $sm} {
+  .row {
+    [class*="col-"] {
+      text-align: center;
+      margin-bottom: 20px;
+      
+      // Exception for form elements
+      input, textarea, select {
+        text-align: left;
+      }
+    }
+  }
+  
+  // Center buttons on mobile
+  .tp-btn, .tp-btn-2 {
+    display: inline-block;
+    width: auto;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  // Center section titles
+  .tp-section-title {
+    text-align: center;
+    
+    h2, h3, h4 {
+      text-align: center;
+    }
+  }
+  
+  // Better spacing for product items
+  .tp-product-item, .tp-product-item-2 {
+    margin-bottom: 30px;
+  }
+}
+
+// Tablet optimizations
+@media #{$md} {
+  .container {
+    max-width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  // Better spacing on tablet
+  .row {
+    [class*="col-"] {
+      margin-bottom: 25px;
+    }
+  }
+}
+
+// Additional mobile optimizations
+@media #{$xs} {
+  // Reduce margins on very small screens
+  .mb-50, .mb-70, .mb-90 {
+    margin-bottom: 30px !important;
+  }
+  
+  .mt-50, .mt-70, .mt-90 {
+    margin-top: 30px !important;
+  }
+  
+  // Better padding
+  .pt-40, .pb-40 {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+  }
+}
+
+// Ensure images are responsive
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Responsive video containers
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Center content on mobile for better UX
+@media #{$xs, $sm} {
+  // Center all text content
+  .text-start, .text-left {
+    text-align: center !important;
+  }
+  
+  // But keep form inputs left-aligned
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    text-align: left !important;
+  }
+  
+  // Center navigation elements
+  .tp-header-action,
+  .tp-header-search {
+    justify-content: center;
+  }
+  
+  // Better spacing for lists
+  ul, ol {
+    padding-left: 20px;
+  }
+}
+
+// Enhanced mobile responsive styles for all pages
+@media #{$xs, $sm} {
+  // Ensure all images are fluid and responsive
+  img, Image {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  // Make all buttons responsive and centered
+  button, .btn, .tp-btn, .tp-btn-2, a[class*="btn"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px 20px !important;
+    font-size: clamp(14px, 2vw, 16px) !important;
+    text-align: center !important;
+    display: block !important;
+    margin: 10px auto !important;
+    box-sizing: border-box;
+  }
+  
+  // Center all headings and text
+  h1, h2, h3, h4, h5, h6, p, span, div, label {
+    text-align: center !important;
+  }
+  
+  // Exception for form labels and inputs
+  label {
+    text-align: left !important;
+  }
+  
+  input, textarea, select {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    font-size: clamp(14px, 2vw, 16px) !important;
+  }
+  
+  // Section titles
+  .tp-section-title, .section-title {
+    text-align: center !important;
+    margin-bottom: 30px !important;
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-size: clamp(24px, 5vw, 36px) !important;
+      text-align: center !important;
+      margin-bottom: 15px !important;
+    }
+    
+    p {
+      font-size: clamp(14px, 2.5vw, 18px) !important;
+      text-align: center !important;
+      margin: 0 auto !important;
+      max-width: 100% !important;
+    }
+  }
+  
+  // Product items
+  .tp-product-item, .tp-product-item-2, .product-item {
+    margin-bottom: 30px !important;
+    text-align: center !important;
+    
+    img {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+    }
+    
+    .tp-product-content, .product-content {
+      text-align: center !important;
+      padding: 15px !important;
+      
+      h3, h4, h5 {
+        font-size: clamp(16px, 3vw, 20px) !important;
+        text-align: center !important;
+        margin-bottom: 10px !important;
+      }
+      
+      p {
+        font-size: clamp(13px, 2vw, 15px) !important;
+        text-align: center !important;
+      }
+    }
+  }
+  
+  // Breadcrumb
+  .breadcrumb, .tp-breadcrumb {
+    text-align: center !important;
+    padding: 15px 0 !important;
+    
+    ul, ol {
+      justify-content: center !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+    }
+  }
+  
+  // Cards and containers
+  .card, .tp-card {
+    margin-bottom: 20px !important;
+    text-align: center !important;
+    
+    .card-body, .card-content {
+      padding: 20px 15px !important;
+      text-align: center !important;
+    }
+  }
+  
+  // Tables - make them scrollable on mobile
+  table {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+    font-size: clamp(12px, 2vw, 14px) !important;
+    
+    thead, tbody {
+      display: block;
+    }
+    
+    tr {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+    
+    th, td {
+      min-width: 100px;
+      padding: 8px 10px !important;
+      font-size: clamp(11px, 2vw, 13px) !important;
+    }
+  }
+  
+  // Invoice/Order pages
+  .invoice__area, .invoice__wrapper {
+    padding: 20px 10px !important;
+    
+    .invoice__header, .invoice__customer, .invoice__order-table {
+      padding: 15px 10px !important;
+      text-align: center !important;
+    }
+    
+    .invoice__left, .invoice__right {
+      text-align: center !important;
+      margin-bottom: 20px !important;
+    }
+    
+    .invoice__print {
+      text-align: center !important;
+      margin-top: 20px !important;
+      
+      button {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
+  }
+  
+  // Forms
+  form {
+    width: 100% !important;
+    max-width: 100% !important;
+    
+    .form-group, .form-row {
+      margin-bottom: 20px !important;
+      width: 100% !important;
+    }
+    
+    .form-control {
+      width: 100% !important;
+      font-size: clamp(14px, 2vw, 16px) !important;
+    }
+  }
+  
+  // Hero sections
+  .hero, .tp-hero, .hero-banner {
+    padding: 40px 15px !important;
+    text-align: center !important;
+    
+    h1, h2 {
+      font-size: clamp(28px, 6vw, 42px) !important;
+      text-align: center !important;
+      margin-bottom: 20px !important;
+    }
+    
+    p {
+      font-size: clamp(14px, 3vw, 18px) !important;
+      text-align: center !important;
+      margin-bottom: 25px !important;
+    }
+    
+    img {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 20px auto !important;
+    }
+  }
+  
+  // Blog listing cards
+  .blog-item {
+    text-align: center !important;
+    margin-bottom: 30px !important;
+    
+    img {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 20px 0 !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-size: clamp(20px, 4vw, 28px) !important;
+      text-align: center !important;
+      margin: 20px 0 15px !important;
+    }
+    
+    p {
+      font-size: clamp(14px, 2.5vw, 16px) !important;
+      text-align: center !important;
+      line-height: 1.6 !important;
+      margin-bottom: 15px !important;
+    }
+  }
+  
+  // Shop and product pages
+  .shop-area, .product-area {
+    .row {
+      margin: 0 !important;
+      
+      [class*="col-"] {
+        padding: 0 10px !important;
+        margin-bottom: 20px !important;
+      }
+    }
+  }
+  
+  // Cart and checkout
+  .cart-area, .checkout-area {
+    .table-responsive {
+      overflow-x: auto !important;
+    }
+    
+    .cart-total, .checkout-total {
+      margin-top: 30px !important;
+      padding: 20px 15px !important;
+      text-align: center !important;
+    }
+  }
+  
+  // Profile pages
+  .profile-area, .account-area {
+    .profile-content, .account-content {
+      padding: 20px 15px !important;
+      text-align: center !important;
+    }
+  }
+  
+  // Contact forms
+  .contact-area, .contact-form {
+    padding: 30px 15px !important;
+    
+    .contact-info {
+      margin-bottom: 30px !important;
+      text-align: center !important;
+    }
+  }
+  
+  // About pages
+  .about-area {
+    padding: 30px 15px !important;
+    text-align: center !important;
+    
+    img {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 20px 0 !important;
+    }
+  }
+  
+  // Error pages
+  .error-area, .not-found {
+    padding: 60px 15px !important;
+    text-align: center !important;
+    
+    h1 {
+      font-size: clamp(48px, 10vw, 72px) !important;
+    }
+    
+    h2 {
+      font-size: clamp(24px, 5vw, 36px) !important;
+    }
+  }
+  
+  // Reduce font sizes for better mobile readability
+  .small-text, small {
+    font-size: clamp(11px, 1.8vw, 13px) !important;
+  }
+  
+  // Ensure all containers have proper padding
+  .container, .container-fluid {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  
+  // Grid adjustments
+  .row {
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+    
+    [class*="col-"] {
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+    }
+  }
+  
+  // Spacing adjustments
+  .mb-50, .mb-60, .mb-70, .mb-80, .mb-90, .mb-100 {
+    margin-bottom: 30px !important;
+  }
+  
+  .mt-50, .mt-60, .mt-70, .mt-80, .mt-90, .mt-100 {
+    margin-top: 30px !important;
+  }
+  
+  .pt-50, .pt-60, .pt-70, .pt-80, .pt-90, .pt-100, .pt-115 {
+    padding-top: 40px !important;
+  }
+  
+  .pb-50, .pb-60, .pb-70, .pb-80, .pb-90, .pb-100, .pb-115 {
+    padding-bottom: 40px !important;
+  }
+}
+
+// Additional small screen optimizations
+@media #{$xs} {
+  // Extra small screens
+  h1 { font-size: clamp(24px, 8vw, 32px) !important; }
+  h2 { font-size: clamp(20px, 7vw, 28px) !important; }
+  h3 { font-size: clamp(18px, 6vw, 24px) !important; }
+  h4 { font-size: clamp(16px, 5vw, 20px) !important; }
+  h5 { font-size: clamp(14px, 4vw, 18px) !important; }
+  h6 { font-size: clamp(13px, 3.5vw, 16px) !important; }
+  
+  p, body {
+    font-size: clamp(13px, 2.5vw, 15px) !important;
+  }
+  
+  button, .btn {
+    padding: 10px 18px !important;
+    font-size: clamp(13px, 2.5vw, 15px) !important;
+  }
+}

@@ -20,13 +20,19 @@
 	@extend %tp-transition-common;
 
 	@media #{$xs}{
-		right: 20px;
-		bottom: 20px;
+		right: 12px;
+		bottom: 12px;
+		height: 40px;
+		width: 40px;
 	}
 	&.back-to-top-btn-show{
 		visibility: visible;
 		opacity: 1;
 		bottom: 50px;
+
+		@media #{$sm, $xs}{
+			bottom: 16px;
+		}
 	}
 }
 
@@ -48,6 +54,12 @@
 
 	&:hover{
 		@include transform(translateY(-4px));
+	}
+
+	@media #{$sm, $xs}{
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
 	}
 
 }

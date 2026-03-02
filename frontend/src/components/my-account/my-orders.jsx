@@ -13,6 +13,11 @@ const MyOrders = ({ orderData }) => {
   
   return (
     <div className="profile__ticket table-responsive">
+      {order_items && order_items?.length > 0 && (
+        <div className="profile__ticket-scroll-hint d-md-none">
+          Swipe horizontally to view all columns
+        </div>
+      )}
       {(!order_items || order_items?.length === 0) && (
         <div
           style={{ height: "210px" }}

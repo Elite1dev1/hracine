@@ -2,12 +2,16 @@ import React from "react";
 import Image from "next/image";
 // internal
 import author_img from "@assets/img/users/mariam.jpg";
-import social_data from "@/data/social-data";
 
 const BlogDetailsAuthor = () => {
+  const instagramAuthor = {
+    link: "https://www.instagram.com",
+    icon: "fa-brands fa-instagram",
+  };
+
   return (
     <div
-      className="tp-postbox-details-author d-sm-flex align-items-start"
+      className="tp-postbox-details-author d-flex flex-column align-items-center"
       data-bg-color="#F4F7F9"
     >
       <div className="tp-postbox-details-author-thumb">
@@ -25,11 +29,9 @@ const BlogDetailsAuthor = () => {
         </p>
 
         <div className="tp-postbox-details-author-social">
-          {social_data.map((s) => (
-            <a href={s.link} target="_blank" className="me-1" key={s.id}>
-              <i className={s.icon}></i>
-            </a>
-          ))}
+          <a href={instagramAuthor.link} target="_blank" rel="noreferrer" className="me-1">
+            <i className={instagramAuthor.icon}></i>
+          </a>
         </div>
       </div>
     </div>

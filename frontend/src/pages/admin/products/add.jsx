@@ -674,7 +674,7 @@ const AddProductPage = () => {
                   style={{ width: '18px', height: '18px', cursor: 'pointer' }}
                 />
                 <span style={{ fontSize: '16px', color: '#555' }}>
-                  Coming Soon
+                  free shipping on orders above #25,000
                   <span style={{ fontSize: '12px', color: '#888', marginLeft: '8px' }}>
                     (Product will appear in Featured Rituals section)
                   </span>

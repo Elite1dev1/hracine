@@ -5,34 +5,24 @@ const notifySuccess = (message) =>
   toast.success(message, {
     position: 'top-center',
     autoClose: 3000,
-    hideProgressBar: false,
+    hideProgressBar: true,
     closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
+    pauseOnHover: false,
+    draggable: false,
     progress: undefined,
+    className: 'tp-toast-mobile',
   });
 
 const notifyError = (message) =>
   toast.error(message, {
     position: 'top-center',
     autoClose: 3000,
-    hideProgressBar: false,
+    hideProgressBar: true,
     closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
+    pauseOnHover: false,
+    draggable: false,
     progress: undefined,
+    className: 'tp-toast-mobile',
   });
-
-<ToastContainer
-  position="top-center"
-  autoClose={3000}
-  hideProgressBar={false}
-  newestOnTop={false}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-/>;
 
 export { ToastContainer, notifySuccess, notifyError };

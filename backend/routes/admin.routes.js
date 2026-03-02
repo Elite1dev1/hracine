@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../middleware/verifyToken");
+const authorize = require("../middleware/authorization");
 const {
   registerAdmin,
   loginAdmin,
@@ -21,8 +23,8 @@ const {
   createDefaultAdmin,
 } = require("../controller/admin.controller");
 const {
-  getSettings,
-  updateSettings,
+  getAdminSettings,
+  updateAdminSettings,
 } = require("../controller/settings.controller");
 
 //register a staff
@@ -80,7 +82,17 @@ router.get("/orders/all", getAllOrders);
 router.post("/create-default", createDefaultAdmin);
 
 // settings routes
-router.get("/settings", getSettings);
-router.patch("/settings", updateSettings);
+router.get(
+  "/settings",
+  verifyToken,
+  authorize("Admin", "Super Admin", "Manager", "CEO"),
+  getAdminSettings
+);
+router.patch(
+  "/settings",
+  verifyToken,
+  authorize("Admin", "Super Admin", "Manager", "CEO"),
+  updateAdminSettings
+);
 
 module.exports = router;

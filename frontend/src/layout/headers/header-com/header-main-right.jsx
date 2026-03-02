@@ -41,13 +41,13 @@ const HeaderMainRight = ({ setIsCanvasOpen }) => {
           <div className="tp-header-login-content d-none d-xl-block">
             {!userInfo?.name && (
               <Link href="/login">
-                <span>Hello,</span>
+                <span style={{ color: '#000000' }}>Hello,</span>
               </Link>
             )}
-            {userInfo?.name && <span>Hello, {userInfo?.name}</span>}
+            {userInfo?.name && <span style={{ color: '#000000' }}>Hello, {userInfo?.name}</span>}
             <div className="tp-header-login-title">
-              {!userInfo?.name && <Link href="/login">Sign In</Link>}
-              {userInfo?.name && <Link href="/profile">Your Account</Link>}
+              {!userInfo?.name && <Link href="/login" style={{ color: '#000000' }}>Sign In</Link>}
+              {userInfo?.name && <Link href="/profile" style={{ color: '#000000' }}>Your Account</Link>}
             </div>
           </div>
         </div>

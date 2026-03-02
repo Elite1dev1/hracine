@@ -148,16 +148,18 @@
         }
     }
     &-btn{
-        font-size: 16px;
+        font-size: 14px;
         color: var(--tp-common-white);
-        background-color: var(--tp-common-black);
-        padding: 9px 30px;
+        background-color: #C47070;
+        padding: 8px 8px;
         display: inline-block;
+        border-radius: 25px;
         @extend %tp-transition;
 
         &:hover{
             color: var(--tp-common-white);
-            background-color: var(--tp-theme-primary);
+            background-color: #D28669;
+            transform: translateY(-2px);
         }
     }
     &-info{
@@ -208,18 +210,21 @@
         }
         &-icon{
             & a{
-                display: inline-block;
-                width: 38px;
-                height: 38px;
-                line-height: 36px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
                 text-align: center;
-                border: 1px solid #E6E7E8;
-                background-color: var(--tp-common-white);
-                color: var(--tp-common-black);
+                background-color: #C47070;
+                color: var(--tp-common-white);
+                font-size: 18px;
+                @extend %tp-transition;
 
                 &:hover{
-                    background-color: var(--tp-theme-primary);
-                    border-color: var(--tp-theme-primary);
+                    background-color: #D28669;
+                    transform: translateY(-2px);
                     color: var(--tp-common-white);
                 }
             }

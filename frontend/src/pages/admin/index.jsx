@@ -48,7 +48,16 @@ const AdminDashboard = () => {
   return (
     <AdminLayout>
       <div>
-        <h1 style={{ marginBottom: '30px', color: '#2c3e50' }}>Dashboard Overview</h1>
+        <h1
+          style={{
+            marginBottom: '22px',
+            color: '#2c3e50',
+            fontSize: 'clamp(1.5rem, 2vw, 1.95rem)',
+            lineHeight: 1.25,
+          }}
+        >
+          Dashboard Overview
+        </h1>
 
         {/* Stats Grid */}
         <div
@@ -83,7 +92,16 @@ const AdminDashboard = () => {
 
         {/* Order Status */}
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ marginBottom: '20px', color: '#2c3e50' }}>Order Status</h2>
+          <h2
+            style={{
+              marginBottom: '16px',
+              color: '#2c3e50',
+              fontSize: 'clamp(1.1rem, 1.55vw, 1.35rem)',
+              lineHeight: 1.3,
+            }}
+          >
+            Order Status
+          </h2>
           <div
             style={{
               display: 'grid',
@@ -112,7 +130,16 @@ const AdminDashboard = () => {
 
         {/* Top Rated Products */}
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ marginBottom: '20px', color: '#2c3e50' }}>Top Rated Products</h2>
+          <h2
+            style={{
+              marginBottom: '16px',
+              color: '#2c3e50',
+              fontSize: 'clamp(1.1rem, 1.55vw, 1.35rem)',
+              lineHeight: 1.3,
+            }}
+          >
+            Top Rated Products
+          </h2>
           <div
             style={{
               backgroundColor: 'white',
@@ -179,7 +206,16 @@ const AdminDashboard = () => {
 
         {/* Most Reviewed Products */}
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ marginBottom: '20px', color: '#2c3e50' }}>Most Reviewed Products</h2>
+          <h2
+            style={{
+              marginBottom: '16px',
+              color: '#2c3e50',
+              fontSize: 'clamp(1.1rem, 1.55vw, 1.35rem)',
+              lineHeight: 1.3,
+            }}
+          >
+            Most Reviewed Products
+          </h2>
           <div
             style={{
               backgroundColor: 'white',
