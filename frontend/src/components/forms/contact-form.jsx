@@ -32,6 +32,12 @@ const ContactForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="contact-form">
+      <style dangerouslySetInnerHTML={{ __html: `
+        #contact-form .tp-contact-btn { background: none !important; padding: 0 !important; border-radius: 0 !important; }
+        .tp-contact-submit-btn, .tp-contact-submit-btn:hover, .tp-contact-submit-btn:focus, .tp-contact-submit-btn:active { background-color: #6b2824 !important; border: none !important; box-shadow: none !important; }
+        .tp-contact-submit-btn:hover { opacity: 0.95; }
+        .tp-contact-submit-btn:focus { outline: none !important; }
+      `}} />
       <div className="tp-contact-input-wrapper">
         <div className="tp-contact-input-box">
           <div className="tp-contact-input">
@@ -62,7 +68,24 @@ const ContactForm = () => {
         </div>
       </div>
       <div className="tp-contact-btn">
-        <button type="submit">Send Message</button>
+        <button
+          type="submit"
+          className="tp-contact-submit-btn"
+          style={{
+            backgroundColor: '#6b2824',
+            border: 'none',
+            color: '#fff',
+            width: '100%',
+            padding: '14px 24px',
+            borderRadius: '12px',
+            fontWeight: 600,
+            fontSize: '16px',
+            cursor: 'pointer',
+            boxShadow: 'none',
+          }}
+        >
+          Send Message
+        </button>
       </div>
     </form>
   );

@@ -1,6 +1,6 @@
 // external
 import React, { useState } from "react";
-import { Navigation, Pagination, EffectFade } from "swiper";
+import { Navigation, Pagination, EffectFade, Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -78,15 +78,20 @@ const HomeHeroSlider = () => {
         <Swiper
           slidesPerView={1}
           spaceBetween={30}
-          loop={false}
+          loop={true}
           effect="fade"
+          speed={300}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
           navigation={{
             nextEl: ".tp-slider-button-next",
             prevEl: ".tp-slider-button-prev",
           }}
           onSlideChange={(swiper) => handleActiveIndex(swiper.activeIndex)}
           pagination={{ el: ".tp-slider-dot", clickable: true }}
-          modules={[Navigation, Pagination, EffectFade]}
+          modules={[Navigation, Pagination, EffectFade, Autoplay]}
           className={`tp-slider-active tp-slider-variation swiper-container ${
             active ? "is-light" : ""
           }`}

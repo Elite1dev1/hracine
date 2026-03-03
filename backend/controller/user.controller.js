@@ -5,6 +5,12 @@ const { sendEmail } = require("../config/email");
 const { generateToken, tokenForVerify } = require("../utils/token");
 const { secret } = require("../config/secret");
 
+/** Base URL for email links (from STORE_URL). Must be set in production. */
+const getClientBaseUrl = () => {
+  const url = (secret.client_url || "").trim().replace(/\/$/, "");
+  return url || null;
+};
+
 // register user
 // sign up
 exports.signup = async (req, res,next) => {
@@ -18,6 +24,15 @@ exports.signup = async (req, res,next) => {
 
       await saved_user.save({ validateBeforeSave: false });
 
+      const baseUrl = getClientBaseUrl();
+      if (!baseUrl) {
+        return res.status(503).json({
+          status: "fail",
+          message:
+            "Email verification is not configured. Set STORE_URL in the server environment to your store frontend URL (e.g. https://yourstore.com).",
+        });
+      }
+
       const mailData = {
         from: secret.email_user,
         to: `${req.body.email}`,
@@ -30,9 +45,9 @@ exports.signup = async (req, res,next) => {
   
           <p style="margin-bottom:20px;">Click this link for active your account</p>
   
-          <a href="${secret.client_url}/email-verify/${token}" style="background:#0989FF;color:white;border:1px solid #0989FF; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Verify Account</a>
+          <a href="${baseUrl}/email-verify/${token}" style="background:#0989FF;color:white;border:1px solid #0989FF; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Verify Account</a>
   
-          <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at hello.hracine@gmail.com</p>
+          <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at support@hracine.com</p>
   
           <p style="margin-bottom:0px;">Thank you</p>
           <strong>Hracine Team</strong>
@@ -164,7 +179,16 @@ exports.forgetPassword = async (req, res,next) => {
       return res.status(404).send({
         message: "User Not found with this email!",
       });
-    } else {
+    }
+    const baseUrl = getClientBaseUrl();
+    if (!baseUrl) {
+      return res.status(503).json({
+        status: "fail",
+        message:
+          "Password reset emails are not configured. Set STORE_URL in the server environment to your store frontend URL (e.g. https://yourstore.com).",
+      });
+    }
+    {
       const token = tokenForVerify(user);
       const body = {
         from: secret.email_user,
@@ -177,9 +201,9 @@ exports.forgetPassword = async (req, res,next) => {
 
         <p style="margin-bottom:20px;">Click this link for reset your password</p>
 
-        <a href=${secret.client_url}/forget-password/${token} style="background:#0989FF;color:white;border:1px solid #0989FF; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Reset Password</a>
+        <a href="${baseUrl}/forget-password/${token}" style="background:#0989FF;color:white;border:1px solid #0989FF; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Reset Password</a>
 
-        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at hello.hracine@gmail.com</p>
+        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at support@hracine.com</p>
 
         <p style="margin-bottom:0px;">Thank you</p>
         <strong>Hracine Team</strong>

@@ -1,0 +1,197 @@
+/* Mobile navigation drawer redesign – applies only when .offcanvas__mobile-redesign is present */
+@use '../utils' as *;
+
+/* Drawer: fixed height so flex children can shrink; only the menu column scrolls */
+.offcanvas__area.offcanvas__mobile-redesign {
+  @include tp-transition-mul((transform 250ms ease-out));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  height: 100vh;
+}
+
+/* Close button: no grey box, simple X, padding for 44px tap target */
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__close {
+  top: 12px;
+  right: 12px;
+}
+
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__close-btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  background-color: transparent !important;
+  color: var(--tp-common-black);
+  border: none;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s ease, opacity 0.2s ease;
+
+  &:hover {
+    background-color: transparent !important;
+    color: var(--tp-common-black);
+    opacity: 0.8;
+  }
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+/* Logo: make visible on white (subtle background) */
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__logo a {
+  display: inline-block;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 50%;
+  line-height: 0;
+}
+
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__logo img {
+  display: block;
+}
+
+/* Wrapper: flex column, must shrink so content can scroll (override base min-height: 100%) */
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0 !important;
+  padding: 16px 20px 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+/* Scrollable middle: logo + nav; only this part scrolls so CONTENT (Blog, Community) is visible */
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__content {
+  flex: 1 1 0;
+  min-height: 0 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__top {
+  margin-bottom: 8px !important;
+  flex-shrink: 0;
+}
+
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__nav {
+  flex-shrink: 0;
+  min-height: 0;
+}
+
+/* Grouped menu sections */
+.tp-mobile-drawer-menu {
+  padding: 0 0 0 4px;
+}
+
+.tp-mobile-drawer-section {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tp-mobile-drawer-section-head {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.tp-mobile-drawer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tp-mobile-drawer-list li {
+  margin: 0;
+}
+
+.tp-mobile-drawer-link {
+  display: block;
+  min-height: 40px;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--tp-common-black);
+  text-decoration: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 6px;
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+
+  &:hover {
+    color: #85312C;
+  }
+  &:active {
+    background-color: rgba(133, 49, 44, 0.08);
+    color: #85312C;
+  }
+}
+
+/* Bottom: fixed so Contact + currency/language are always visible (no scrolling to find them) */
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__bottom {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 380px;
+  left: auto;
+  padding: 16px 20px 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tp-border-primary);
+  background: #fff;
+  z-index: 2;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 380px) {
+  .offcanvas__area.offcanvas__mobile-redesign .offcanvas__bottom {
+    width: 100%;
+  }
+}
+
+.offcanvas__contact-btn-redesign {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff !important;
+  background-color: #85312C !important;
+  border: none !important;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none !important;
+  box-shadow: 0 2px 8px rgba(133, 49, 44, 0.35);
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: #6b2824 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(133, 49, 44, 0.4);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}

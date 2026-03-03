@@ -164,4 +164,10 @@ export const mobile_menu = [
     title: 'Consultations',
     link: '/consultation',
   },
+  {
+    id: 8,
+    single_link: true,
+    title: 'Community',
+    link: '/community',
+  },
 ]

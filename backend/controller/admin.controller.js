@@ -133,7 +133,7 @@ const forgetPassword = async (req, res,next) => {
 
         <a href=${secret.admin_url}/forget-password/${token} style="background:#0989FF;color:white;border:1px solid #0989FF; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Reset Password</a>
 
-        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at hello.hracine@gmail.com</p>
+        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at support@hracine.com</p>
 
         <p style="margin-bottom:0px;">Thank you</p>
         <strong>Hraine Team</strong>

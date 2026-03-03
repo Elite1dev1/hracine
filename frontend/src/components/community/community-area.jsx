@@ -3,8 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 // internal
 import { ArrowRightLong } from '@/svg';
-// You'll need to add placeholder images or use existing ones
-import community_img from '@assets/img/about/about-1.jpg';
 
 const CommunityArea = () => {
   const benefits = [
@@ -28,8 +26,45 @@ const CommunityArea = () => {
     }
   ];
 
+  const openNewsletterModal = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('open-newsletter-modal'));
+    }
+  };
+
+  const WHATSAPP_CHAT_URL = 'https://chat.whatsapp.com/KZNgF0snHw5DwTdODVk8oH';
+
   return (
     <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .tp-community-explore-btn { background-color: #85312C !important; border-color: #85312C !important; }
+        .tp-community-explore-btn:hover { background-color: #6b2824 !important; border-color: #6b2824 !important; }
+        .tp-community-ugc-area .tp-community-ugc-content { text-align: center !important; padding-right: 0 !important; }
+        .tp-community-ugc-area .tp-community-ugc-content .tp-section-title,
+        .tp-community-ugc-area .tp-community-ugc-content .tp-section-title-wrapper,
+        .tp-community-ugc-area .tp-community-ugc-content p { text-align: center !important; }
+        .tp-community-ugc-area .tp-community-ugc-cta { display: flex !important; justify-content: center !important; }
+        .tp-community-ugc-visual-img { border-radius: 8px; overflow: hidden; max-width: 100%; margin-left: auto; margin-right: auto; }
+        .tp-community-ugc-visual-img img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: cover; vertical-align: middle; }
+        @media (min-width: 992px) {
+          .tp-community-ugc-visual-img { max-width: 380px; }
+          .tp-community-ugc-visual-img img { max-height: 480px; }
+        }
+        @media (max-width: 991px) {
+          .tp-community-ugc-visual-img { margin-top: 2rem; max-width: 420px; }
+          .tp-community-ugc-visual-img img { max-height: 360px; }
+        }
+        @media (max-width: 575.98px) {
+          .tp-community-ugc-visual-img { max-width: 100%; margin-left: 0; margin-right: 0; }
+          .tp-community-ugc-visual-img img { max-height: 320px; }
+        }
+        @media (max-width: 767.98px) {
+          .tp-community-hero-area { padding-top: 56px !important; }
+          .tp-community-ugc-mobile-center .tp-community-ugc-content { text-align: center !important; }
+          .tp-community-ugc-mobile-center .tp-community-ugc-content p { text-align: center !important; }
+          .tp-community-ugc-mobile-center .tp-community-ugc-cta { justify-content: center; display: flex !important; }
+        }
+      `}} />
       {/* Hero Section */}
       <section className="tp-community-hero-area pt-120 pb-80">
         <div className="container">
@@ -92,11 +127,11 @@ const CommunityArea = () => {
       </section>
 
       {/* UGC & Challenges Section */}
-      <section className="tp-community-ugc-area pt-100 pb-100 grey-bg">
+      <section className="tp-community-ugc-area tp-community-ugc-mobile-center pt-100 pb-100 grey-bg">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-xl-6 col-lg-6">
-              <div className="tp-community-ugc-content pr-50">
+              <div className="tp-community-ugc-content">
                 <div className="tp-section-title-wrapper mb-40">
                   <h3 className="tp-section-title" style={{ fontSize: '36px', marginBottom: '20px' }}>
                     Share Your Journey
@@ -108,8 +143,8 @@ const CommunityArea = () => {
                   <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#55585B', marginBottom: '40px' }}>
                     Tag us on Instagram and use #HracineRoutine for a chance to be featured on our page!
                   </p>
-                  <div className="tp-community-ugc-cta">
-                    <Link href="/shop" className="tp-btn tp-btn-2">
+                  <div className="tp-community-ugc-cta d-flex justify-content-center">
+                    <Link href="/shop" className="tp-btn tp-btn-2 tp-community-explore-btn">
                       Explore Our Products <ArrowRightLong />
                     </Link>
                   </div>
@@ -117,27 +152,15 @@ const CommunityArea = () => {
               </div>
             </div>
             <div className="col-xl-6 col-lg-6">
-              <div className="tp-community-ugc-visual">
-                <div style={{ 
-                  backgroundColor: '#f8f8f8', 
-                  borderRadius: '8px', 
-                  padding: '60px 40px',
-                  textAlign: 'center',
-                  minHeight: '400px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '48px', marginBottom: '20px' }}>📸</div>
-                    <p style={{ fontSize: '18px', color: '#55585B' }}>
-                      Your #HracineRoutine photos will appear here
-                    </p>
-                    <p style={{ fontSize: '14px', color: '#90969B', marginTop: '10px' }}>
-                      Follow us on Instagram to see community posts
-                    </p>
-                  </div>
-                </div>
+              <div className="tp-community-ugc-visual tp-community-ugc-visual-img">
+                <Image
+                  src="/comuunity.jpg"
+                  alt="Community - Share your journey"
+                  width={380}
+                  height={480}
+                  sizes="(max-width: 575px) 100vw, (max-width: 991px) 420px, 380px"
+                  style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                />
               </div>
             </div>
           </div>
@@ -162,12 +185,12 @@ const CommunityArea = () => {
                   scalp-first hair care.
                 </p>
                 <div className="tp-community-join-buttons">
-                  <Link href="/shop" className="tp-btn tp-btn-2 mr-20">
-                    Shop Products <ArrowRightLong />
-                  </Link>
-                  <Link href="/consultation" className="tp-btn tp-btn-border">
-                    Book Consultation <ArrowRightLong />
-                  </Link>
+                  <button type="button" onClick={openNewsletterModal} className="tp-btn tp-btn-2 mr-20">
+                    Subscribe <ArrowRightLong />
+                  </button>
+                  <a href={WHATSAPP_CHAT_URL} target="_blank" rel="noopener noreferrer" className="tp-btn tp-btn-border">
+                    Join our chat
+                  </a>
                 </div>
               </div>
             </div>

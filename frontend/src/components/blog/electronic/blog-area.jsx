@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Autoplay } from 'swiper';
 // internal
-import { ArrowRightLong, ShapeLine } from '@/svg';
+import { ArrowRightLong } from '@/svg';
 import BlogItem from './blog-item';
 import Link from 'next/link';
 import { useGetPublishedBlogsQuery } from '@/redux/features/blogApi';
@@ -73,7 +73,6 @@ const BlogArea = () => {
           <div className="col-xl-4 col-md-6">
             <div className="tp-section-title-wrapper mb-50">
               <h3 className="tp-section-title">Latest news & articles
-                <ShapeLine />
               </h3>
             </div>
           </div>
@@ -116,7 +115,6 @@ const BlogArea = () => {
                 marginBottom: '0'
               }}>
                 Latest news & articles
-                <ShapeLine />
               </h3>
             </div>
 

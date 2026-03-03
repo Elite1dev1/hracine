@@ -1,11 +1,47 @@
+/* ReactModal content wrapper - no overlay, allow content to show */
+.modal {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  background: transparent !important;
+}
+
+.modal::before,
+.modal::after {
+  display: none !important;
+}
+
 .modalContent {
-  background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+  background: #85312C;
   border-radius: 20px;
-  padding: 40px 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 56px 30px 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
   position: relative;
   text-align: center;
   animation: fadeIn 0.3s ease-in-out;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Close button: inside modal top-right, clear of the 20px border-radius */
+.closeButtonWrapper {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.closeButtonWrapper .closeButton {
+  pointer-events: auto;
 }
 
 @keyframes fadeIn {
@@ -20,25 +56,44 @@
 }
 
 .closeButton {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(255, 255, 255, 0.8);
-  border: none;
+  position: static;
+  flex-shrink: 0;
   width: 36px;
   height: 36px;
+  min-width: 36px;
+  min-height: 36px;
   border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  color: #8b7355;
+  transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+  outline: none;
+  overflow: visible;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.closeButton svg {
+  display: block;
+  flex-shrink: 0;
 }
 
 .closeButton:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: scale(1.1);
+  opacity: 0.85;
+  transform: scale(1.05);
+  color: #fff;
+}
+
+.closeButton:focus {
+  outline: none;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
 }
 
 .emoji {
@@ -60,14 +115,16 @@
   font-family: "'Playfair Display', serif";
   font-size: clamp(24px, 3vw, 32px);
   font-weight: 700;
-  color: #8b7355;
+  color: #fff;
   margin: 0 0 15px 0;
   line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .bodyText {
   font-size: clamp(14px, 1.5vw, 16px);
-  color: #6d5d47;
+  color: rgba(255, 255, 255, 0.92);
   line-height: 1.6;
   margin: 0 0 25px 0;
   max-width: 400px;
@@ -85,42 +142,44 @@
 .emailInput {
   width: 100%;
   padding: 14px 20px;
-  border: 2px solid #d4a574;
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   font-size: 16px;
-  background: white;
-  color: #8b7355;
-  transition: all 0.3s ease;
+  background: #85312C;
+  color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
 }
 
 .emailInput:focus {
   outline: none;
-  border-color: #c47070;
-  box-shadow: 0 0 0 3px rgba(196, 112, 112, 0.1);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 .emailInput::placeholder {
-  color: #a0826d;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .subscribeButton {
   width: 100%;
   padding: 14px 20px;
-  background: linear-gradient(135deg, #c47070 0%, #d28669 100%);
-  color: white;
-  border: none;
+  background: #fff;
+  color: #85312C;
+  border: 2px solid #fff;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(196, 112, 112, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .subscribeButton:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(196, 112, 112, 0.4);
+  background: rgba(255, 255, 255, 0.95);
+  color: #85312C;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .subscribeButton:active:not(:disabled) {
@@ -134,9 +193,8 @@
 
 .disclaimer {
   font-size: 12px;
-  color: #8b7355;
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
-  opacity: 0.8;
 }
 
 .successContent {
@@ -162,14 +220,14 @@
   font-family: "'Playfair Display', serif";
   font-size: clamp(22px, 3vw, 28px);
   font-weight: 700;
-  color: #8b7355;
+  color: #fff;
   margin: 0 0 15px 0;
   line-height: 1.3;
 }
 
 .successText {
   font-size: clamp(14px, 1.5vw, 16px);
-  color: #6d5d47;
+  color: rgba(255, 255, 255, 0.92);
   line-height: 1.6;
   margin: 0;
 }
@@ -206,13 +264,20 @@
 
 @media (max-width: 480px) {
   .modalContent {
-    padding: 25px 15px;
+    padding: 52px 15px 25px;
+  }
+
+  .closeButtonWrapper {
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
   }
 
   .closeButton {
     width: 32px;
     height: 32px;
-    top: 10px;
-    right: 10px;
+    min-width: 32px;
+    min-height: 32px;
   }
 }

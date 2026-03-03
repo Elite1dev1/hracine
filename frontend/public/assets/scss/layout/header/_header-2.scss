@@ -5,7 +5,7 @@
 
 .#{$theme-prifix}-header{
     &-area{
-        background-color: #C47070;
+        background-color: #85312C;
     }
     $self : &;
     &-top{
@@ -269,14 +269,14 @@
 .tp-header-area .tp-header-bottom-2.tp-header-sticky.header-sticky,
 header .tp-header-bottom-2.tp-header-sticky.header-sticky,
 .tp-header-style-darkRed .tp-header-bottom-2.tp-header-sticky.header-sticky {
-    background-color: #C47070 !important;
-    background: #C47070 !important;
+    background-color: #85312C !important;
+    background: #85312C !important;
     background-image: none !important;
 }
 
 // Mobile header hide/show on scroll - always fixed on mobile
 .tp-header-bottom-2 {
-    background-color: #D28669;
+    background-color: #85312C;
     
     @media #{$xs, $sm, $md} {
         position: fixed !important;
@@ -285,7 +285,7 @@ header .tp-header-bottom-2.tp-header-sticky.header-sticky,
         right: 0;
         width: 100%;
         z-index: 999;
-        background-color: #D28669;
+        background-color: #85312C;
         box-shadow: 0px 2px 6px rgba(1, 15, 28, 0.16);
         transition: transform 0.3s ease, opacity 0.3s ease;
         
@@ -303,10 +303,10 @@ header .tp-header-bottom-2.tp-header-sticky.header-sticky,
     
     // Ensure sticky state also has correct background
     &.header-sticky {
-        background-color: #C47070 !important;
+        background-color: #85312C !important;
         
         @media #{$xs, $sm, $md} {
-            background-color: #D28669 !important;
+            background-color: #85312C !important;
         }
     }
 }
@@ -410,7 +410,7 @@ header .tp-header-bottom-2.tp-header-sticky.header-sticky,
 body .tp-header-area .tp-header-bottom-2.tp-header-sticky.header-sticky,
 body #header-sticky.tp-header-bottom-2.tp-header-sticky.header-sticky,
 html body .tp-header-style-darkRed .tp-header-bottom-2.tp-header-sticky.header-sticky {
-    background-color: #C47070 !important;
-    background: #C47070 !important;
+    background-color: #85312C !important;
+    background: #85312C !important;
     background-image: none !important;
 }

@@ -10,7 +10,7 @@ const FooterTwo = () => {
   return (
     <>
       <footer>
-        <div className="tp-footer-area tp-footer-style-2 tp-footer-style-3 tp-footer-style-4" data-bg-color="#D28669" style={{ backgroundColor: `#D28669` }}>
+        <div className="tp-footer-area tp-footer-style-2 tp-footer-style-3 tp-footer-style-4" data-bg-color="#85312C" style={{ backgroundColor: `#85312C` }}>
           <div className="tp-footer-top pt-95 pb-40">
             <div className="container">
               {/* Desktop: Original 4-column layout */}
@@ -50,7 +50,7 @@ const FooterTwo = () => {
                             </span>
                           </div>
                           <div className="tp-footer-contact-content">
-                            <p><a href="mailto:hello.hracine@gmail.com">hello.hracine@gmail.com</a></p>
+                            <p><a href="mailto:support@hracine.com">support@hracine.com</a></p>
                           </div>
                         </div>
                         <div className="tp-footer-contact-item d-flex align-items-start">
@@ -192,7 +192,7 @@ const FooterTwo = () => {
                               </span>
                             </div>
                             <div className="tp-footer-contact-content">
-                              <p><a href="mailto:hello.hracine@gmail.com">hello.hracine@gmail.com</a></p>
+                              <p><a href="mailto:support@hracine.com">support@hracine.com</a></p>
                             </div>
                           </div>
                           <div className="tp-footer-contact-item d-flex align-items-start d-none d-md-flex">

@@ -24,16 +24,16 @@ const ContactArea = () => {
                 <div className="tp-contact-info-simple text-center mt-50">
                   <p style={{ fontSize: '16px', color: '#55585B', marginBottom: '20px' }}>
                     <strong>Support Email:</strong>{" "}
-                    <a href="mailto:support@rootsandrituals.com" style={{ color: '#C47070', textDecoration: 'none' }}>
-                      support@rootsandrituals.com
+                    <a href="mailto:support@hracine.com" style={{ color: '#C47070', textDecoration: 'none' }}>
+                      support@hracine.com
                     </a>
                   </p>
                   <div className="tp-contact-social-icon" style={{ marginTop: '30px' }}>
-                    <a href="#" style={{ margin: '0 10px' }}>
+                    <a href="https://www.instagram.com/theroot.tribe?igsh=MWwyM2U0cWk5djF3bQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" style={{ margin: '0 10px' }} aria-label="Instagram">
                       <i className="fa-brands fa-instagram"></i>
                     </a>
-                    <a href="#" style={{ margin: '0 10px' }}>
-                      <i className="fa-brands fa-twitter"></i>
+                    <a href="https://chat.whatsapp.com/KZNgF0snHw5DwTdODVk8oH" target="_blank" rel="noopener noreferrer" style={{ margin: '0 10px' }} aria-label="WhatsApp">
+                      <i className="fa-brands fa-whatsapp"></i>
                     </a>
                   </div>
                 </div>

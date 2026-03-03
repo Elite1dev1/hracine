@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useGetProductTypeQuery } from "@/redux/features/productApi";
-import { ShapeLine } from "@/svg";
 import Link from "next/link";
 import Image from "next/image";
 import ErrorMsg from "@/components/common/error-msg";
@@ -27,9 +26,9 @@ const FeaturedRituals = () => {
     content = <ErrorMsg msg="No Products found!" />;
   }
   if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0, 4); // Show only 4 products
+    const product_items = products.data.slice(0, 4); // 4 on desktop; mobile shows 2 via CSS
     content = product_items.map((prd, i) => (
-      <div key={i} className="col-xl-3 col-lg-3 col-sm-6" style={{
+      <div key={i} className="col-xl-3 col-lg-3 col-sm-6 tp-featured-rituals-col" style={{
         paddingLeft: '10px',
         paddingRight: '10px',
         marginBottom: 'clamp(20px, 3vw, 30px)'
@@ -120,7 +119,10 @@ const FeaturedRituals = () => {
                 display: 'inline-block',
                 width: 'auto',
                 maxWidth: '100%',
-                borderRadius: '6px'
+                borderRadius: '6px',
+                backgroundColor: '#85312C',
+                borderColor: '#85312C',
+                color: '#fff'
               }}>
                 Explore Rituals
               </Link>
@@ -132,10 +134,17 @@ const FeaturedRituals = () => {
   }
 
   return (
-    <section className="tp-featured-rituals-area pt-100 pb-100 grey-bg" style={{
+    <section className="tp-featured-rituals-area tp-featured-rituals-mobile-two pt-100 pb-100 grey-bg" style={{
       paddingTop: 'clamp(40px, 8vw, 100px)',
       paddingBottom: 'clamp(40px, 8vw, 100px)'
     }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 767.98px) {
+          .tp-featured-rituals-mobile-two .tp-featured-rituals-col:nth-child(n+3) {
+            display: none !important;
+          }
+        }
+      `}} />
       <div className="container">
         <div className="row">
           <div className="col-xxl-12">
@@ -148,7 +157,6 @@ const FeaturedRituals = () => {
                 textAlign: 'center'
               }}>
                 Featured Routine
-                <ShapeLine />
               </h2>
               <p style={{ 
                 fontSize: 'clamp(14px, 2.5vw, 18px)', 

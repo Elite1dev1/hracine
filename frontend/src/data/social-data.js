@@ -1,29 +1,22 @@
-
 const social_data = [
   {
-    id:1,
-    link:'https://www.facebook.com',
-    icon:'fa-brands fa-facebook-f',
-    title:'Facebook'
+    id: 1,
+    link: 'https://pin.it/7A0JjyP8x',
+    icon: 'fa-brands fa-pinterest-p',
+    title: 'Pinterest'
   },
   {
-    id:2,
-    link:'https://twitter.com',
-    icon:'fa-brands fa-twitter',
-    title:'Twitter'
+    id: 2,
+    link: 'https://chat.whatsapp.com/KZNgF0snHw5DwTdODVk8oH',
+    icon: 'fa-brands fa-whatsapp',
+    title: 'WhatsApp'
   },
   {
-    id:3,
-    link:'https://www.linkedin.com/in/shuvok/',
-    icon:'fa-brands fa-linkedin-in',
-    title:'Linkedin'
-  },
-  {
-    id:4,
-    link:'https://vimeo.com/',
-    icon:'fa-brands fa-vimeo-v',
-    title:'Vimeo'
-  },
-]
+    id: 3,
+    link: 'https://www.instagram.com/theroot.tribe?igsh=MWwyM2U0cWk5djF3bQ%3D%3D&utm_source=qr',
+    icon: 'fa-brands fa-instagram',
+    title: 'Instagram'
+  }
+];
 
 export default social_data;
