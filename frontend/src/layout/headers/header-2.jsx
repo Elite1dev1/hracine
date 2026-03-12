@@ -15,6 +15,7 @@ import CartMiniSidebar from '@/components/common/cart-mini-sidebar';
 import { CartTwo, Compare, Facebook, Menu, PhoneTwo, Wishlist, Search, Filter } from '@/svg';
 import useSearchFormSubmit from '@/hooks/use-search-form-submit';
 import OffCanvas from '@/components/common/off-canvas';
+import PromoBanner from "@/components/common/promo-banner";
 
 const HeaderTwo = ({ style_2 = false }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -51,23 +52,23 @@ const HeaderTwo = ({ style_2 = false }) => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Show header when at top (within 10px of top)
       if (currentScrollY <= 10) {
         setIsHeaderVisible(true);
-      } 
+      }
       // Hide header when scrolling down, show when scrolling up
       else if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setIsHeaderVisible(false);
       } else if (currentScrollY < lastScrollY) {
         setIsHeaderVisible(true);
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -75,10 +76,10 @@ const HeaderTwo = ({ style_2 = false }) => {
   return (
     <>
       <header>
+        <PromoBanner />
         <div
-          className={`tp-header-area tp-header-style-${style_2 ? 'primary' : 'darkRed'} tp-header-height ${
-            isHomeNavbar ? "" : "tp-header-non-home"
-          }`}
+          className={`tp-header-area tp-header-style-${style_2 ? 'primary' : 'darkRed'} tp-header-height ${isHomeNavbar ? "" : "tp-header-non-home"
+            }`}
         >
           <div className="tp-header-top-2 p-relative z-index-11 tp-header-top-border d-none d-md-block">
             <div className="container">
@@ -110,8 +111,8 @@ const HeaderTwo = ({ style_2 = false }) => {
             </div>
           </div>
 
-          <div 
-            id="header-sticky" 
+          <div
+            id="header-sticky"
             className={`tp-header-bottom-2 tp-header-sticky ${sticky ? 'header-sticky' : ''} ${isHeaderVisible ? 'header-visible' : 'header-hidden'}`}
             style={sticky ? { backgroundColor: '#C47070', background: '#C47070' } : {}}
           >
@@ -121,21 +122,21 @@ const HeaderTwo = ({ style_2 = false }) => {
                   <div className="col-xl-2 col-lg-5 col-md-5 col-sm-4 col-6">
                     <div className="logo">
                       <Link href="/">
-                        <Image 
-                          src={logo} 
-                          alt="logo" 
-                          width={120} 
-                          height={120} 
-                          priority 
+                        <Image
+                          src={logo}
+                          alt="logo"
+                          width={120}
+                          height={120}
+                          priority
                           style={{ width: 'auto', height: 'auto', maxWidth: '150px' }}
                           className="d-none d-md-block"
                         />
-                        <Image 
-                          src={logo} 
-                          alt="logo" 
-                          width={50} 
-                          height={50} 
-                          priority 
+                        <Image
+                          src={logo}
+                          alt="logo"
+                          width={50}
+                          height={50}
+                          priority
                           style={{ width: 'auto', height: 'auto', maxWidth: '50px', maxHeight: '50px' }}
                           className="d-block d-md-none"
                         />
@@ -184,9 +185,9 @@ const HeaderTwo = ({ style_2 = false }) => {
                         {/* Filter Icon - Mobile Only */}
                         {router.pathname === '/shop' && (
                           <div className="tp-header-action-item d-xl-none">
-                            <button 
-                              onClick={handleFilterClick} 
-                              type="button" 
+                            <button
+                              onClick={handleFilterClick}
+                              type="button"
                               className="tp-header-action-btn tp-header-filter-btn"
                             >
                               <Filter />

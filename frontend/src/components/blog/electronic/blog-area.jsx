@@ -72,7 +72,11 @@ const BlogArea = () => {
         <div className="row align-items-end d-none d-md-flex">
           <div className="col-xl-4 col-md-6">
             <div className="tp-section-title-wrapper mb-50">
-              <h3 className="tp-section-title">Latest news & articles
+              <h3
+                className="tp-section-title"
+                style={{ fontFamily: "'Playfair Display', 'Times New Roman', serif" }}
+              >
+                Latest Stories
               </h3>
             </div>
           </div>
@@ -112,9 +116,10 @@ const BlogArea = () => {
             }}>
               <h3 className="tp-section-title" style={{
                 fontSize: 'clamp(20px, 5vw, 28px)',
-                marginBottom: '0'
+                marginBottom: '0',
+                fontFamily: "'Playfair Display', 'Times New Roman', serif",
               }}>
-                Latest news & articles
+                Latest Stories
               </h3>
             </div>
 

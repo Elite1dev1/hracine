@@ -21,28 +21,6 @@ const OffCanvas = ({ isOffCanvasOpen, setIsCanvasOpen, categoryType = "electroni
             </button>
           </div>
           <div className="offcanvas__content">
-            <div className="offcanvas__top offcanvas__top--compact d-flex justify-content-between align-items-center">
-              <div className="offcanvas__logo logo">
-                <Link href="/">
-                  <Image
-                    src={logo}
-                    alt="logo"
-                    width={100}
-                    height={100}
-                    style={{ width: 'auto', height: 'auto', maxWidth: '100px', maxHeight: '100px' }}
-                    className="d-none d-sm-block"
-                  />
-                  <Image
-                    src={logo}
-                    alt="logo"
-                    width={50}
-                    height={50}
-                    style={{ width: 'auto', height: 'auto', maxWidth: '50px', maxHeight: '50px' }}
-                    className="d-block d-sm-none"
-                  />
-                </Link>
-              </div>
-            </div>
             <div className="offcanvas__nav d-lg-none">
               <MobileDrawerMenu />
             </div>

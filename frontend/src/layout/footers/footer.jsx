@@ -98,7 +98,7 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                       <li><a href="#">Careers</a></li>
                       <li><a href="#">Privacy Policy</a></li>
                       <li><a href="#">Terms & Conditions</a></li>
-                      <li><a href="#">Latest News</a></li>
+                      <li><a href="#">Latest Stories</a></li>
                       <li><a href="#">Contact Us</a></li>
                     </ul>
                   </div>
@@ -109,8 +109,10 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                   <h4 className="tp-footer-widget-title">Talk To Us</h4>
                   <div className="tp-footer-widget-content">
                     <div className="tp-footer-talk mb-20">
-                      <span>Got Questions? Call us</span>
-                      <h4><a href="tel:08039311425">08039311425</a></h4>
+                      <span style={{ fontSize: '14px', fontWeight: 500, color: '#22160E' }}>Got Questions? Call us</span>
+                      <h4 style={{ fontSize: '20px', marginTop: '6px', marginBottom: '0' }}>
+                        <a href="tel:08039311425" style={{ color: '#22160E' }}>08039311425</a>
+                      </h4>
                     </div>
                     <div className="tp-footer-contact">
                       <div className="tp-footer-contact-item d-flex align-items-start">
@@ -120,7 +122,9 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                           </span>
                         </div>
                         <div className="tp-footer-contact-content">
-                          <p><a href="mailto:support@hracine.com">support@hracine.com</a></p>
+                          <p style={{ marginBottom: '6px', fontSize: '14px', color: '#55585B' }}>
+                            <a href="mailto:support@hracine.com" style={{ color: '#22160E' }}>support@hracine.com</a>
+                          </p>
                         </div>
                       </div>
                       <div className="tp-footer-contact-item d-flex align-items-start">
@@ -130,7 +134,15 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                           </span>
                         </div>
                         <div className="tp-footer-contact-content">
-                          <p><a href="https://www.google.com/maps/place/Lagos,+Nigeria" target="_blank">Lagos, Nigeria</a></p>
+                          <p style={{ marginBottom: 0, fontSize: '14px', color: '#55585B' }}>
+                            <a
+                              href="https://www.google.com/maps/place/Lagos,+Nigeria"
+                              target="_blank"
+                              style={{ color: '#22160E' }}
+                            >
+                              Lagos, Nigeria
+                            </a>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -173,7 +185,7 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                         <li><Link href="/about">Our Story</Link></li>
                         <li><Link href="#">Privacy Policy</Link></li>
                         <li><Link href="#">Terms &amp; Conditions</Link></li>
-                        <li><Link href="/blog">Latest News</Link></li>
+                        <li><Link href="/blog">Latest Stories</Link></li>
                         <li><Link href="/contact">Contact Us</Link></li>
                       </ul>
                     </div>

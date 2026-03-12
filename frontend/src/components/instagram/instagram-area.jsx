@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 // internal
-import ins_1 from '@assets/img/instagram/instagram-1.jpg';
-import ins_2 from '@assets/img/instagram/instagram-2.jpg';
+import ins_1 from '@assets/img/instagram/instagram.jpeg';
+import ins_2 from '@assets/img/instagram/istagram-2.jpeg';
 import ins_3 from '@assets/img/instagram/instagram-3.jpg';
 import ins_4 from '@assets/img/instagram/instagram-4.jpg';
 import ins_5 from '@assets/img/instagram/instagram-5.jpg';
@@ -13,18 +13,32 @@ const INSTAGRAM_LINK = 'https://www.instagram.com/theroot.tribe?igsh=MWwyM2U0cWk
 const instagram_data = [
   { id: 1, link: INSTAGRAM_LINK, img: ins_1 },
   { id: 2, link: INSTAGRAM_LINK, img: ins_2 },
-  { id: 3, link: INSTAGRAM_LINK, img: ins_3 },
-  { id: 4, link: INSTAGRAM_LINK, img: ins_4 },
-  { id: 5, link: INSTAGRAM_LINK, img: ins_5 },
+  // Desktop: replace the three smaller images with 4, 5, 3
+  { id: 3, link: INSTAGRAM_LINK, img: ins_4 },
+  { id: 4, link: INSTAGRAM_LINK, img: ins_5 },
+  { id: 5, link: INSTAGRAM_LINK, img: ins_3 },
 ];
 
 const InstagramArea = () => {
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @media (max-width: 767.98px) {
           .tp-instagram-area.tp-instagram-mobile-limit .tp-instagram-col:nth-child(n+3) {
             display: none !important;
+          }
+        }
+
+        @media (min-width: 992px) {
+          .tp-instagram-area.tp-instagram-mobile-limit .tp-instagram-item {
+            height: 260px;
+          }
+
+          .tp-instagram-area.tp-instagram-mobile-limit .tp-instagram-item img {
+            height: 100% !important;
+            width: 100% !important;
+            object-fit: cover;
           }
         }
       `}} />

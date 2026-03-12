@@ -253,10 +253,22 @@
     }
     &-bottom{
         &-2{
-            @media #{$lg, $md, $sm, $xs}{
+            @media #{$lg, $xl, $xxl, $x3l, $x4l}{
                 padding-top: 15px;
                 padding-bottom: 15px;
             }
+            @media #{$md, $sm, $xs}{
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+        }
+    }
+
+    // Ensure mobile hamburger icon uses a consistent color across all pages
+    &-bottom-2 {
+        .tp-header-hamburger .tp-offcanvas-open-btn svg {
+            color: #ffffff;
+            stroke: #ffffff;
         }
     }
 }

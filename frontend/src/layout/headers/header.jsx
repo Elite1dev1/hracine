@@ -14,6 +14,7 @@ import HeaderTopRight from "./header-com/header-top-right";
 import HeaderMainRight from "./header-com/header-main-right";
 import CartMiniSidebar from "@/components/common/cart-mini-sidebar";
 import HeaderSearchForm from "@/components/forms/header-search-form";
+import PromoBanner from "@/components/common/promo-banner";
 import { CartTwo, CategoryMenu, Compare, Menu, ShippingCar, Wishlist } from "@/svg";
 import { formatCurrency } from "@/utils/currency";
 
@@ -27,6 +28,7 @@ const Header = () => {
   return (
     <>
       <header>
+        <PromoBanner />
         <div className="tp-header-area p-relative z-index-11">
           {/* header top start  */}
           <div className="tp-header-top black-bg p-relative z-index-1 d-none d-md-block">
@@ -50,7 +52,7 @@ const Header = () => {
           </div>
 
           {/* header main start */}
-          <div 
+          <div
             className="tp-header-main tp-header-sticky"
             style={sticky ? { backgroundColor: '#C47070', background: '#C47070' } : {}}
           >
@@ -59,34 +61,34 @@ const Header = () => {
                 <div className="col-xl-2 col-lg-2 col-md-4 col-6">
                   <div className="logo" style={{ display: 'flex', alignItems: 'center', padding: '5px 0' }}>
                     <Link href="/" style={{ display: 'block' }}>
-                      <Image 
-                        src={logo} 
-                        alt="logo" 
-                        width={100} 
-                        height={100} 
-                        style={{ 
-                          width: 'auto', 
-                          height: 'auto', 
+                      <Image
+                        src={logo}
+                        alt="logo"
+                        width={100}
+                        height={100}
+                        style={{
+                          width: 'auto',
+                          height: 'auto',
                           maxWidth: '100px',
                           maxHeight: '100px',
                           objectFit: 'contain',
                           display: 'block'
-                        }} 
+                        }}
                         className="d-none d-md-block"
                       />
-                      <Image 
-                        src={logo} 
-                        alt="logo" 
-                        width={50} 
-                        height={50} 
-                        style={{ 
-                          width: 'auto', 
-                          height: 'auto', 
+                      <Image
+                        src={logo}
+                        alt="logo"
+                        width={50}
+                        height={50}
+                        style={{
+                          width: 'auto',
+                          height: 'auto',
                           maxWidth: '50px',
                           maxHeight: '50px',
                           objectFit: 'contain',
                           display: 'block'
-                        }} 
+                        }}
                         className="d-block d-md-none"
                       />
                     </Link>
@@ -151,8 +153,8 @@ const Header = () => {
       </header>
 
       {/* sticky header start */}
-      <div 
-        id="header-sticky-2" 
+      <div
+        id="header-sticky-2"
         className={`tp-header-sticky-area ${sticky ? 'header-sticky-2' : ''}`}
         style={sticky ? { backgroundColor: '#C47070', background: '#C47070' } : {}}
       >
@@ -162,34 +164,34 @@ const Header = () => {
               <div className="col-xl-3 col-lg-3 col-md-3 col-6">
                 <div className="logo" style={{ display: 'flex', alignItems: 'center', padding: '5px 0' }}>
                   <Link href="/" style={{ display: 'block' }}>
-                    <Image 
-                      src={logo} 
-                      alt="logo" 
-                      width={100} 
-                      height={100} 
-                      style={{ 
-                        width: 'auto', 
-                        height: 'auto', 
+                    <Image
+                      src={logo}
+                      alt="logo"
+                      width={100}
+                      height={100}
+                      style={{
+                        width: 'auto',
+                        height: 'auto',
                         maxWidth: '100px',
                         maxHeight: '100px',
                         objectFit: 'contain',
                         display: 'block'
-                      }} 
+                      }}
                       className="d-none d-md-block"
                     />
-                    <Image 
-                      src={logo} 
-                      alt="logo" 
-                      width={50} 
-                      height={50} 
-                      style={{ 
-                        width: 'auto', 
-                        height: 'auto', 
+                    <Image
+                      src={logo}
+                      alt="logo"
+                      width={50}
+                      height={50}
+                      style={{
+                        width: 'auto',
+                        height: 'auto',
                         maxWidth: '50px',
                         maxHeight: '50px',
                         objectFit: 'contain',
                         display: 'block'
-                      }} 
+                      }}
                       className="d-block d-md-none"
                     />
                   </Link>

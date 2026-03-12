@@ -119,7 +119,7 @@ const BlogDetailsAreaTwo = ({blog}) => {
             <div className="row">
               <div className="col-xl-12">
                 <div className="tp-postbox-related">
-                  <h3 className="tp-postbox-related-title">Related Articles</h3>
+                  <h3 className="tp-postbox-related-title">Related </h3>
 
                   <div className="row">
                     {related_blogs.map((blog) => (

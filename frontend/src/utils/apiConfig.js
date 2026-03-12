@@ -1,9 +1,12 @@
 // API Configuration
 // In development, use localhost. In production, use the Vercel URL
 export const getApiBaseUrl = () => {
+  // Strip trailing slash helper to avoid double-slash URLs like //api/...
+  const normalize = (url) => url.replace(/\/$/, '');
+
   // Priority 1: Use environment variable if set (most reliable)
   if (process.env.NEXT_PUBLIC_API_BASE_URL) {
-    return process.env.NEXT_PUBLIC_API_BASE_URL;
+    return normalize(process.env.NEXT_PUBLIC_API_BASE_URL);
   }
   
   // Priority 2: Check if we're in the browser

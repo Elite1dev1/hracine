@@ -36,7 +36,8 @@ const CommunityArea = () => {
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .tp-community-explore-btn { background-color: #85312C !important; border-color: #85312C !important; }
         .tp-community-explore-btn:hover { background-color: #6b2824 !important; border-color: #6b2824 !important; }
         .tp-community-ugc-area .tp-community-ugc-content { text-align: center !important; padding-right: 0 !important; }
@@ -72,16 +73,16 @@ const CommunityArea = () => {
             <div className="col-xxl-12">
               <div className="tp-section-title-wrapper text-center mb-60">
                 <h2 className="tp-section-title" style={{ fontSize: '48px', marginBottom: '20px' }}>
-                  Roots & Rituals Tribe
+                  Root Tribe
                 </h2>
-                <p className="tp-section-subtitle" style={{ 
-                  fontSize: '18px', 
-                  lineHeight: '1.8', 
-                  maxWidth: '700px', 
+                <p className="tp-section-subtitle" style={{
+                  fontSize: '18px',
+                  lineHeight: '1.8',
+                  maxWidth: '700px',
                   margin: '0 auto',
                   color: '#55585B'
                 }}>
-                  Join a community of people who believe in root-deep care and natural wellness. 
+                  Join a community of people who believe in root-deep care and natural wellness.
                   Share your journey, learn from others, and grow together.
                 </p>
               </div>
@@ -103,8 +104,8 @@ const CommunityArea = () => {
           <div className="row gx-4">
             {benefits.map((benefit) => (
               <div key={benefit.id} className="col-xl-4 col-lg-4 col-md-6 mb-30">
-                <div className="tp-community-benefit-card text-center" style={{ 
-                  padding: '50px 30px', 
+                <div className="tp-community-benefit-card text-center" style={{
+                  padding: '50px 30px',
                   backgroundColor: '#fff',
                   borderRadius: '8px',
                   boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
@@ -137,7 +138,7 @@ const CommunityArea = () => {
                     Share Your Journey
                   </h3>
                   <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#55585B', marginBottom: '30px' }}>
-                    We love seeing how our community uses Roots & Rituals products in their daily routines. 
+                    We love seeing how our community uses Hracine products in their daily routines.
                     Share your #HracineRoutine and inspire others on their hair wellness journey.
                   </p>
                   <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#55585B', marginBottom: '40px' }}>
@@ -154,7 +155,7 @@ const CommunityArea = () => {
             <div className="col-xl-6 col-lg-6">
               <div className="tp-community-ugc-visual tp-community-ugc-visual-img">
                 <Image
-                  src="/comuunity.jpg"
+                  src="/comuunity.jpeg"
                   alt="Community - Share your journey"
                   width={380}
                   height={480}
@@ -172,7 +173,7 @@ const CommunityArea = () => {
         <div className="container">
           <div className="row">
             <div className="col-xxl-12">
-              <div className="tp-community-join-cta text-center" style={{ 
+              <div className="tp-community-join-cta text-center" style={{
                 padding: '80px 40px',
                 backgroundColor: '#f8f8f8',
                 borderRadius: '8px'
@@ -181,7 +182,7 @@ const CommunityArea = () => {
                   Ready to Join the Tribe?
                 </h3>
                 <p style={{ fontSize: '18px', color: '#55585B', marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
-                  Start your root-deep care journey today. Join our community and discover the power of natural, 
+                  Start your root-deep care journey today. Join our community and discover the power of natural,
                   scalp-first hair care.
                 </p>
                 <div className="tp-community-join-buttons">

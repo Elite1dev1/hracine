@@ -12,12 +12,10 @@
 }
 
 /* Close button: no grey box, simple X, padding for 44px tap target */
-.offcanvas__area.offcanvas__mobile-redesign .offcanvas__close {
-  top: 12px;
-  right: 12px;
-}
-
-.offcanvas__area.offcanvas__mobile-redesign .offcanvas__close-btn {
+.offcanvas__area.offcanvas__mobile-redesign .offcanvas__wrapper .offcanvas__close-btn {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
   min-width: 44px;
   min-height: 44px;
   padding: 10px;
@@ -29,6 +27,10 @@
   align-items: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  z-index: 100000;
+  pointer-events: auto;
   transition: color 0.2s ease, opacity 0.2s ease;
 
   &:hover {
@@ -41,18 +43,7 @@
   }
 }
 
-/* Logo: make visible on white (subtle background) */
-.offcanvas__area.offcanvas__mobile-redesign .offcanvas__logo a {
-  display: inline-block;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.06);
-  border-radius: 50%;
-  line-height: 0;
-}
-
-.offcanvas__area.offcanvas__mobile-redesign .offcanvas__logo img {
-  display: block;
-}
+/* No logo header row in mobile redesign – only close button */
 
 /* Wrapper: flex column, must shrink so content can scroll (override base min-height: 100%) */
 .offcanvas__area.offcanvas__mobile-redesign .offcanvas__wrapper {
@@ -80,11 +71,6 @@
   }
 }
 
-.offcanvas__area.offcanvas__mobile-redesign .offcanvas__top {
-  margin-bottom: 8px !important;
-  flex-shrink: 0;
-}
-
 .offcanvas__area.offcanvas__mobile-redesign .offcanvas__nav {
   flex-shrink: 0;
   min-height: 0;
@@ -92,11 +78,13 @@
 
 /* Grouped menu sections */
 .tp-mobile-drawer-menu {
-  padding: 0 0 0 4px;
+  padding: 0;
+  margin-top: 40px;
+  text-align: center;
 }
 
 .tp-mobile-drawer-section {
-  margin-bottom: 1rem;
+  margin-bottom: 14px;
 
   &:last-child {
     margin-bottom: 0;
@@ -104,11 +92,11 @@
 }
 
 .tp-mobile-drawer-section-head {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: rgba(0, 0, 0, 0.5);
-  margin: 0 0 0.5rem 0;
+  color: rgba(0, 0, 0, 0.45);
+  margin: 0 0 10px 0;
   text-transform: uppercase;
   line-height: 1.3;
 }
@@ -125,18 +113,18 @@
 
 .tp-mobile-drawer-link {
   display: block;
-  min-height: 40px;
-  padding: 8px 0;
+  min-height: 36px;
+  padding: 6px 0;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--tp-common-black);
   text-decoration: none;
   transition: color 0.15s ease, background-color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   border-radius: 6px;
-  margin: 0 -4px;
-  padding-left: 4px;
-  padding-right: 4px;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
 
   &:hover {
     color: #85312C;

@@ -12,6 +12,7 @@ import OffCanvas from '@/components/common/off-canvas';
 import useCartInfo from '@/hooks/use-cart-info';
 import CartMiniSidebar from '@/components/common/cart-mini-sidebar';
 import { openCartMini } from '@/redux/features/cartSlice';
+import PromoBanner from "@/components/common/promo-banner";
 
 const HeaderFour = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -23,6 +24,7 @@ const HeaderFour = () => {
   return (
     <>
       <header>
+        <PromoBanner />
         <div id="header-sticky" className={`tp-header-area tp-header-style-transparent-white tp-header-sticky tp-header-transparent has-dark-logo tp-header-height ${sticky ? 'header-sticky' : ''}`}>
           <div className="tp-header-bottom-3 pl-85 pr-85">
             <div className="container-fluid">
@@ -30,29 +32,29 @@ const HeaderFour = () => {
                 <div className="col-xl-2 col-lg-2 col-6">
                   <div className="logo">
                     <Link href="/">
-                      <Image 
-                        className="logo-light d-none d-md-block" 
-                        src={logo} 
-                        alt="logo" 
-                        width={120} 
-                        height={120} 
-                        style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} 
+                      <Image
+                        className="logo-light d-none d-md-block"
+                        src={logo}
+                        alt="logo"
+                        width={120}
+                        height={120}
+                        style={{ width: 'auto', height: 'auto', maxWidth: '150px' }}
                       />
-                      <Image 
-                        className="logo-dark d-none d-md-block" 
-                        src={logo} 
-                        alt="logo" 
-                        width={120} 
-                        height={120} 
-                        style={{ width: 'auto', height: 'auto', maxWidth: '150px' }} 
+                      <Image
+                        className="logo-dark d-none d-md-block"
+                        src={logo}
+                        alt="logo"
+                        width={120}
+                        height={120}
+                        style={{ width: 'auto', height: 'auto', maxWidth: '150px' }}
                       />
-                      <Image 
-                        className="d-block d-md-none" 
-                        src={logo} 
-                        alt="logo" 
-                        width={50} 
-                        height={50} 
-                        style={{ width: 'auto', height: 'auto', maxWidth: '50px', maxHeight: '50px' }} 
+                      <Image
+                        className="d-block d-md-none"
+                        src={logo}
+                        alt="logo"
+                        width={50}
+                        height={50}
+                        style={{ width: 'auto', height: 'auto', maxWidth: '50px', maxHeight: '50px' }}
                       />
                     </Link>
                   </div>

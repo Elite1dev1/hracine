@@ -124,7 +124,7 @@ const FeaturedRituals = () => {
                 borderColor: '#85312C',
                 color: '#fff'
               }}>
-                Explore Rituals
+                Explore Our Products
               </Link>
             </div>
           </div>
@@ -161,12 +161,22 @@ const FeaturedRituals = () => {
               <p style={{ 
                 fontSize: 'clamp(14px, 2.5vw, 18px)', 
                 color: '#55585B', 
-                maxWidth: '100%',
+                maxWidth: '860px',
+                margin: '0 auto 10px',
+                padding: '0 15px',
+                textAlign: 'center'
+              }}>
+                After years of struggling with hair growth, I discovered that the secret to beautiful and long hair isn&apos;t in the latest trend but in nurturing your roots. If you wish to have long, beautiful hair but your scalp is damaged, you&apos;re still struggling with dandruff, scalp itchiness, or product build-up, it&apos;s nearly impossible to achieve your hair goal.
+              </p>
+              <p style={{ 
+                fontSize: 'clamp(14px, 2.3vw, 18px)', 
+                color: '#55585B', 
+                maxWidth: '860px',
                 margin: '0 auto',
                 padding: '0 15px',
                 textAlign: 'center'
               }}>
-                Discover our collection of scalp-first hair care products, each designed to nourish and restore.
+                The first step in your hair care journey is to care for your hair root—your scalp. This is why every Hracine product starts with scalp health. Join us on this journey to healthier, longer, and fuller hair, one routine at a time.
               </p>
             </div>
           </div>

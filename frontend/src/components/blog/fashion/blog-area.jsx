@@ -25,7 +25,12 @@ const BlogArea = () => {
                   Our Blog & News
                   <TextShapeLine />
                 </span>
-                <h3 className="tp-section-title-2">Latest News & Articles</h3>
+                <h3
+                  className="tp-section-title-2"
+                  style={{ fontFamily: "'Playfair Display', 'Times New Roman', serif" }}
+                >
+                  Latest Stories
+                </h3>
               </div>
             </div>
           </div>

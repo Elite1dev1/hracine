@@ -111,7 +111,7 @@ const HairCareHero = () => {
                       fontSize: 'clamp(14px, 2vw, 16px)',
                       display: 'inline-block'
                     }}>
-                      Join the Roots and Rituals Tribe
+                      Join the Root Tribe
                       {" "} <ArrowRightLong />
                     </Link>
                   </div>

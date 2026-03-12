@@ -5,8 +5,23 @@ const BlogBreadcrumb = () => {
   return (
     <section
       className="breadcrumb__area include-bg pt-150 pb-150 breadcrumb__overlay breadcrumb__style-3"
-      style={{backgroundImage:`url(${bg.src})`}}
+      style={{
+        // On desktop it applies the bg, on mobile our CSS overides/hides it
+        ...(typeof window !== 'undefined' && window.innerWidth > 768
+          ? { backgroundImage: `url(${bg.src})` }
+          : { backgroundImage: `url(${bg.src})`, backgroundSize: 'cover' })
+      }}
     >
+      <style>{`
+        @media (max-width: 767px) {
+          .breadcrumb__area.breadcrumb__style-3 {
+            background-image: none !important;
+          }
+          .breadcrumb__area.breadcrumb__style-3.breadcrumb__overlay::after {
+            display: none !important;
+          }
+        }
+      `}</style>
       <div className="container">
         <div className="row">
           <div className="col-xxl-12">

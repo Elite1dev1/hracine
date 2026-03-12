@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 // internal
 import { ArrowRightLong } from '@/svg';
-import founder_img from '@assets/img/about/about-1.jpg';
+import founder_img from '@assets/img/about/founders.jpeg';
 
 const FounderNote = () => {
   return (
@@ -15,17 +15,17 @@ const FounderNote = () => {
               marginBottom: 'clamp(30px, 5vw, 0px)',
               textAlign: 'center'
             }}>
-              <Image 
-                src={founder_img} 
-                alt="Founder" 
-                style={{ 
-                  borderRadius: '8px', 
-                  width: '82%', 
+              <Image
+                src={founder_img}
+                alt="Founder"
+                style={{
+                  borderRadius: '8px',
+                  width: '82%',
                   height: 'auto',
                   maxWidth: '420px',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
                   margin: '0 auto'
-                }} 
+                }}
               />
             </div>
           </div>
@@ -42,9 +42,9 @@ const FounderNote = () => {
                 marginRight: 'auto',
                 width: '100%'
               }}>
-                <span className="tp-section-title-pre" style={{ 
-                  fontSize: 'clamp(12px, 2vw, 14px)', 
-                  textTransform: 'uppercase', 
+                <span className="tp-section-title-pre" style={{
+                  fontSize: 'clamp(12px, 2vw, 14px)',
+                  textTransform: 'uppercase',
                   letterSpacing: '2px',
                   color: '#E8E8E8',
                   marginBottom: '15px',
@@ -53,9 +53,9 @@ const FounderNote = () => {
                 }}>
                   A Note From Our Founder
                 </span>
-                <h3 className="tp-section-title" style={{ 
-                  fontSize: 'clamp(24px, 5vw, 36px)', 
-                  marginBottom: '30px', 
+                <h3 className="tp-section-title" style={{
+                  fontSize: 'clamp(24px, 5vw, 36px)',
+                  marginBottom: '30px',
                   color: '#FFFFFF',
                   textAlign: 'center',
                   marginLeft: 'auto',
@@ -69,23 +69,23 @@ const FounderNote = () => {
                 marginRight: 'auto',
                 width: '100%'
               }}>
-                <p style={{ 
-                  fontSize: 'clamp(14px, 2.5vw, 18px)', 
-                  lineHeight: '1.8', 
-                  color: '#E8E8E8', 
+                <p style={{
+                  fontSize: 'clamp(14px, 2.5vw, 18px)',
+                  lineHeight: '1.8',
+                  color: '#E8E8E8',
                   marginBottom: '25px',
                   textAlign: 'center',
                   marginLeft: 'auto',
                   marginRight: 'auto'
                 }}>
-                  &quot;After years of struggling with scalp issues, I discovered that the secret to beautiful hair 
-                  isn&apos;t in the latest trend—it&apos;s in nurturing your roots. That&apos;s why every product we create 
+                  &quot;After years of struggling with scalp issues, I discovered that the secret to beautiful hair
+                  isn&apos;t in the latest trend—it&apos;s in nurturing your roots. That&apos;s why every product we create
                   starts with scalp health.&quot;
                 </p>
-                <p style={{ 
-                  fontSize: 'clamp(14px, 2.5vw, 18px)', 
-                  lineHeight: '1.8', 
-                  color: '#E8E8E8', 
+                <p style={{
+                  fontSize: 'clamp(14px, 2.5vw, 18px)',
+                  lineHeight: '1.8',
+                  color: '#E8E8E8',
                   fontStyle: 'italic',
                   textAlign: 'center',
                   marginLeft: 'auto',
@@ -100,7 +100,7 @@ const FounderNote = () => {
                 marginRight: 'auto',
                 width: '100%'
               }}>
-                <Link href="/about" className="tp-btn tp-btn-2" style={{ 
+                <Link href="/about" className="tp-btn tp-btn-2" style={{
                   backgroundColor: '#FFFFFF',
                   color: '#22160E',
                   borderColor: '#FFFFFF',
