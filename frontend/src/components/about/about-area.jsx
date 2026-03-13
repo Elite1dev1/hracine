@@ -4,11 +4,18 @@ import Link from 'next/link';
 // internal
 import { ArrowRightLong } from '@/svg';
 import founder_img from '@assets/img/about/founders.jpeg';
+import user_1 from '@assets/img/users/user-1.jpg';
+import user_2 from '@assets/img/users/user-2.jpg';
+import user_3 from '@assets/img/users/user-3.jpg';
+import user_4 from '@assets/img/users/user-4.jpg';
+import author_img from '@assets/img/users/mariam.jpg';
 
 const reviews = [
   {
     id: 1,
-    name: 'Sophia T.',
+    name: 'Kelvin T.',
+    rating: 5,
+    avatar: user_1,
     headline: 'Stronger hair from the roots',
     quote:
       'I’ve been trying to grow my hair out for years and nothing seemed right. What I like about Hracine is that it focuses on scalp health first. After a few weeks of using it with regular scalp massages, my hair feels stronger at the roots and my scalp feels clean and comfortable.',
@@ -20,6 +27,8 @@ const reviews = [
   {
     id: 2,
     name: 'Ife A.',
+    rating: 4,
+    avatar: user_2,
     headline: 'A new ritual that actually works',
     quote:
       'What I appreciate most about Hracine is how it changed my haircare routine. Instead of just applying oil on my hair, I now focus on scalp care. The scalp relief serum absorbs well and the massage ritual has become part of my weekly care. My hair feels stronger and I’m seeing less shedding when I detangle.',
@@ -32,6 +41,8 @@ const reviews = [
   {
     id: 3,
     name: 'Amara O.',
+    rating: 4,
+    avatar: user_3,
     headline: 'Itchy scalp relief in days',
     quote:
       'I’ve always struggled with an itchy scalp whenever I keep braids for more than two weeks. I started using Hracine directly on my scalp and the difference was noticeable within days. My scalp feels calmer and hydrated, not greasy. I love that it’s lightweight and actually feels like it’s caring for my scalp, not just coating my hair.',
@@ -44,6 +55,8 @@ const reviews = [
   {
     id: 4,
     name: 'Ada N.',
+    rating: 3,
+    avatar: user_4,
     headline: 'Lightweight but deeply nourishing',
     quote:
       'I’m very picky with oils because most of them are heavy and clog my scalp. Hracine surprised me. It’s nourishing but still lightweight, and it absorbs quickly. My scalp feels balanced and my hair looks healthier overall.',
@@ -56,6 +69,8 @@ const reviews = [
   {
     id: 5,
     name: 'Chelsea A.',
+    rating: 5,
+    avatar: author_img,
     headline: 'All-week moisture for dry hair',
     quote:
       'My hair is usually very dry but this butter has helped keep it moisturized throughout the week. My strands feel healthier.',
@@ -111,6 +126,13 @@ const renderHighlightedQuote = (quote, highlights = []) => {
   });
 
   return parts;
+};
+
+const renderRatingStars = (rating = 5) => {
+  const maxStars = 5;
+  return Array.from({ length: maxStars }, (_, index) => (
+    <span key={index}>{index < rating ? '★' : '☆'}</span>
+  ));
 };
 
 const AboutArea = () => {
@@ -229,13 +251,9 @@ const AboutArea = () => {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            overflow: hidden;
             background: #F3E7E4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 600;
-            color: #85312C;
+            flex-shrink: 0;
           }
 
           .tp-about-review-name {
@@ -346,13 +364,8 @@ const AboutArea = () => {
               width: 36px;
               height: 36px;
               border-radius: 50%;
-              background: #F3E7E4;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 14px;
-              font-weight: 600;
-              color: #85312C;
+            overflow: hidden;
+            background: #F3E7E4;
               flex-shrink: 0;
             }
 
@@ -744,12 +757,6 @@ const AboutArea = () => {
             </div>
             <div ref={mobileCarouselRef} className="tp-about-mobile-reviews-scroll">
               {reviews.map((review) => {
-                const initials = review.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')
-                  .slice(0, 2)
-                  .toUpperCase();
                 return (
                   <article
                     key={review.id}
@@ -762,15 +769,27 @@ const AboutArea = () => {
                       textAlign: 'left',
                     }}
                   >
-                    <div className="tp-about-review-stars" aria-hidden="true">
-                      <span>★</span>
-                      <span>★</span>
-                      <span>★</span>
-                      <span>★</span>
-                      <span>★</span>
+                    <div
+                      className="tp-about-review-stars"
+                      aria-hidden="true"
+                      title={`${review.rating} out of 5 stars`}
+                    >
+                      {renderRatingStars(review.rating)}
                     </div>
                     <div className="tp-about-review-meta">
-                      <div className="tp-about-review-avatar">{initials}</div>
+                      <div className="tp-about-review-avatar">
+                        {review.avatar ? (
+                          <Image
+                            src={review.avatar}
+                            alt={review.name}
+                            width={32}
+                            height={32}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                          />
+                        ) : (
+                          getInitials(review.name)
+                        )}
+                      </div>
                       <div className="tp-about-review-name">{review.name}</div>
                     </div>
                     <p
@@ -840,12 +859,12 @@ const AboutArea = () => {
             <div className="tp-about-reviews-grid">
               {reviews.map((review) => (
                 <article key={review.id} className="tp-about-review-card-desktop">
-                  <div className="tp-about-review-stars-desktop" aria-hidden="true">
-                    <span>★</span>
-                    <span>★</span>
-                    <span>★</span>
-                    <span>★</span>
-                    <span>★</span>
+                  <div
+                    className="tp-about-review-stars-desktop"
+                    aria-hidden="true"
+                    title={`${review.rating} out of 5 stars`}
+                  >
+                    {renderRatingStars(review.rating)}
                   </div>
                   <h3 className="tp-about-review-headline-desktop">
                     {review.headline}
@@ -855,7 +874,17 @@ const AboutArea = () => {
                   </p>
                   <div className="tp-about-review-footer-desktop">
                     <div className="tp-about-review-avatar-desktop">
-                      {getInitials(review.name)}
+                      {review.avatar ? (
+                        <Image
+                          src={review.avatar}
+                          alt={review.name}
+                          width={36}
+                          height={36}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                        />
+                      ) : (
+                        getInitials(review.name)
+                      )}
                     </div>
                     <div className="tp-about-review-meta-desktop">
                       <span className="tp-about-review-name-desktop">{review.name}</span>

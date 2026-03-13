@@ -16,8 +16,8 @@ const RegisterArea = () => {
             <div className="col-xl-6 col-lg-8">
               <div className="tp-login-wrapper">
                 <div className="tp-login-top text-center mb-30">
-                  <h3 className="tp-login-title">Sign Up Hracine.</h3>
-                  <p>
+                  <h3 className="tp-login-title">Create your Hracine account</h3>
+                  <p className="tp-login-switch">
                     Already have an account?{" "}
                     <span>
                       <Link href="/login">Sign In</Link>
@@ -32,7 +32,7 @@ const RegisterArea = () => {
                   </div>
                   <div className="tp-login-mail text-center mb-40">
                     <p>
-                      or Sign up with <a href="#">Email</a>
+                      ──────── or continue with email ────────
                     </p>
                   </div>
                   {/* form start */}

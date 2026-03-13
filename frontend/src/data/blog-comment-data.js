@@ -21,7 +21,7 @@ const comment_data = [
   {
     id: 2,
     user: user_3,
-    name: 'Shahnewaz Sakil',
+    name: 'Your name',
     date: '20 April, 2023 at 3.50pm',
     desc: 'By defining and following internal and external processes, your team will have clarity on resources to  attract and retain customers for your business.',
   },

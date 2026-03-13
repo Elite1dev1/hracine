@@ -135,32 +135,21 @@
   }
 }
 
-/* Bottom: fixed so Contact + currency/language are always visible (no scrolling to find them) */
+/* Bottom area: sits directly under the last nav section on mobile */
 .offcanvas__area.offcanvas__mobile-redesign .offcanvas__bottom {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 380px;
-  left: auto;
-  padding: 16px 20px 20px;
-  padding-top: 16px;
+  position: static;
+  width: 100%;
+  padding: 8px 12px 14px;
+  margin-top: 8px;
   border-top: 1px solid var(--tp-border-primary);
   background: #fff;
-  z-index: 2;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
-}
-
-@media (max-width: 380px) {
-  .offcanvas__area.offcanvas__mobile-redesign .offcanvas__bottom {
-    width: 100%;
-  }
 }
 
 .offcanvas__contact-btn-redesign {
   display: block;
   width: 100%;
-  min-height: 44px;
-  padding: 14px 20px;
+  min-height: 40px;
+  padding: 10px 18px;
   font-size: 16px;
   font-weight: 600;
   color: #fff !important;

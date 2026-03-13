@@ -16,8 +16,11 @@ const LoginArea = () => {
             <div className="col-xl-6 col-lg-8">
               <div className="tp-login-wrapper">
                 <div className="tp-login-top text-center mb-30">
-                  <h3 className="tp-login-title">Login to Hracine.</h3>
-                  <p>
+                  <h3 className="tp-login-title">Welcome back</h3>
+                  <p className="tp-login-subtitle">
+                    Sign in to your Hracine account
+                  </p>
+                  <p className="tp-login-switch">
                     Don’t have an account?{" "}
                     <span>
                       <Link href="/register">Create a free account</Link>
@@ -32,7 +35,7 @@ const LoginArea = () => {
                   </div>
                   <div className="tp-login-mail text-center mb-40">
                     <p>
-                      or Sign in with <a href="#">Email</a>
+                      ──────── or continue with email ────────
                     </p>
                   </div>
                   <LoginForm />

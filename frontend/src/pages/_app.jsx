@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
   ReactModal.setAppElement("body");
 }
 
-const NEXT_PUBLIC_GOOGLE_CLIENT_ID = '872872451077-h90g0g0762aoi4vfk0iv6oug1pg4h2u0.apps.googleusercontent.com'
+const NEXT_PUBLIC_GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 export default function App({ Component, pageProps }) {
   return (
     <GoogleOAuthProvider clientId={NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
