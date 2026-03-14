@@ -48,12 +48,12 @@ const adminSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      default: "Admin",
+      default: "Super Admin",
       enum: [
-        "Admin",
         "Super Admin",
-        "Manager",
-        "CEO",
+        "Order Manager",
+        "Store Manager",
+        "Support Staff",
       ],
     },
     joiningDate: {

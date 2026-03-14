@@ -3,6 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 // internal
 const productController = require('../controller/product.controller');
+const verifyToken = require('../middleware/verifyToken');
+const { authorizePermission } = require('../middleware/authorization');
 
 // Configure multer for file uploads (memory storage for Excel/CSV)
 const upload = multer({
@@ -25,10 +27,10 @@ const upload = multer({
   }
 });
 
-// add a product
-router.post('/add', productController.addProduct);
-// add all product
-router.post('/add-all', productController.addAllProducts);
+// add a product (requires store manager or super admin)
+router.post('/add', verifyToken, authorizePermission("products", "create"), productController.addProduct);
+// add all product (requires store manager or super admin)
+router.post('/add-all', verifyToken, authorizePermission("products", "create"), productController.addAllProducts);
 // get all products
 router.get('/all', productController.getAllProducts);
 // get offer timer product
@@ -46,14 +48,14 @@ router.get("/single-product/:id", productController.getSingleProduct);
 // stock Product
 router.get("/stock-out", productController.stockOutProducts);
 // Export products (MUST be before /:type route)
-router.get('/export/all', productController.exportProducts);
+router.get('/export/all', verifyToken, authorizePermission("products", "view"), productController.exportProducts);
 // Import products
-router.post('/import', upload.single('file'), productController.importProducts);
-// get Single Product
-router.patch("/edit-product/:id", productController.updateProduct);
+router.post('/import', verifyToken, authorizePermission("products", "create"), upload.single('file'), productController.importProducts);
+// edit product (requires store manager or super admin)
+router.patch("/edit-product/:id", verifyToken, authorizePermission("products", "edit"), productController.updateProduct);
 // get Products ByType (MUST be last to avoid catching other routes)
 router.get('/:type', productController.getProductsByType);
-// get Products ByType 
-router.delete('/:id', productController.deleteProduct);
+// delete product (requires store manager or super admin)
+router.delete('/:id', verifyToken, authorizePermission("products", "delete"), productController.deleteProduct);
 
 module.exports = router;

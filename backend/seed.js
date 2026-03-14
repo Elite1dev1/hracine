@@ -55,7 +55,7 @@ const importData = async () => {
     console.log(`✅ Inserted ${insertedAdmins.length} admin accounts`);
     console.log('Admin accounts created:');
     insertedAdmins.forEach(admin => {
-      console.log(`  - ${admin.email} (${admin.name}) - Password: 123456`);
+      console.log(`  - ${admin.email} (${admin.name}) - Role: ${admin.role} - Password: 123456`);
     });
 
     console.log('data inserted successfully!');

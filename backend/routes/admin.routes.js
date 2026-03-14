@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken");
-const authorize = require("../middleware/authorization");
+const { authorizeRole, authorizePermission } = require("../middleware/authorization");
 const {
   registerAdmin,
   loginAdmin,
   updateStaff,
+  updateStaffStatus,
   changePassword,
   addStaff,
   getAllStaff,
@@ -33,65 +34,63 @@ router.post("/register", registerAdmin);
 //login a admin
 router.post("/login", loginAdmin);
 
-//login a admin
-router.patch("/change-password", changePassword);
+//change password
+router.patch("/change-password", verifyToken, changePassword);
 
-//login a admin
-router.post("/add", addStaff);
+// STAFF MANAGEMENT ROUTES (Super Admin only)
+// Add new staff
+router.post("/staff/add", verifyToken, authorizeRole("Super Admin"), addStaff);
 
-//login a admin
-router.get("/all", getAllStaff);
+// Get all staff
+router.get("/staff/all", verifyToken, authorizeRole("Super Admin"), getAllStaff);
+
+// Get staff by id
+router.get("/staff/:id", verifyToken, authorizeRole("Super Admin"), getStaffById);
+
+// Update staff
+router.patch("/staff/:id", verifyToken, authorizeRole("Super Admin"), updateStaff);
+
+// Update staff status (activate/deactivate)
+router.patch("/staff/status/:id", verifyToken, authorizeRole("Super Admin"), updateStaffStatus);
+
+// Delete staff
+router.delete("/staff/:id", verifyToken, authorizeRole("Super Admin"), deleteStaff);
 
 //forget-password
 router.patch("/forget-password", forgetPassword);
 
-//forget-password
+//confirm-forget-password
 router.patch("/confirm-forget-password", confirmAdminForgetPass);
 
-//get a staff
-router.get("/get/:id", getStaffById);
+// DASHBOARD
+router.get("/dashboard/stats", verifyToken, getDashboardStats);
 
-// update a staff
-router.patch("/update-stuff/:id", updateStaff);
+// USERS MANAGEMENT
+router.get("/users/all", verifyToken, authorizePermission("users", "view"), getAllUsers);
 
-//update staf status
-// router.put("/update-status/:id", updatedStatus);
+router.get("/users/:id", verifyToken, authorizePermission("users", "view"), getSingleUser);
 
-//delete a staff
-router.delete("/:id", deleteStaff);
+router.patch("/users/status/:id", verifyToken, authorizePermission("users", "edit"), updateUserStatus);
 
-// get dashboard stats
-router.get("/dashboard/stats", getDashboardStats);
+router.patch("/users/:id", verifyToken, authorizePermission("users", "edit"), updateUser);
 
-// get all users
-router.get("/users/all", getAllUsers);
-
-// get single user
-router.get("/users/:id", getSingleUser);
-
-// update user status
-router.patch("/users/status/:id", updateUserStatus);
-
-// update user
-router.patch("/users/:id", updateUser);
-
-// get all orders
-router.get("/orders/all", getAllOrders);
+// ORDERS
+router.get("/orders/all", verifyToken, authorizePermission("orders", "view"), getAllOrders);
 
 // create default admin (development only)
 router.post("/create-default", createDefaultAdmin);
 
-// settings routes
+// SETTINGS ROUTES (Super Admin only)
 router.get(
   "/settings",
   verifyToken,
-  authorize("Admin", "Super Admin", "Manager", "CEO"),
+  authorizeRole("Super Admin"),
   getAdminSettings
 );
 router.patch(
   "/settings",
   verifyToken,
-  authorize("Admin", "Super Admin", "Manager", "CEO"),
+  authorizeRole("Super Admin"),
   updateAdminSettings
 );
 

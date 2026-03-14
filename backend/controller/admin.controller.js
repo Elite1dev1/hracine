@@ -244,18 +244,36 @@ const addStaff = async (req, res,next) => {
         message: "This Email already Added!",
       });
     } else {
+      // Validate role
+      const validRoles = ["Super Admin", "Order Manager", "Store Manager", "Support Staff"];
+      if (!validRoles.includes(req.body.role)) {
+        return res.status(400).json({
+          message: "Invalid role",
+          validRoles: validRoles
+        });
+      }
+
       const newStaff = new Admin({
-        name:req.body.name,
+        name: req.body.name,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password),
         phone: req.body.phone,
-        joiningDate: req.body.joiningDate,
+        joiningDate: req.body.joiningDate || new Date(),
         role: req.body.role,
+        status: req.body.status || "Active",
         image: req.body.image,
       });
-      await newStaff.save();
+      const savedStaff = await newStaff.save();
       res.status(200).send({
         message: "Staff Added Successfully!",
+        data: {
+          _id: savedStaff._id,
+          name: savedStaff.name,
+          email: savedStaff.email,
+          role: savedStaff.role,
+          status: savedStaff.status,
+          joiningDate: savedStaff.joiningDate,
+        }
       });
     }
   } catch (err) {
@@ -265,7 +283,7 @@ const addStaff = async (req, res,next) => {
 // get all staff
 const getAllStaff = async (req, res,next) => {
   try {
-    const admins = await Admin.find({}).sort({ _id: -1 });
+    const admins = await Admin.find({}).select('-password').sort({ _id: -1 });
     res.status(200).json({
       status:true,
       message:'Staff get successfully',
@@ -279,37 +297,44 @@ const getAllStaff = async (req, res,next) => {
 const getStaffById = async (req, res,next) => {
 
   try {
-    const admin = await Admin.findById(req.params.id);
+    const admin = await Admin.findById(req.params.id).select('-password');
+    if (!admin) {
+      return res.status(404).json({
+        message: "Staff not found"
+      });
+    }
     res.send(admin);
   } catch (err) {
     next(err)
   }
 };
 // updateStaff
-const updateStaff = async (req, res) => {
+const updateStaff = async (req, res,next) => {
   try {
     const admin = await Admin.findOne({ _id: req.params.id });
     if (admin) {
-      admin.name = req.body.name;
-      admin.email = req.body.email;
-      admin.phone = req.body.phone;
-      admin.role = req.body.role;
-      admin.joiningData = req.body.joiningDate;
-      admin.image = req.body.image;
-      admin.password =
-      req.body.password !== undefined
-        ? bcrypt.hashSync(req.body.password)
-        : admin.password;
+      admin.name = req.body.name || admin.name;
+      admin.email = req.body.email || admin.email;
+      admin.phone = req.body.phone || admin.phone;
+      admin.role = req.body.role || admin.role;
+      admin.status = req.body.status || admin.status;
+      admin.joiningDate = req.body.joiningDate || admin.joiningDate;
+      admin.image = req.body.image || admin.image;
+      
+      if (req.body.password !== undefined && req.body.password !== '') {
+        admin.password = bcrypt.hashSync(req.body.password);
+      }
+      
       const updatedAdmin = await admin.save();
-      const token = generateToken(updatedAdmin);
       res.send({
-        token,
         _id: updatedAdmin._id,
         name: updatedAdmin.name,
         email: updatedAdmin.email,
         role: updatedAdmin.role,
+        status: updatedAdmin.status,
         image: updatedAdmin.image,
         phone: updatedAdmin.phone,
+        joiningDate: updatedAdmin.joiningDate,
       });
     } else {
       res.status(404).send({
@@ -317,17 +342,60 @@ const updateStaff = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+    next(err)
   }
 };
 // deleteStaff
 const deleteStaff = async (req, res,next) => {
   try {
+    // Prevent deleting the super admin
+    const staff = await Admin.findById(req.params.id);
+    if (staff && staff.role === "Super Admin" && req.user.role === staff.role) {
+      // Allow super admin to delete themselves, but prevent deleting the only super admin
+      const superAdminCount = await Admin.countDocuments({ role: "Super Admin" });
+      if (superAdminCount <= 1) {
+        return res.status(400).json({
+          message: 'Cannot delete the last Super Admin in the system'
+        });
+      }
+    }
+    
     await Admin.findByIdAndDelete(req.params.id);
     res.status(200).json({
-      message:'Admin Deleted Successfully',
+      message:'Staff Deleted Successfully',
+    });
+  } catch (err) {
+    next(err)
+  }
+};
+
+// deactivate/activate staff
+const updateStaffStatus = async (req, res,next) => {
+  try {
+    const { status } = req.body;
+    
+    // Validate status
+    if (!["Active", "Inactive"].includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status. Must be Active or Inactive"
+      });
+    }
+
+    const staff = await Admin.findByIdAndUpdate(
+      req.params.id,
+      { status: status },
+      { new: true }
+    ).select('-password');
+
+    if (!staff) {
+      return res.status(404).json({
+        message: "Staff not found"
+      });
+    }
+
+    res.status(200).json({
+      message: `Staff status updated to ${status}`,
+      data: staff
     });
   } catch (err) {
     next(err)
@@ -469,7 +537,7 @@ const createDefaultAdmin = async (req, res, next) => {
       return res.status(200).json({
         status: true,
         message: 'Default admin already exists',
-        data: { email: existingAdmin.email }
+        data: { email: existingAdmin.email, role: existingAdmin.role }
       });
     }
 
@@ -477,7 +545,7 @@ const createDefaultAdmin = async (req, res, next) => {
       name: 'Dorothy R. Brown',
       email: 'dorothy@gmail.com',
       password: bcrypt.hashSync('123456'),
-      role: 'Admin',
+      role: 'Super Admin',
       status: 'Active',
       phone: '708-628-3122',
       image: 'https://i.ibb.co/wpjNftS/user-2.jpg',
@@ -486,8 +554,8 @@ const createDefaultAdmin = async (req, res, next) => {
     await defaultAdmin.save();
     res.status(201).json({
       status: true,
-      message: 'Default admin created successfully',
-      data: { email: defaultAdmin.email, password: '123456' }
+      message: 'Default super admin created successfully',
+      data: { email: defaultAdmin.email, role: defaultAdmin.role, password: '123456' }
     });
   } catch (err) {
     next(err);
@@ -586,6 +654,7 @@ module.exports = {
   getAllStaff,
   getStaffById,
   updateStaff,
+  updateStaffStatus,
   deleteStaff,
   updatedStatus,
   changePassword,

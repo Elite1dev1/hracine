@@ -10,6 +10,51 @@ const AdminLayout = ({ children }) => {
   const router = useRouter();
   const [admin, setAdmin] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [menuItems, setMenuItems] = useState([]);
+
+  // Define role-based menu access
+  const roleMenuAccess = {
+    "Super Admin": [
+      { name: 'Dashboard', icon: '📊', path: '/admin' },
+      { name: 'Products', icon: '📦', path: '/admin/products' },
+      { name: 'Categories', icon: '📁', path: '/admin/categories' },
+      { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
+      { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
+      { name: 'Users', icon: '👥', path: '/admin/users' },
+      { name: 'Orders', icon: '🛒', path: '/admin/orders' },
+      { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
+      { name: 'Blogs', icon: '📝', path: '/admin/blogs' },
+      { 
+        name: 'Marketing', 
+        icon: '📧', 
+        path: '/admin/marketing',
+        submenu: [
+          { name: 'Newsletter Subscribers', path: '/admin/newsletter' },
+        ]
+      },
+      { name: 'Settings', icon: '⚙️', path: '/admin/settings' },
+      { name: 'Staff Management', icon: '👨‍💼', path: '/admin/staff' },
+    ],
+    "Order Manager": [
+      { name: 'Dashboard', icon: '📊', path: '/admin' },
+      { name: 'Orders', icon: '🛒', path: '/admin/orders' },
+      { name: 'Users', icon: '👥', path: '/admin/users' },
+      { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
+    ],
+    "Store Manager": [
+      { name: 'Dashboard', icon: '📊', path: '/admin' },
+      { name: 'Products', icon: '📦', path: '/admin/products' },
+      { name: 'Categories', icon: '📁', path: '/admin/categories' },
+      { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
+      { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
+    ],
+    "Support Staff": [
+      { name: 'Dashboard', icon: '📊', path: '/admin' },
+      { name: 'Orders', icon: '🛒', path: '/admin/orders' },
+      { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
+      { name: 'Users', icon: '👥', path: '/admin/users' },
+    ],
+  };
 
   useEffect(() => {
     const adminInfo = Cookies.get('adminInfo');
@@ -18,7 +63,12 @@ const AdminLayout = ({ children }) => {
     } else {
       try {
         const parsed = JSON.parse(adminInfo);
-        setAdmin(parsed.admin);
+        const adminData = parsed.admin;
+        setAdmin(adminData);
+        
+        // Set menu items based on role
+        const items = roleMenuAccess[adminData.role] || roleMenuAccess["Super Admin"];
+        setMenuItems(items);
       } catch (error) {
         router.push('/admin/login');
       }
@@ -33,22 +83,6 @@ const AdminLayout = ({ children }) => {
   if (!admin) {
     return null;
   }
-
-  const menuItems = [
-    { name: 'Dashboard', icon: '📊', path: '/admin' },
-    { name: 'Products', icon: '📦', path: '/admin/products' },
-    { name: 'Categories', icon: '📁', path: '/admin/categories' },
-    { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
-    { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
-    { name: 'Users', icon: '👥', path: '/admin/users' },
-    { name: 'Orders', icon: '🛒', path: '/admin/orders' },
-    { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
-    { name: 'Blogs', icon: '📝', path: '/admin/blogs' },
-    { name: 'Marketing', icon: '📧', path: '/admin/marketing', submenu: [
-      { name: 'Newsletter Subscribers', path: '/admin/newsletter' },
-    ]},
-    { name: 'Settings', icon: '⚙️', path: '/admin/settings' },
-  ];
 
   return (
     <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
@@ -138,7 +172,7 @@ const AdminLayout = ({ children }) => {
             {sidebarOpen && (
               <div>
                 <div style={{ fontWeight: 'bold' }}>{admin.name}</div>
-                <div style={{ fontSize: '12px', color: '#95a5a6' }}>{admin.email}</div>
+                <div style={{ fontSize: '12px', color: '#95a5a6' }}>{admin.role}</div>
               </div>
             )}
           </div>
