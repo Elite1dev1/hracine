@@ -14,7 +14,7 @@ import { handleModalClose } from '@/redux/features/productModalSlice';
 import { formatCurrency } from '@/utils/currency';
 
 const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBottom = false }) => {
-  const { sku, img, title, imageURLs, category, description, discount, price, status, reviews, tags, offerDate, ingredients, howToUse, keyBenefits } = productItem || {};
+  const { sku, img, title, imageURLs, category, description, discount, price, status, reviews, tags, offerDate, ingredients, howToUse, keyBenefits, isPreOrder, launchDate } = productItem || {};
   const [ratingVal, setRatingVal] = useState(0);
   const [textMore, setTextMore] = useState(false);
   const dispatch = useDispatch()
@@ -51,6 +51,17 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
         <span>{category.name}</span>
       </div>
       <h3 className="tp-product-details-title">{title}</h3>
+
+      {isPreOrder && (
+        <div className="tp-product-details-preorder-notice mb-20" style={{ backgroundColor: '#fff4f0', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #ff5501' }}>
+          <p style={{ color: '#ff5501', fontWeight: 'bold', margin: 0, fontSize: '16px' }}>
+            This is a pre-order item
+          </p>
+          <p style={{ color: '#555', margin: '5px 0 0 0', fontSize: '14px' }}>
+            Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)
+          </p>
+        </div>
+      )}
 
       {/* inventory details */}
       <div className="tp-product-details-inventory d-flex align-items-center mb-10">
@@ -154,11 +165,11 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
           <ProductQuantity />
           {/* product quantity */}
           <div className="tp-product-details-add-to-cart mb-15 w-100">
-            <button onClick={() => handleAddProduct(productItem)} disabled={status === 'out-of-stock'} className="tp-product-details-add-to-cart-btn w-100">Pre-Order</button>
+            <button onClick={() => handleAddProduct(productItem)} disabled={status === 'out-of-stock'} className="tp-product-details-add-to-cart-btn w-100">{isPreOrder ? 'Pre-order' : 'Add to Cart'}</button>
           </div>
         </div>
         <Link href="/cart" onClick={() => dispatch(handleModalClose())}>
-          <button className="tp-product-details-buy-now-btn w-100">Buy Now</button>
+          <button className="tp-product-details-buy-now-btn w-100">{isPreOrder ? 'Pre-order' : 'Buy Now'}</button>
         </Link>
       </div>
       {/* product-details-action-sm start */}
@@ -178,7 +189,7 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
       </div>
       {/* product-details-action-sm end */}
 
-      {detailsBottom && <DetailsBottomInfo category={category?.name} sku={sku} tag={tags[0]} />}
+      {detailsBottom && <DetailsBottomInfo category={category?.name} sku={sku} tag={tags[0]} isPreOrder={isPreOrder} />}
     </div>
   );
 };

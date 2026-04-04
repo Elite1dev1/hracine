@@ -15,11 +15,13 @@ import HeaderMainRight from "./header-com/header-main-right";
 import CartMiniSidebar from "@/components/common/cart-mini-sidebar";
 import HeaderSearchForm from "@/components/forms/header-search-form";
 import PromoBanner from "@/components/common/promo-banner";
+import { useGetSettingsQuery } from "@/redux/features/admin/adminApi";
 import { CartTwo, CategoryMenu, Compare, Menu, ShippingCar, Wishlist } from "@/svg";
 import { formatCurrency } from "@/utils/currency";
 
 const Header = () => {
   const { wishlist } = useSelector((state) => state.wishlist);
+  const { data: settingsData } = useGetSettingsQuery();
   const [isOffCanvasOpen, setIsCanvasOpen] = useState(false);
   const [isCategoryActive, setIsCategoryActive] = useState(false);
   const { quantity } = useCartInfo();
@@ -27,7 +29,7 @@ const Header = () => {
   const dispatch = useDispatch();
   return (
     <>
-      <header>
+      <header style={{ position: 'relative', zIndex: 100 }}>
         <PromoBanner />
         <div className="tp-header-area p-relative z-index-11">
           {/* header top start  */}
@@ -39,7 +41,7 @@ const Header = () => {
                     <span>
                       <ShippingCar />
                     </span>
-                    <p>Free shipping on orders over ₦25,500</p>
+                    <p>{settingsData?.data?.freeShippingBannerText || "Free shipping on orders over ₦25,500"}</p>
                   </div>
                 </div>
                 <div className="col-md-6">

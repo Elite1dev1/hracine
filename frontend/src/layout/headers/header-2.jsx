@@ -10,6 +10,7 @@ import useSticky from '@/hooks/use-sticky';
 import useCartInfo from '@/hooks/use-cart-info';
 import { openCartMini } from '@/redux/features/cartSlice';
 import { handleFilterSidebarOpen } from '@/redux/features/shop-filter-slice';
+import { useGetSettingsQuery } from '@/redux/features/admin/adminApi';
 import HeaderTopRight from './header-com/header-top-right';
 import CartMiniSidebar from '@/components/common/cart-mini-sidebar';
 import { CartTwo, Compare, Facebook, Menu, PhoneTwo, Wishlist, Search, Filter } from '@/svg';
@@ -19,6 +20,7 @@ import PromoBanner from "@/components/common/promo-banner";
 
 const HeaderTwo = ({ style_2 = false }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
+  const { data: settingsData } = useGetSettingsQuery();
   const [isOffCanvasOpen, setIsCanvasOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -75,7 +77,7 @@ const HeaderTwo = ({ style_2 = false }) => {
   }, [lastScrollY]);
   return (
     <>
-      <header>
+      <header style={{ position: 'relative', zIndex: 100 }}>
         <PromoBanner />
         <div
           className={`tp-header-area tp-header-style-${style_2 ? 'primary' : 'darkRed'} tp-header-height ${isHomeNavbar ? "" : "tp-header-non-home"
@@ -90,7 +92,7 @@ const HeaderTwo = ({ style_2 = false }) => {
                       <a href="#">
                         <span>
                           <Facebook />
-                        </span> free shipping on orders above #25,000
+                        </span> {settingsData?.data?.freeShippingBannerText || "free shipping on orders above #25,000"}
                       </a>
                     </div>
                     <div className="tp-header-info-item">

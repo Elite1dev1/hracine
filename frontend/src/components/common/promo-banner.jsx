@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Close } from '@/svg';
+import { useGetSettingsQuery } from '@/redux/features/admin/adminApi';
 
 const PromoBanner = () => {
+    const { data: settingsData } = useGetSettingsQuery();
     const [isVisible, setIsVisible] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const isDismissed = sessionStorage.getItem('promo_banner_dismissed');
         if (!isDismissed) {
             setIsVisible(true);
@@ -16,11 +20,23 @@ const PromoBanner = () => {
         setIsVisible(false);
     };
 
-    if (!isVisible) return null;
+    if (!mounted) return null;
+
+    const bannerText = settingsData?.data?.freeShippingBannerText || "Free shipping on orders above ₦25,000.";
 
     return (
         <>
             <style dangerouslySetInnerHTML={{ __html: `
+                .tp-promo-banner {
+                    transition: all 0.3s ease-in-out;
+                    overflow: hidden;
+                    background-color: #000;
+                }
+                .tp-promo-banner.hidden {
+                    opacity: 0;
+                    visibility: hidden;
+                    pointer-events: none;
+                }
                 .tp-promo-banner .tp-promo-banner__row {
                     display: flex !important;
                     flex-direction: row !important;
@@ -28,7 +44,7 @@ const PromoBanner = () => {
                     align-items: center !important;
                     justify-content: center !important;
                     position: relative;
-                    min-height: 24px;
+                    min-height: 34px;
                     width: 100%;
                     max-width: 1230px;
                     margin: 0 auto;
@@ -39,7 +55,7 @@ const PromoBanner = () => {
                     flex: 1 1 auto !important;
                     text-align: center !important;
                     margin: 0 !important;
-                    padding-right: 44px !important;
+                    padding: 5px 44px 5px 0 !important;
                     font-size: 14px;
                     font-weight: 500;
                     color: #fff;
@@ -77,7 +93,7 @@ const PromoBanner = () => {
                     fill: currentColor;
                 }
                 @media (max-width: 576px) {
-                    .tp-promo-banner .tp-promo-banner__row { padding: 0 10px; }
+                    .tp-promo-banner .tp-promo-banner__row { padding: 0 10px; min-height: 30px; }
                     .tp-promo-banner .tp-promo-banner__text { font-size: 12px; padding-right: 36px !important; }
                     .tp-promo-banner .tp-promo-banner__close,
                     .tp-promo-banner button.tp-promo-banner__close {
@@ -90,15 +106,15 @@ const PromoBanner = () => {
                     .tp-promo-banner .tp-promo-banner__close svg { width: 9px; height: 9px; }
                 }
             `}} />
-            <div className="tp-promo-banner">
+            <div className={`tp-promo-banner ${isVisible ? 'visible' : 'hidden'}`} aria-hidden={!isVisible}>
                 <div className="tp-promo-banner__row">
                     <p className="tp-promo-banner__text">
-                        Free shipping on orders above ₦25,000.
+                        {bannerText}
                     </p>
                     <button
                         type="button"
-                        onClick={handleDismiss}
                         className="tp-promo-banner__close"
+                        onClick={handleDismiss}
                         aria-label="Close promo banner"
                     >
                         <Close />

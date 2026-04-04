@@ -13,7 +13,7 @@ import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { formatCurrency } from "@/utils/currency";
 
 const ProductItem = ({ product, offer_style = false }) => {
-  const { _id, img, category, title, reviews, price, discount,status,offerDate } = product || {};
+  const { _id, img, category, title, reviews, price, discount,status,offerDate, isPreOrder } = product || {};
 
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -60,6 +60,7 @@ const ProductItem = ({ product, offer_style = false }) => {
 
             <div className="tp-product-badge">
               {status === 'out-of-stock' && <span className="product-hot">out-stock</span>}
+              {isPreOrder && <span className="product-hot" style={{backgroundColor: '#ff5501'}}>Pre-order</span>}
             </div>
           </div>
 
@@ -82,7 +83,7 @@ const ProductItem = ({ product, offer_style = false }) => {
                 >
                   <Cart />
 
-                  <span className="tp-product-tooltip">Add to Cart</span>
+                  <span className="tp-product-tooltip">{isPreOrder ? 'Pre-order' : 'Add to Cart'}</span>
                 </button>
               )}
               <button

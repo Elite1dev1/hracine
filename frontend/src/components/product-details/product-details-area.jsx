@@ -19,7 +19,7 @@ const ProductDetailsArea = ({ productItem }) => {
   };
 
   return (
-    <section className="tp-product-details-area">
+    <section className="tp-product-details-area tp-product-details-area--page">
       {/* Mobile-first layout (visible only on mobile/tablet) */}
       <div className="d-lg-none">
         <ProductDetailsMobile productItem={productItem} />

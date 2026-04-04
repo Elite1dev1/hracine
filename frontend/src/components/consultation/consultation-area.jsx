@@ -4,7 +4,7 @@ import { useCreateConsultationMutation } from '@/redux/features/consultationApi'
 import { notifySuccess, notifyError } from '@/utils/toast';
 import { ArrowRightLong } from '@/svg';
 // You'll need to add placeholder images
-import consultation_img from '@assets/img/about/about-1.jpg';
+import consultation_img from '@assets/img/about/about-1.jpeg';
 
 const ConsultationArea = () => {
   const [createConsultation, { isLoading }] = useCreateConsultationMutation();
@@ -134,7 +134,7 @@ const ConsultationArea = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="tp-consultation-hero-area pt-120 pb-100" style={{ backgroundColor: '#F8F8F8' }}>
+      <section className="tp-consultation-hero-area pt-120 pb-100" style={{ backgroundColor: '#F8F8F8', paddingTop: 'clamp(100px, 15vw, 150px)' }}>
         <div className="container">
           <div className="row align-items-center">
             <div className="col-xl-6 col-lg-6">

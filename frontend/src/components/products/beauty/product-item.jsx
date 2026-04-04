@@ -10,7 +10,7 @@ import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { formatCurrency } from "@/utils/currency";
 
 const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
-  const { _id, img, title, discount, price, tags,status } = product || {};
+  const { _id, img, title, discount, price, tags,status, isPreOrder } = product || {};
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const isAddedToCart = cart_products.some((prd) => prd._id === _id);
@@ -37,6 +37,7 @@ const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
 
         <div className="tp-product-badge">
           {status === 'out-of-stock' && <span className="product-hot">out-stock</span>}
+          {isPreOrder && <span className="product-hot" style={{backgroundColor: '#ff5501'}}>Pre-order</span>}
         </div>
 
         {/* product action */}
@@ -58,7 +59,7 @@ const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
                 disabled={status === 'out-of-stock'}
               >
                 <Cart />
-                <span className="tp-product-tooltip">Add to Cart</span>
+                <span className="tp-product-tooltip">{isPreOrder ? 'Pre-order' : 'Add to Cart'}</span>
               </button>
             )}
             <button
@@ -93,7 +94,7 @@ const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
               className="tp-product-add-cart-btn-large"
               disabled={status === 'out-of-stock'}
             >
-              Add To Cart
+              {isPreOrder ? 'Pre-order' : 'Add To Cart'}
             </button>
           )}
         </div>

@@ -242,6 +242,12 @@ exports.updateProductService = async (id, currProduct) => {
     if (currProduct.featured !== undefined) {
       product.featured = currProduct.featured;
     }
+    if (currProduct.isPreOrder !== undefined) {
+      product.isPreOrder = currProduct.isPreOrder;
+    }
+    if (currProduct.launchDate !== undefined) {
+      product.launchDate = currProduct.launchDate;
+    }
 
     await product.save();
   }

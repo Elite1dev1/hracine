@@ -45,7 +45,7 @@ const ShopArea = ({ all_products, products, otherProps }) => {
 
   return (
     <>
-      <section className="tp-shop-area pb-120">
+      <section className="tp-shop-area pb-120" style={{ paddingTop: 'clamp(100px, 15vw, 150px)' }}>
         <div className="container">
           <div className="row">
             {/* Desktop Sidebar - Hidden on Mobile */}

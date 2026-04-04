@@ -4,16 +4,16 @@ import Link from 'next/link';
 // internal
 import { ArrowRightLong } from '@/svg';
 import founder_img from '@assets/img/about/founders.jpeg';
-import user_1 from '@assets/img/users/user-1.jpg';
-import user_2 from '@assets/img/users/user-2.jpg';
-import user_3 from '@assets/img/users/user-3.jpg';
-import user_4 from '@assets/img/users/user-4.jpg';
-import author_img from '@assets/img/users/mariam.jpg';
+import user_1 from '@assets/profile picture/1.jpg';
+import user_2 from '@assets/profile picture/2p.jpg';
+import user_3 from '@assets/profile picture/3p.jpg';
+import user_4 from '@assets/profile picture/4p.jpg';
+import author_img from '@assets/profile picture/5p.jpg';
 
 const reviews = [
   {
     id: 1,
-    name: 'Kelvin T.',
+    name: 'Sophia T.',
     rating: 5,
     avatar: user_1,
     headline: 'Stronger hair from the roots',
@@ -504,34 +504,34 @@ const AboutArea = () => {
               {valueCards
                 .filter((card) => card.title !== 'Integrity')
                 .map((card) => (
-                <div key={card.id} className="col-xl-4 col-lg-4 col-md-6 mb-30">
-                  <div className="tp-about-value-card" style={{
-                    padding: '40px 30px',
-                    backgroundColor: '#fff',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                    height: '100%',
-                    transition: 'transform 0.3s ease'
-                  }}>
-                    <h3 className="tp-about-value-title" style={{
-                      fontSize: '28px',
-                      marginBottom: '20px',
-                      fontWeight: '600',
-                      color: '#22160E'
+                  <div key={card.id} className="col-xl-4 col-lg-4 col-md-6 mb-30">
+                    <div className="tp-about-value-card" style={{
+                      padding: '40px 30px',
+                      backgroundColor: '#fff',
+                      borderRadius: '8px',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                      height: '100%',
+                      transition: 'transform 0.3s ease'
                     }}>
-                      {card.title}
-                    </h3>
-                    <p style={{
-                      fontSize: '16px',
-                      lineHeight: '1.7',
-                      color: '#55585B',
-                      margin: 0
-                    }}>
-                      {card.description}
-                    </p>
+                      <h3 className="tp-about-value-title" style={{
+                        fontSize: '28px',
+                        marginBottom: '20px',
+                        fontWeight: '600',
+                        color: '#22160E'
+                      }}>
+                        {card.title}
+                      </h3>
+                      <p style={{
+                        fontSize: '16px',
+                        lineHeight: '1.7',
+                        color: '#55585B',
+                        margin: 0
+                      }}>
+                        {card.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </section>

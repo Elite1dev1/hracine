@@ -91,7 +91,7 @@ const CompareArea = () => {
                           <td key={item._id}>
                             <div className="tp-compare-add-to-cart">
                               <button onClick={() => handleAddProduct(item)} type="button" className="tp-btn">
-                                Add to Cart
+                                {item.isPreOrder ? 'Pre-order' : 'Add to Cart'}
                               </button>
                             </div>
                           </td>

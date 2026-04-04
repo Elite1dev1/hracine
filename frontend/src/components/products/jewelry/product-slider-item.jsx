@@ -10,7 +10,7 @@ import { notifyError } from "@/utils/toast";
 import { formatCurrency } from "@/utils/currency";
 
 const ProductSliderItem = ({ product }) => {
-  const { _id, title, price, img,status } = product || {};
+  const { _id, title, price, img, status, isPreOrder } = product || {};
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const isAddedToCart = cart_products.some((prd) => prd._id === _id);
@@ -57,7 +57,7 @@ const ProductSliderItem = ({ product }) => {
               className={`tp-product-action-btn-3 ${isAddedToCart ? 'active' : ''} tp-product-add-cart-btn`}
             >
               <Cart />
-              <span className="tp-product-tooltip">Add to Cart</span>
+              <span className="tp-product-tooltip">{isPreOrder ? 'Pre-order' : 'Add to Cart'}</span>
             </button>
           )}
           <button
@@ -91,7 +91,7 @@ const ProductSliderItem = ({ product }) => {
               </Link>
             ) : (
               <button onClick={() => handleAddProduct(product)} className="tp-category-add-to-cart-4">
-                <AddCart />{" "}Add to Cart
+                <AddCart />{" "}{isPreOrder ? 'Pre-order' : 'Add to Cart'}
               </button>
             )}
           </div>

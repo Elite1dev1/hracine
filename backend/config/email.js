@@ -2,19 +2,19 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const { secret } = require('./secret');
 
+const transporter = nodemailer.createTransport({
+  host: secret.email_host,
+  service: secret.email_service, //comment this line if you use custom server/domain
+  port: secret.email_port,
+  secure: true,
+  auth: {
+    user: secret.email_user,
+    pass: secret.email_pass,
+  },
+});
+
 // sendEmail
 module.exports.sendEmail = (body, res, message) => {
-  const transporter = nodemailer.createTransport({
-    host: secret.email_host,
-    service: secret.email_service, //comment this line if you use custom server/domain
-    port: secret.email_port,
-    secure: true,
-    auth: {
-      user: secret.email_user,
-      pass: secret.email_pass,
-    },
-  });
-
   transporter.verify(function (err, success) {
     if (err) {
       res.status(403).send({
@@ -38,4 +38,6 @@ module.exports.sendEmail = (body, res, message) => {
     }
   });
 };
+
+module.exports.transporter = transporter;
 

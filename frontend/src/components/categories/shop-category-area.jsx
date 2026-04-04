@@ -55,7 +55,7 @@ const ShopCategoryArea = () => {
   }
   return (
     <>
-      <section className="tp-category-area pb-120">
+      <section className="tp-category-area pb-120" style={{ paddingTop: 'clamp(100px, 15vw, 150px)' }}>
         <div className="container">
           <div className="row">{content}</div>
         </div>

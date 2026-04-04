@@ -77,7 +77,8 @@ const HairCareHero = () => {
           position: 'relative',
           zIndex: 2,
           minHeight: '100vh',
-          width: '100%'
+          width: '100%',
+          paddingTop: '80px' /* Push content down slightly to clear fixed header on mobile */
         }}>
           <div className="container">
             <div className="row justify-content-center">

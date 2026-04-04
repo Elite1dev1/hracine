@@ -104,12 +104,12 @@ const PopularProducts = () => {
                     View Cart
                   </Link>
                 ) : (
-                  <a
+                  <button
                     onClick={() => handleAddProduct(item)}
                     className="tp-btn tp-btn-border cursor-pointer"
                   >
-                    Add to Cart
-                  </a>
+                    {item.isPreOrder ? 'Pre-order' : 'Add to Cart'}
+                  </button>
                 )}
               </div>
             </div>

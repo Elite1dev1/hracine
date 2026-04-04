@@ -49,6 +49,11 @@ const handleCloseCartMini = () => {
                     <h5 className="cartmini__title">
                       <Link href={`/product-details/${item._id}`}>{item.title}</Link>
                     </h5>
+                    {item.isPreOrder && (
+                      <div className="cartmini__preorder-badge mb-5">
+                        <span style={{ backgroundColor: '#ff5501', color: 'white', padding: '1px 6px', borderRadius: '3px', fontSize: '10px' }}>Pre-order</span>
+                      </div>
+                    )}
                     <div className="cartmini__price-wrapper">
                       {item.discount > 0 ? (
                         <span className="cartmini__price">{formatCurrency(Number(item.price) - (Number(item.price) * Number(item.discount)) / 100)}</span>

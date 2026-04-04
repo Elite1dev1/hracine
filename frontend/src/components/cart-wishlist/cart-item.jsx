@@ -8,7 +8,7 @@ import { add_cart_product, quantityDecrement, remove_product } from "@/redux/fea
 import { formatCurrency } from "@/utils/currency";
 
 const CartItem = ({product}) => {
-  const {_id, img,title,price, orderQuantity = 0 } = product || {};
+  const {_id, img,title,price, orderQuantity = 0, isPreOrder } = product || {};
 
   const dispatch = useDispatch();
 
@@ -37,6 +37,11 @@ const CartItem = ({product}) => {
       {/* title */}
       <td className="tp-cart-title">
         <Link href={`/product-details/${_id}`}>{title}</Link>
+        {isPreOrder && (
+          <div className="tp-cart-preorder-badge mt-10">
+            <span style={{ backgroundColor: '#ff5501', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '12px' }}>Pre-order</span>
+          </div>
+        )}
       </td>
       {/* price */}
       <td className="tp-cart-price">

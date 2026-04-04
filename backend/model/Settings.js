@@ -7,6 +7,15 @@ const settingsSchema = new mongoose.Schema(
       required: true,
       default: 200,
     },
+    preOrderFreeShippingThreshold: {
+      type: Number,
+      required: true,
+      default: 25000,
+    },
+    freeShippingBannerText: {
+      type: String,
+      default: "Free shipping on orders above 25,000",
+    },
     todayDeliveryPrice: {
       type: Number,
       required: true,
@@ -44,6 +53,8 @@ settingsSchema.statics.getSettings = async function () {
   if (!settings) {
     settings = await this.create({
       freeShippingThreshold: 200,
+      preOrderFreeShippingThreshold: 25000,
+      freeShippingBannerText: "Free shipping on orders above 25,000",
       todayDeliveryPrice: 60,
       sevenDayDeliveryPrice: 20,
       paystackTestApiKey: "",
@@ -52,6 +63,14 @@ settingsSchema.statics.getSettings = async function () {
     });
   } else {
     let isUpdated = false;
+    if (typeof settings.preOrderFreeShippingThreshold !== "number") {
+      settings.preOrderFreeShippingThreshold = 25000;
+      isUpdated = true;
+    }
+    if (typeof settings.freeShippingBannerText !== "string") {
+      settings.freeShippingBannerText = "Free shipping on orders above 25,000";
+      isUpdated = true;
+    }
     if (typeof settings.todayDeliveryPrice !== "number") {
       settings.todayDeliveryPrice = 60;
       isUpdated = true;

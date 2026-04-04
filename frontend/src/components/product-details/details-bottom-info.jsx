@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import payment_option_img from '@assets/img/product/icons/payment-option.png';
 
-const DetailsBottomInfo = ({sku,category,tag}) => {
+const DetailsBottomInfo = ({sku,category,tag, isPreOrder}) => {
   return (
     <>
       {/* product-details-query */}
@@ -41,12 +41,14 @@ const DetailsBottomInfo = ({sku,category,tag}) => {
 
       {/* product-details-msg */}
 
-      <div className="tp-product-details-msg mb-15">
-        <ul>
-          <li>30 days easy returns</li>
-          <li>Order yours before 2.30pm for same day dispatch</li>
-        </ul>
-      </div>
+      {!isPreOrder && (
+        <div className="tp-product-details-msg mb-15">
+          <ul>
+            <li>30 days easy returns</li>
+            <li>Order yours before 2.30pm for same day dispatch</li>
+          </ul>
+        </div>
+      )}
       {/* product-details-payment */}
       <div className="tp-product-details-payment d-flex align-items-center flex-wrap justify-content-between">
         <p>

@@ -496,6 +496,14 @@ video {
     min-height: 80px !important;
   }
 
+  .product-details-breadcrumb {
+    display: none !important;
+  }
+
+  .tp-product-details-area--page {
+    padding-top: 0 !important;
+  }
+
   // Cards and containers
   .card,
   .tp-card {
@@ -538,7 +546,9 @@ video {
   // Invoice/Order pages
   .invoice__area,
   .invoice__wrapper {
-    padding: 20px 10px !important;
+    padding-bottom: 20px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
 
     .invoice__header,
     .invoice__customer,
@@ -778,6 +788,12 @@ video {
   .pb-100,
   .pb-115 {
     padding-bottom: 40px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .tp-product-details-area--page {
+    padding-top: clamp(48px, 8vw, 96px);
   }
 }
 

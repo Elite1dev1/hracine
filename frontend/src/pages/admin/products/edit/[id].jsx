@@ -52,6 +52,8 @@ const EditProductPage = () => {
         howToUse: productData.howToUse || '',
         keyBenefits: productData.keyBenefits || [],
         comingSoon: productData.comingSoon || false,
+        isPreOrder: productData.isPreOrder || false,
+        launchDate: productData.launchDate ? new Date(productData.launchDate).toISOString().split('T')[0] : '',
       });
       
       // Set selected category and brand
@@ -633,12 +635,41 @@ const EditProductPage = () => {
                   style={{ width: '18px', height: '18px', cursor: 'pointer' }}
                 />
                 <span style={{ fontSize: '16px', color: '#555' }}>
-                  free shipping on orders above #25,000
+                  Enable Free Shipping Banner
                   <span style={{ fontSize: '12px', color: '#888', marginLeft: '8px' }}>
-                    (Product will appear in Featured Rituals section)
+                    (Product will appear in Featured Rituals section with the dynamic banner)
                   </span>
                 </span>
               </label>
+
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  name="isPreOrder"
+                  checked={formData.isPreOrder || false}
+                  onChange={(e) => setFormData(prev => ({ ...prev, isPreOrder: e.target.checked }))}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '16px', color: '#555' }}>
+                  Enable Pre-order
+                </span>
+              </label>
+
+              {formData.isPreOrder && (
+                <div style={{ marginLeft: '28px', marginTop: '10px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', color: '#555', fontWeight: 'bold' }}>
+                    Launch Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="launchDate"
+                    value={formData.launchDate}
+                    onChange={handleChange}
+                    required={formData.isPreOrder}
+                    style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}
+                  />
+                </div>
+              )}
             </div>
           </div>
 

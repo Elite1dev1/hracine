@@ -12,7 +12,7 @@ import { add_to_compare } from "@/redux/features/compareSlice";
 import { formatCurrency } from "@/utils/currency";
 
 const ProductItem = ({ product, style_2 = false }) => {
-  const { _id, img, category, title, reviews, price, discount, tags, status } = product || {};
+  const { _id, img, category, title, reviews, price, discount, tags, status, isPreOrder } = product || {};
   const [ratingVal, setRatingVal] = useState(0);
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -59,6 +59,7 @@ const ProductItem = ({ product, style_2 = false }) => {
         </div>
         <div className="tp-product-badge">
           {status === 'out-of-stock' && <span className="product-hot">out-stock</span>}
+          {isPreOrder && <span className="product-hot" style={{backgroundColor: '#ff5501'}}>Pre-order</span>}
         </div>
         {/* product action */}
         <div className="tp-product-action-2 tp-product-action-blackStyle">
@@ -82,7 +83,7 @@ const ProductItem = ({ product, style_2 = false }) => {
               >
                 <Cart />
                 <span className="tp-product-tooltip tp-product-tooltip-right">
-                  Pre-Order
+                  {isPreOrder ? 'Pre-order' : 'Add to Cart'}
                 </span>
               </button>
             )}

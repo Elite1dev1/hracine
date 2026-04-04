@@ -28,15 +28,30 @@ const SingleOrder = ({ params }) => {
   }
   if (!isLoading && !isError) {
     const { name, country, city, contact, invoice, createdAt, cart, shippingCost, discount, totalAmount,paymentMethod} = order.order;
+    const allPreOrder = cart.length > 0 && cart.every(item => item.isPreOrder === true);
+    const launchDate = allPreOrder ? cart[0]?.launchDate : null;
+
     content = (
       <>
-        <section className="invoice__area pt-120 pb-120">
+        <section className="invoice__area pt-120 pb-120" style={{ 
+          paddingTop: 'clamp(180px, 20vw, 240px)',
+          paddingBottom: 'clamp(60px, 10vw, 120px)'
+        }}>
           <div className="container">
-            <div className="invoice__msg-wrapper">
+            <div className="invoice__msg-wrapper" style={{ marginTop: '20px' }}>
               <div className="row">
                 <div className="col-xl-12">
                   <div className="invoice_msg mb-40">
-                    <p className="text-black alert alert-success">Thank you <strong>{name}</strong> Your order have been received ! </p>
+                    {allPreOrder ? (
+                      <div className="alert alert-success">
+                        <h4 className="alert-heading">Pre-order Confirmed 🎉</h4>
+                        <p className="text-black mb-0">Hi <strong>{name}</strong>, your pre-order has been placed successfully.</p>
+                        <p className="text-black mb-0">Delivery begins on <strong>{new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)</strong>.</p>
+                        <p className="text-black mb-0">We&apos;ll keep you updated.</p>
+                      </div>
+                    ) : (
+                      <p className="text-black alert alert-success">Thank you <strong>{name}</strong> Your order have been received ! </p>
+                    )}
                   </div>
                 </div>
               </div>

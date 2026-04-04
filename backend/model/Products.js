@@ -140,6 +140,16 @@ const productsSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isPreOrder: {
+    type: Boolean,
+    default: false,
+  },
+  launchDate: {
+    type: Date,
+    required: function() {
+      return this.isPreOrder === true;
+    }
+  },
   sellCount: {
     type: Number,
     default: 0,

@@ -14,21 +14,37 @@ const CheckoutOrderArea = ({ checkoutData }) => {
     errors,
     shippingCost,
     discountAmount,
-    paymentError
+    paymentError,
+    allPreOrder,
   } = checkoutData;
   const { cart_products } = useSelector((state) => state.cart);
   const { total } = useCartInfo();
   const { data: settingsData, isLoading: isLoadingSettings } = useGetSettingsQuery();
   const freeShippingThreshold = settingsData?.data?.freeShippingThreshold || 200;
+  const preOrderFreeShippingThreshold = settingsData?.data?.preOrderFreeShippingThreshold || 25000;
   const todayDeliveryPrice = settingsData?.data?.todayDeliveryPrice || 60;
   const sevenDayDeliveryPrice = settingsData?.data?.sevenDayDeliveryPrice || 20;
   const qualifiesForFreeShipping = total >= freeShippingThreshold;
+  const qualifiesForPreOrderFreeShipping = allPreOrder && total >= preOrderFreeShippingThreshold;
+  const isFreeShipping = qualifiesForFreeShipping || qualifiesForPreOrderFreeShipping;
+
+  const launchDate = allPreOrder ? cart_products[0]?.launchDate : null;
+
   return (
     <div className="tp-checkout-place white-bg">
-      <h3 className="tp-checkout-place-title">Your Order</h3>
+      <h3 className="tp-checkout-place-title">{allPreOrder ? 'Your Pre-order' : 'Your Order'}</h3>
 
       <div className="tp-order-info-list">
         <ul>
+          {/* pre-order notice */}
+          {allPreOrder && (
+            <li className="tp-order-info-list-header" style={{ display: 'block', backgroundColor: '#fff4f0', padding: '15px', borderLeft: '4px solid #ff5501', marginBottom: '15px' }}>
+              <p style={{ color: '#ff5501', fontWeight: 'bold', margin: 0 }}>This is a pre-order item</p>
+              <p style={{ color: '#555', fontSize: '14px', margin: '5px 0 0 0' }}>
+                Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)
+              </p>
+            </li>
+          )}
           {/*  header */}
           <li className="tp-order-info-list-header">
             <h4>Product</h4>
@@ -46,14 +62,14 @@ const CheckoutOrderArea = ({ checkoutData }) => {
           ))}
 
           {/*  shipping - only show if not qualified for free shipping */}
-          {!qualifiesForFreeShipping && !isLoadingSettings && (
+          {!isFreeShipping && !isLoadingSettings && !allPreOrder && (
             <li className="tp-order-info-list-shipping">
               <span className="tp-order-info-list-shipping-title">Shipping</span>
               <div className="tp-order-info-list-shipping-item d-flex flex-column align-items-end">
                 <div className="tp-order-info-list-shipping-option">
                   <input
                     {...register(`shippingOption`, {
-                      required: !qualifiesForFreeShipping ? `Shipping Option is required!` : false,
+                      required: !isFreeShipping ? `Shipping Option is required!` : false,
                     })}
                     id="flat_shipping"
                     type="radio"
@@ -71,7 +87,7 @@ const CheckoutOrderArea = ({ checkoutData }) => {
                 <div className="tp-order-info-list-shipping-option">
                   <input
                     {...register(`shippingOption`, {
-                      required: !qualifiesForFreeShipping ? `Shipping Option is required!` : false,
+                      required: !isFreeShipping ? `Shipping Option is required!` : false,
                     })}
                     id="flat_rate"
                     type="radio"
@@ -91,22 +107,50 @@ const CheckoutOrderArea = ({ checkoutData }) => {
             </li>
           )}
           
-          {/* Free shipping message when qualified */}
-          {qualifiesForFreeShipping && !isLoadingSettings && (
+          {/* Free shipping message when qualified or pre-order free shipping */}
+          {isFreeShipping && !isLoadingSettings && (
             <li className="tp-order-info-list-shipping">
               <span className="tp-order-info-list-shipping-title">Shipping</span>
               <div className="tp-order-info-list-shipping-item d-flex flex-column align-items-end">
                 <span className="tp-order-info-list-shipping-free">
                   Free Shipping
+                  {qualifiesForPreOrderFreeShipping && (
+                    <div style={{ fontSize: '10px', color: '#ff5501' }}>Pre-order qualifying free delivery</div>
+                  )}
                 </span>
+                <input
+                  {...register(`shippingOption`)}
+                  type="hidden"
+                  value="free_shipping"
+                />
               </div>
-              {/* Hidden input for form validation */}
-              <input
-                {...register(`shippingOption`)}
-                type="hidden"
-                value="free_shipping"
-              />
             </li>
+          )}
+
+          {/* If pre-order but NOT qualifying for free shipping, show only launch day delivery */}
+          {allPreOrder && !isFreeShipping && !isLoadingSettings && (
+             <li className="tp-order-info-list-shipping">
+             <span className="tp-order-info-list-shipping-title">Shipping</span>
+             <div className="tp-order-info-list-shipping-item d-flex flex-column align-items-end">
+                <div className="tp-order-info-list-shipping-option">
+                  <input
+                    {...register(`shippingOption`, {
+                      required: `Shipping Option is required!`,
+                    })}
+                    id="preorder_delivery"
+                    type="radio"
+                    name="shippingOption"
+                    value="flat_rate"
+                    defaultChecked={true}
+                    onChange={() => handleShippingCost(sevenDayDeliveryPrice)}
+                  />
+                  <label htmlFor="preorder_delivery">
+                    Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}
+                    <span className="tp-order-info-list-shipping-price">{formatCurrency(sevenDayDeliveryPrice)}</span>
+                  </label>
+                </div>
+             </div>
+           </li>
           )}
 
            {/*  subtotal */}
@@ -156,23 +200,11 @@ const CheckoutOrderArea = ({ checkoutData }) => {
             id="card_payment"
             name="payment"
             value="Card"
+            defaultChecked={true}
           />
           <label htmlFor="card_payment">
             Pay with Paystack (Card/Bank Transfer)
           </label>
-          <ErrorMsg msg={errors?.payment?.message} />
-        </div>
-        <div className="tp-checkout-payment-item">
-          <input
-            {...register(`payment`, {
-              required: `Payment Option is required!`,
-            })}
-            type="radio"
-            id="cod"
-            name="payment"
-            value="COD"
-          />
-          <label htmlFor="cod">Cash on Delivery</label>
           <ErrorMsg msg={errors?.payment?.message} />
         </div>
         {paymentError && (
@@ -188,7 +220,7 @@ const CheckoutOrderArea = ({ checkoutData }) => {
           disabled={isCheckoutSubmit}
           className="tp-checkout-btn w-100"
         >
-          {isCheckoutSubmit ? "Processing..." : "Place Order"}
+          {isCheckoutSubmit ? "Processing..." : allPreOrder ? "Place Pre-order" : "Place Order"}
         </button>
       </div>
     </div>

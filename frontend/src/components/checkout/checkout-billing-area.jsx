@@ -77,7 +77,7 @@ const CheckoutBillingArea = ({ register, errors }) => {
             </div>
             <div className="col-md-6">
               <div className="tp-checkout-input">
-                <label>Town / City</label>
+                <label>Town / City <span>*</span></label>
                 <input
                   {...register("city", { required: `City is required!` })}
                   name="city"
@@ -86,6 +86,19 @@ const CheckoutBillingArea = ({ register, errors }) => {
                   placeholder="City"
                 />
                  <ErrorMsg msg={errors?.city?.message} />
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="tp-checkout-input">
+                <label>State <span>*</span></label>
+                <input
+                  {...register("state", { required: `State is required!` })}
+                  name="state"
+                  id="state"
+                  type="text"
+                  placeholder="State"
+                />
+                 <ErrorMsg msg={errors?.state?.message} />
               </div>
             </div>
             <div className="col-md-6">

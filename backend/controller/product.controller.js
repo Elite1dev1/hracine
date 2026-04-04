@@ -4,6 +4,27 @@ const productServices = require("../services/product.service");
 const Product = require("../model/Products");
 const XLSX = require("xlsx");
 
+// Helper function to update pre-order status
+const updatePreOrderStatus = async () => {
+  try {
+    const now = new Date();
+    // Find products where isPreOrder is true and launchDate has passed
+    const result = await Product.updateMany(
+      { 
+        isPreOrder: true, 
+        launchDate: { $lte: now } 
+      },
+      { 
+        $set: { isPreOrder: false } 
+      }
+    );
+    if (result.modifiedCount > 0) {
+      console.log(`Automatically updated ${result.modifiedCount} products from pre-order to standard.`);
+    }
+  } catch (error) {
+    console.error("Error updating pre-order status:", error);
+  }
+};
 
 // add product
 exports.addProduct = async (req, res,next) => {
@@ -54,6 +75,7 @@ module.exports.addAllProducts = async (req,res,next) => {
 // get all products
 exports.getAllProducts = async (req,res,next) => {
   try {
+    await updatePreOrderStatus();
     const result = await productServices.getAllProductsService();
     res.status(200).json({
       success:true,
@@ -67,6 +89,7 @@ exports.getAllProducts = async (req,res,next) => {
 // get all products by type
 module.exports.getProductsByType = async (req,res,next) => {
   try {
+    await updatePreOrderStatus();
     const result = await productServices.getProductTypeService(req);
     res.status(200).json({
       success:true, 
@@ -120,6 +143,7 @@ module.exports.getTopRatedProducts = async (req,res,next) => {
 // getSingleProduct
 exports.getSingleProduct = async (req,res,next) => {
   try {
+    await updatePreOrderStatus();
     if (!req.params.id) {
       console.error("Product ID is required");
       return res.status(400).json({

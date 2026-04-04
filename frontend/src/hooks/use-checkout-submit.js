@@ -19,6 +19,7 @@ const useCheckoutSubmit = () => {
   // settings for free shipping threshold
   const { data: settingsData } = useGetSettingsQuery();
   const freeShippingThreshold = settingsData?.data?.freeShippingThreshold || 200;
+  const preOrderFreeShippingThreshold = settingsData?.data?.preOrderFreeShippingThreshold || 25000;
   const todayDeliveryPrice = settingsData?.data?.todayDeliveryPrice || 60;
   const sevenDayDeliveryPrice = settingsData?.data?.sevenDayDeliveryPrice || 20;
   // addOrder
@@ -35,6 +36,8 @@ const useCheckoutSubmit = () => {
   const { shipping_info } = useSelector((state) => state.order);
   // total amount
   const { total, setTotal } = useCartInfo();
+  // allPreOrder
+  const allPreOrder = cart_products.length > 0 && cart_products.every(item => item.isPreOrder === true);
   // couponInfo
   const [couponInfo, setCouponInfo] = useState({});
   //cartTotal
@@ -83,12 +86,18 @@ const useCheckoutSubmit = () => {
 
   // Auto-apply free shipping when customer qualifies
   useEffect(() => {
-    if (total >= freeShippingThreshold) {
+    const isPreOrderFreeShipping = allPreOrder && total >= preOrderFreeShippingThreshold;
+    if (total >= freeShippingThreshold || isPreOrderFreeShipping) {
       setShippingCost(0);
       // Set shipping option to free shipping
       setValue("shippingOption", "free_shipping");
+    } else if (allPreOrder) {
+      // For pre-orders not qualifying for free shipping, auto-select the standard delivery option
+      // Using sevenDayDeliveryPrice as it represents the standard/launch day delivery in the UI
+      setShippingCost(sevenDayDeliveryPrice);
+      setValue("shippingOption", "flat_rate");
     }
-  }, [total, freeShippingThreshold, setValue]);
+  }, [total, freeShippingThreshold, preOrderFreeShippingThreshold, setValue, allPreOrder, sevenDayDeliveryPrice]);
 
   //calculate total and discount value
   useEffect(() => {
@@ -184,6 +193,7 @@ const useCheckoutSubmit = () => {
     setValue("country", shipping_info.country);
     setValue("address", shipping_info.address);
     setValue("city", shipping_info.city);
+    setValue("state", shipping_info.state);
     setValue("zipCode", shipping_info.zipCode);
     setValue("contactNo", shipping_info.contactNo);
     setValue("email", shipping_info.email);
@@ -203,8 +213,10 @@ const useCheckoutSubmit = () => {
         : data.shippingOption === "flat_rate"
         ? sevenDayDeliveryPrice
         : shippingCost;
-    const finalShippingCost = total >= freeShippingThreshold ? 0 : selectedShippingCost;
-    const finalShippingOption = total >= freeShippingThreshold ? "free_shipping" : data.shippingOption;
+    
+    const isPreOrderFreeShipping = allPreOrder && total >= preOrderFreeShippingThreshold;
+    const finalShippingCost = (total >= freeShippingThreshold || isPreOrderFreeShipping) ? 0 : selectedShippingCost;
+    const finalShippingOption = (total >= freeShippingThreshold || isPreOrderFreeShipping) ? "free_shipping" : data.shippingOption;
 
     let orderInfo = {
       name: `${data.firstName} ${data.lastName}`,
@@ -212,6 +224,7 @@ const useCheckoutSubmit = () => {
       contact: data.contactNo,
       email: data.email,
       city: data.city,
+      state: data.state,
       country: data.country,
       zipCode: data.zipCode,
       shippingOption: finalShippingOption,
@@ -259,23 +272,6 @@ const useCheckoutSubmit = () => {
         setIsCheckoutSubmit(false);
         notifyError(error?.data?.message || "Failed to initialize payment");
       }
-    } else if (data.payment === 'COD') {
-      // Cash on Delivery
-      saveOrder({
-        ...orderInfo
-      }).then(res => {
-        if(res?.error){
-          setIsCheckoutSubmit(false);
-          notifyError("Failed to place order");
-        }
-        else {
-          localStorage.removeItem("cart_products")
-          localStorage.removeItem("couponInfo");
-          setIsCheckoutSubmit(false)
-          notifySuccess("Your Order Confirmed!");
-          router.push(`/order/${res.data?.order?._id}`);
-        }
-      })
     }
   };
 
@@ -297,6 +293,7 @@ const useCheckoutSubmit = () => {
     handleSubmit,
     cartTotal,
     couponApplyMsg,
+    allPreOrder,
   };
 };
 

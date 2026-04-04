@@ -14,6 +14,8 @@ const AdminSettingsPage = () => {
   const { data, isLoading, error } = useAdminGetSettingsQuery();
   const [updateSettings, { isLoading: isUpdating }] = useAdminUpdateSettingsMutation();
   const [freeShippingThreshold, setFreeShippingThreshold] = useState("200");
+  const [preOrderFreeShippingThreshold, setPreOrderFreeShippingThreshold] = useState("25000");
+  const [freeShippingBannerText, setFreeShippingBannerText] = useState("Free shipping on orders above 25,000");
   const [todayDeliveryPrice, setTodayDeliveryPrice] = useState("60");
   const [sevenDayDeliveryPrice, setSevenDayDeliveryPrice] = useState("20");
   const [paystackTestApiKey, setPaystackTestApiKey] = useState("");
@@ -44,6 +46,10 @@ const AdminSettingsPage = () => {
       setFreeShippingThreshold(
         String(data.data.freeShippingThreshold ?? 200)
       );
+      setPreOrderFreeShippingThreshold(
+        String(data.data.preOrderFreeShippingThreshold ?? 25000)
+      );
+      setFreeShippingBannerText(data.data.freeShippingBannerText ?? "Free shipping on orders above 25,000");
       setTodayDeliveryPrice(String(data.data.todayDeliveryPrice ?? 60));
       setSevenDayDeliveryPrice(
         String(data.data.sevenDayDeliveryPrice ?? 20)
@@ -70,12 +76,15 @@ const AdminSettingsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const threshold = Number(freeShippingThreshold);
+    const preOrderThreshold = Number(preOrderFreeShippingThreshold);
     const todayPrice = Number(todayDeliveryPrice);
     const sevenDayPrice = Number(sevenDayDeliveryPrice);
 
     if (
       !Number.isFinite(threshold) ||
       threshold < 0 ||
+      !Number.isFinite(preOrderThreshold) ||
+      preOrderThreshold < 0 ||
       !Number.isFinite(todayPrice) ||
       todayPrice < 0 ||
       !Number.isFinite(sevenDayPrice) ||
@@ -87,6 +96,8 @@ const AdminSettingsPage = () => {
 
     const payload = {
       freeShippingThreshold: threshold,
+      preOrderFreeShippingThreshold: preOrderThreshold,
+      freeShippingBannerText,
       todayDeliveryPrice: todayPrice,
       sevenDayDeliveryPrice: sevenDayPrice,
     };
@@ -217,6 +228,75 @@ const AdminSettingsPage = () => {
                 />
                 <p style={{ marginTop: '8px', color: '#7f8c8d', fontSize: '14px' }}>
                   Customers need to spend this amount or more to qualify for free shipping.
+                </p>
+              </div>
+
+              <div style={{ marginBottom: '18px' }}>
+                <label
+                  htmlFor="preOrderFreeShippingThreshold"
+                  style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontWeight: 'bold',
+                    color: '#34495e',
+                    fontSize: '0.95rem',
+                  }}
+                >
+                  Pre-order Free Shipping Threshold (₦)
+                </label>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  id="preOrderFreeShippingThreshold"
+                  value={preOrderFreeShippingThreshold}
+                  onChange={(e) =>
+                    handleNumericInput(e.target.value, setPreOrderFreeShippingThreshold)
+                  }
+                  placeholder="e.g. 25000"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '5px',
+                    fontSize: '16px',
+                  }}
+                />
+                <p style={{ marginTop: '8px', color: '#7f8c8d', fontSize: '14px' }}>
+                  Threshold for free shipping on pre-order only carts.
+                </p>
+              </div>
+
+              <div style={{ marginBottom: '18px' }}>
+                <label
+                  htmlFor="freeShippingBannerText"
+                  style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontWeight: 'bold',
+                    color: '#34495e',
+                    fontSize: '0.95rem',
+                  }}
+                >
+                  Free Shipping Banner Text
+                </label>
+                <input
+                  type="text"
+                  id="freeShippingBannerText"
+                  value={freeShippingBannerText}
+                  onChange={(e) => setFreeShippingBannerText(e.target.value)}
+                  placeholder="e.g. Free shipping on orders above 25,000"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '5px',
+                    fontSize: '16px',
+                  }}
+                />
+                <p style={{ marginTop: '8px', color: '#7f8c8d', fontSize: '14px' }}>
+                  Text displayed in the free shipping banner on the storefront.
                 </p>
               </div>
 

@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { useGetProductTypeQuery } from "@/redux/features/productApi";
+import { useGetSettingsQuery } from "@/redux/features/admin/adminApi";
 import Link from "next/link";
 import Image from "next/image";
 import ErrorMsg from "@/components/common/error-msg";
 import HomePrdLoader from "@/components/loader/home/home-prd-loader";
 
 const FeaturedRituals = () => {
+  const { data: settingsData } = useGetSettingsQuery();
   const { data: products, isError, isLoading, refetch } = 
     useGetProductTypeQuery({ type: 'all', query: 'comingSoon=true' });
 
@@ -77,7 +79,7 @@ const FeaturedRituals = () => {
                 color: '#22160E',
                 boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
               }}>
-                free shipping on orders above #25,000
+                {settingsData?.data?.freeShippingBannerText || "free shipping on orders above #25,000"}
               </div>
             )}
           </div>
@@ -135,8 +137,7 @@ const FeaturedRituals = () => {
 
   return (
     <section className="tp-featured-rituals-area tp-featured-rituals-mobile-two pt-100 pb-100 grey-bg" style={{
-      paddingTop: 'clamp(40px, 8vw, 100px)',
-      paddingBottom: 'clamp(40px, 8vw, 100px)'
+      paddingTop: 'clamp(100px, 15vw, 150px)'
     }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 767.98px) {

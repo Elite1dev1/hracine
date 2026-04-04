@@ -31,6 +31,8 @@ const ProductDetailsMobile = ({ productItem }) => {
     ingredients,
     howToUse,
     keyBenefits,
+    isPreOrder,
+    launchDate,
   } = productItem || {};
 
   const router = useRouter();
@@ -75,7 +77,9 @@ const ProductDetailsMobile = ({ productItem }) => {
   const handleIncrement = () => dispatch(increment());
   const handleDecrement = () => dispatch(decrement());
 
-  const shippingContent = 'We offer 30-day easy returns. Order before 2:30PM for same-day dispatch. Standard delivery 3–5 business days.';
+  const shippingContent = isPreOrder 
+    ? `Delivery begins on ${new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day). We’ll keep you updated.`
+    : 'We offer 30-day easy returns. Order before 2:30PM for same-day dispatch. Standard delivery 3–5 business days.';
   const productDetailsContent = [sku && `SKU: ${sku}`, category?.name && `Category: ${category.name}`, tags?.[0] && `Tag: ${tags[0]}`].filter(Boolean).join(' • ') || 'See product info above.';
 
   const accordionSections = [
@@ -112,6 +116,16 @@ const ProductDetailsMobile = ({ productItem }) => {
       {/* 2. Product info header */}
       <div className="tp-pdm-info">
         <h1 className="tp-pdm-title">{title}</h1>
+        {isPreOrder && (
+          <div className="tp-pdm-preorder-notice mb-15" style={{ backgroundColor: '#fff4f0', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #ff5501' }}>
+            <p style={{ color: '#ff5501', fontWeight: 'bold', margin: 0, fontSize: '14px' }}>
+              This is a pre-order item
+            </p>
+            <p style={{ color: '#555', margin: '3px 0 0 0', fontSize: '12px' }}>
+              Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)
+            </p>
+          </div>
+        )}
         <p className="tp-pdm-price">{formatCurrency(displayPrice)}</p>
         <div className="tp-pdm-meta">
           <div className="tp-pdm-rating">
@@ -137,6 +151,31 @@ const ProductDetailsMobile = ({ productItem }) => {
           </p>
         </div>
       )}
+
+      {/* 4. Main CTA section (Floating footer style) */}
+      <div className="tp-pdm-footer">
+        <div className="tp-pdm-footer-inner">
+          <button
+            type="button"
+            className="tp-pdm-add-cart"
+            onClick={handleAddCart}
+            disabled={!inStock}
+          >
+            {isPreOrder ? 'Pre-order' : 'Add to Cart'}
+          </button>
+          <button
+            type="button"
+            className="tp-pdm-buy-now"
+            onClick={() => {
+              handleAddCart();
+              router.push('/cart');
+            }}
+            disabled={!inStock}
+          >
+            {isPreOrder ? 'Pre-order' : 'Buy Now'}
+          </button>
+        </div>
+      </div>
 
       {/* 5. Quantity pill */}
       <div className="tp-pdm-qty">

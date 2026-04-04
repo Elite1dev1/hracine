@@ -10,7 +10,7 @@ import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { formatCurrency } from "@/utils/currency";
 
 const ProductItem = ({ product }) => {
-  const { _id, img, title, price, tags,status } = product || {};
+  const { _id, img, title, price, tags,status, isPreOrder } = product || {};
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const isAddedToCart = cart_products.some((prd) => prd._id === _id);
@@ -35,6 +35,7 @@ const ProductItem = ({ product }) => {
         </div>
         <div className="tp-product-badge">
           {status === 'out-of-stock' && <span className="product-hot">out-stock</span>}
+          {isPreOrder && <span className="product-hot" style={{backgroundColor: '#ff5501'}}>Pre-order</span>}
         </div>
         <div className="tp-product-action-3 tp-product-action-4 has-shadow tp-product-action-blackStyle tp-product-action-brownStyle">
           <div className="tp-product-action-item-3 d-flex flex-column">
@@ -54,7 +55,7 @@ const ProductItem = ({ product }) => {
                 disabled={status === 'out-of-stock'}
               >
                 <Cart />
-                <span className="tp-product-tooltip">Add to Cart</span>
+                <span className="tp-product-tooltip">{isPreOrder ? 'Pre-order' : 'Add to Cart'}</span>
               </button>
             )}
             <button
@@ -93,7 +94,7 @@ const ProductItem = ({ product }) => {
             {isAddedToCart ? <Link href="/cart" className="tp-product-add-to-cart-4">
               <AddCart /> View Cart
             </Link> : <button disabled={status === 'out-of-stock'} onClick={()=> handleAddProduct(product)} className="tp-product-add-to-cart-4">
-              <AddCart /> Add to Cart
+              <AddCart /> {isPreOrder ? 'Pre-order' : 'Add to Cart'}
             </button>}
           </div>
         </div>

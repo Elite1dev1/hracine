@@ -69,7 +69,14 @@ const VerifyPayment = () => {
             localStorage.removeItem('pendingOrderInfo');
             
             setTimeout(() => {
-              router.push(`/order/${orderResult.order._id}`);
+              if (orderResult?.order?._id) {
+                // Use window.location.replace for a clean redirect after payment
+                // This avoids issues with Next.js router when history is in a weird state
+                window.location.replace(`/order/${orderResult.order._id}`);
+              } else {
+                console.error('Order ID missing in result:', orderResult);
+                window.location.replace('/profile'); // Fallback to profile
+              }
             }, 2000);
           } else {
             setStatus('error');
@@ -111,8 +118,8 @@ const VerifyPayment = () => {
       <section className="tp-checkout-area pb-120" style={{ 
         backgroundColor: '#EFF1F5', 
         minHeight: '60vh',
-        paddingTop: 'clamp(40px, 8vw, 80px)',
-        paddingBottom: 'clamp(40px, 8vw, 80px)'
+        paddingTop: 'clamp(180px, 20vw, 240px)',
+        paddingBottom: 'clamp(60px, 10vw, 120px)'
       }}>
         <div className="container">
           <div className="row justify-content-center">

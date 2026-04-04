@@ -2,6 +2,7 @@ const { secret } = require("../config/secret");
 const https = require("https");
 const Order = require("../model/Order");
 const Settings = require("../model/Settings");
+const { transporter } = require("../config/email");
 
 const getActivePaystackSecretKey = async () => {
   const settings = await Settings.getSettings();
@@ -235,6 +236,41 @@ exports.verifyPayment = async (req, res, next) => {
 exports.addOrder = async (req, res, next) => {
   try {
     const orderItems = await Order.create(req.body);
+
+    // Send email confirmation
+    const allPreOrder = req.body.cart.every(item => item.isPreOrder === true);
+    if (allPreOrder) {
+      const launchDate = req.body.cart[0]?.launchDate;
+      const mailData = {
+        from: secret.email_user,
+        to: req.body.email,
+        subject: "Your Pre-Order is Confirmed",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            <h2 style="color: #ff5501; text-align: center;">Your Pre-Order is Confirmed 🎉</h2>
+            <p>Hi <strong>${req.body.name}</strong>,</p>
+            <p>Your pre-order has been successfully confirmed. We're excited to get your items to you!</p>
+            <div style="background-color: #fff4f0; padding: 15px; border-radius: 8px; border-left: 4px solid #ff5501; margin: 20px 0;">
+              <p style="margin: 0; font-weight: bold; color: #ff5501;">Delivery Schedule</p>
+              <p style="margin: 5px 0 0 0; color: #333;">Your items will be shipped starting <strong>${new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)</strong>.</p>
+            </div>
+            <p>We’ll keep you informed as we get closer to delivery. You'll receive another email once your order has been shipped.</p>
+            <p>Thank you for choosing <strong>Hracine</strong>.</p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #777; text-align: center;">
+              <p>© 2026 Hracine. All rights reserved.</p>
+            </div>
+          </div>
+        `,
+      };
+      
+      transporter.sendMail(mailData, (err, info) => {
+        if (err) {
+          console.error("Error sending pre-order email:", err);
+        } else {
+          console.log("Pre-order email sent successfully");
+        }
+      });
+    }
 
     res.status(200).json({
       success: true,
