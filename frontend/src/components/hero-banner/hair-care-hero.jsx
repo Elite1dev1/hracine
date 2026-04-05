@@ -78,7 +78,7 @@ const HairCareHero = () => {
           zIndex: 2,
           minHeight: '100vh',
           width: '100%',
-          paddingTop: '80px' /* Push content down slightly to clear fixed header on mobile */
+          paddingTop: 'clamp(24px, 6vw, 56px)' /* Small buffer so nav doesn't cover text */
         }}>
           <div className="container">
             <div className="row justify-content-center">
