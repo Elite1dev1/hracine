@@ -10,9 +10,10 @@ import Wrapper from "@/layout/wrapper";
 import { useGetAllProductsQuery } from "@/redux/features/productApi";
 import NiceSelect from "@/ui/nice-select";
 import { useState } from "react";
+import { createSeo } from "@/lib/seo";
 // internal
 
-export default function SearchPage({ query }) {
+export default function SearchPage({ query, seo }) {
   const { searchText, productType } = query;
   const { data: products, isError, isLoading } = useGetAllProductsQuery();
   const [shortValue, setShortValue] = useState("");
@@ -152,7 +153,7 @@ export default function SearchPage({ query }) {
 
   return (
     <Wrapper>
-      <SEO pageTitle="Wishlist" />
+      <SEO {...seo} />
       <HeaderTwo style_2={true} />
       <CommonBreadcrumb title="Search Products" subtitle="Search Products" />
       {content}
@@ -167,6 +168,15 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       query,
+      seo: createSeo({
+        title: query.searchText
+          ? `Search: ${query.searchText} | Hracine`
+          : "Search | Hracine",
+        description:
+          "Search Hracine hair care and scalp health products to find the right routine for your needs.",
+        path: `/search${new URLSearchParams(query).toString() ? `?${new URLSearchParams(query).toString()}` : ""}`,
+        noindex: true,
+      }),
     },
   };
 };

@@ -5,11 +5,12 @@ import Wrapper from "@/layout/wrapper";
 import Footer from "@/layout/footers/footer";
 import ContactBreadcrumb from "@/components/breadcrumb/contact-breadcrumb";
 import ContactArea from "@/components/contact/contact-area";
+import { PAGE_SEO } from "@/lib/seo";
 
 const ContactPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Contact" />
+      <SEO {...PAGE_SEO.contact} />
       <HeaderTwo style_2={true} />
       <ContactBreadcrumb />
       <ContactArea/>

@@ -9,8 +9,9 @@ import ErrorMsg from "@/components/common/error-msg";
 import Footer from "@/layout/footers/footer";
 import ShopFilterOffCanvas from "@/components/common/shop-filter-offcanvas";
 import ShopLoader from "@/components/loader/shop/shop-loader";
+import { getShopSeo } from "@/lib/seo";
 
-const ShopPage = ({ query }) => {
+const ShopPage = ({ query, seo }) => {
   const { data: products, isError, isLoading } = useGetAllProductsQuery();
   const [priceValue, setPriceValue] = useState([0, 0]);
   const [selectValue, setSelectValue] = useState("");
@@ -131,7 +132,7 @@ const ShopPage = ({ query }) => {
   }
   return (
     <Wrapper>
-      <SEO pageTitle="Shop" />
+      <SEO {...seo} />
       <HeaderTwo style_2={true} />
       <ShopBreadcrumb title="Shop Grid" subtitle="Shop Grid" />
       {content}
@@ -148,6 +149,7 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       query,
+      seo: getShopSeo(query),
     },
   };
 };

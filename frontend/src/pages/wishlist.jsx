@@ -5,11 +5,12 @@ import Footer from '@/layout/footers/footer';
 import Wrapper from '@/layout/wrapper';
 import WishlistArea from '@/components/cart-wishlist/wishlist-area';
 import CommonBreadcrumb from '@/components/breadcrumb/common-breadcrumb';
+import { PAGE_SEO } from "@/lib/seo";
 
 const WishlistPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Wishlist" />
+      <SEO {...PAGE_SEO.wishlist} />
       <HeaderTwo style_2={true} />
       <CommonBreadcrumb title="Wishlist" subtitle="Wishlist" />
       <WishlistArea/>

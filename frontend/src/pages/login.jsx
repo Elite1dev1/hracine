@@ -5,11 +5,12 @@ import Footer from '@/layout/footers/footer';
 import Wrapper from '@/layout/wrapper';
 import CommonBreadcrumb from '@/components/breadcrumb/common-breadcrumb';
 import LoginArea from '@/components/login-register/login-area';
+import { PAGE_SEO } from "@/lib/seo";
 
 const LoginPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Login" />
+      <SEO {...PAGE_SEO.login} />
       <HeaderTwo style_2={true} />
       <CommonBreadcrumb title="Login" subtitle="Login" center={true} />
       <LoginArea/>

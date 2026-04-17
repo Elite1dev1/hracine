@@ -5,11 +5,12 @@ import Footer from '@/layout/footers/footer';
 import Wrapper from '@/layout/wrapper';
 import CartArea from '@/components/cart-wishlist/cart-area';
 import CommonBreadcrumb from '@/components/breadcrumb/common-breadcrumb';
+import { PAGE_SEO } from "@/lib/seo";
 
 const CartPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Cart" />
+      <SEO {...PAGE_SEO.cart} />
       <HeaderTwo style_2={true} />
       <CommonBreadcrumb title="Shopping Cart" subtitle="Shopping Cart" />
       <CartArea/>

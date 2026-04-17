@@ -13,12 +13,39 @@ import ErrorMsg from "@/components/common/error-msg";
 import { useGetUserOrderByIdQuery } from "@/redux/features/order/orderApi";
 import PrdDetailsLoader from "@/components/loader/prd-details-loader";
 import { formatCurrency } from "@/utils/currency";
+import { trackPurchase } from "@/lib/meta-pixel";
 
 
 const SingleOrder = ({ params }) => {
   const orderId = params.id;
   const printRef = useRef();
   const { data: order, isError, isLoading } = useGetUserOrderByIdQuery(orderId);
+
+  useEffect(() => {
+    const currentOrder = order?.order;
+
+    if (!currentOrder || !orderId) {
+      return;
+    }
+
+    trackPurchase({
+      orderId,
+      value: currentOrder.totalAmount,
+      currency: "NGN",
+      numItems: currentOrder.cart?.reduce(
+        (total, item) => total + Number(item.orderQuantity || 0),
+        0
+      ),
+      items: currentOrder.cart?.map((item) => ({
+        id: item._id,
+        quantity: Number(item.orderQuantity || 0),
+        item_price: Number(item.price || 0),
+      })),
+      contents: undefined,
+      content_name: "Order Completed",
+    });
+  }, [order, orderId]);
+
   let content = null;
   if (isLoading) {
     content = <PrdDetailsLoader loading={isLoading}/>

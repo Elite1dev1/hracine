@@ -11,11 +11,30 @@ import { useGetProductQuery } from '@/redux/features/productApi';
 import ProductDetailsBreadcrumb from '@/components/breadcrumb/product-details-breadcrumb';
 import ProductDetailsArea from '@/components/product-details/product-details-area';
 import PrdDetailsLoader from '@/components/loader/prd-details-loader';
+import { trackViewContent } from '@/lib/meta-pixel';
+import { getApiBaseUrl } from "@/utils/apiConfig";
+import { getProductSeo } from "@/lib/seo";
 
-const ProductDetailsPage = ({ query }) => {
+const ProductDetailsPage = ({ query, initialProduct, seo }) => {
   const router = useRouter();
   const productId = query?.id;
   const { data: product, isLoading, isError, error } = useGetProductQuery(productId, { skip: !productId });
+  const resolvedProduct = product || initialProduct || null;
+
+  useEffect(() => {
+    if (!resolvedProduct?._id) {
+      return;
+    }
+
+    trackViewContent({
+      id: resolvedProduct._id,
+      title: resolvedProduct.title,
+      category: resolvedProduct.category?.name,
+      price: resolvedProduct.price,
+      currency: 'NGN',
+      contentType: resolvedProduct.isPreOrder ? 'product_group' : 'product',
+    });
+  }, [resolvedProduct]);
   
   // decide what to render
   let content = null;
@@ -46,7 +65,7 @@ const ProductDetailsPage = ({ query }) => {
         </div>
       </div>
     );
-  } else if (isLoading) {
+  } else if (isLoading && !resolvedProduct) {
     content = <PrdDetailsLoader loading={isLoading}/>;
   } else if (!isLoading && isError) {
     const errorMessage = error?.data?.message || error?.message || 'There was an error loading the product';
@@ -74,14 +93,14 @@ const ProductDetailsPage = ({ query }) => {
         </div>
       </div>
     );
-  } else if (!isLoading && !isError && product) {
+  } else if (resolvedProduct) {
     content = (
       <>
-        <ProductDetailsBreadcrumb category={product.category?.name || 'Product'} title={product.title || 'Product Details'} />
-        <ProductDetailsArea productItem={product} />
+        <ProductDetailsBreadcrumb category={resolvedProduct.category?.name || 'Product'} title={resolvedProduct.title || 'Product Details'} />
+        <ProductDetailsArea productItem={resolvedProduct} />
       </>
     );
-  } else if (!isLoading && !isError && !product) {
+  } else if (!isLoading && !isError && !resolvedProduct) {
     content = (
       <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
@@ -110,7 +129,7 @@ const ProductDetailsPage = ({ query }) => {
   
   return (
     <Wrapper>
-      <SEO pageTitle="Product Details" />
+      <SEO {...seo} />
       <HeaderTwo style_2={true} />
       {content}
       <Footer primary_style={true} />
@@ -122,10 +141,25 @@ export default ProductDetailsPage;
 
 export const getServerSideProps = async (context) => {
   const { query } = context;
+  const productId = query?.id;
+  let initialProduct = null;
+
+  if (productId) {
+    try {
+      const response = await fetch(`${getApiBaseUrl()}/api/product/single-product/${productId}`);
+      if (response.ok) {
+        initialProduct = await response.json();
+      }
+    } catch (fetchError) {
+      console.error("Failed to fetch product SEO data:", fetchError);
+    }
+  }
 
   return {
     props: {
       query,
+      initialProduct,
+      seo: getProductSeo(initialProduct, productId),
     },
   };
 };

@@ -5,11 +5,12 @@ import Wrapper from "@/layout/wrapper";
 import Footer from "@/layout/footers/footer";
 import CommonBreadcrumb from "@/components/breadcrumb/common-breadcrumb";
 import ConsultationArea from "@/components/consultation/consultation-area";
+import { PAGE_SEO } from "@/lib/seo";
 
 const ConsultationPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Consultation" />
+      <SEO {...PAGE_SEO.consultation} />
       <HeaderTwo style_2={true} />
       <CommonBreadcrumb title="Consultation" subtitle="Consultation" center={true} />
       <ConsultationArea/>

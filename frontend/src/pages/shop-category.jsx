@@ -5,11 +5,12 @@ import Footer from '@/layout/footers/footer';
 import Wrapper from '@/layout/wrapper';
 import ShopBreadcrumb from '@/components/breadcrumb/shop-breadcrumb';
 import ShopCategoryArea from '@/components/categories/shop-category-area';
+import { PAGE_SEO } from "@/lib/seo";
 
 const CategoryPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Shop Category" />
+      <SEO {...PAGE_SEO.categories} />
       <HeaderTwo style_2={true} />
       <ShopBreadcrumb title="Only Categories" subtitle="Only Categories" />
       <ShopCategoryArea/>

@@ -5,11 +5,12 @@ import Wrapper from "@/layout/wrapper";
 import Footer from "@/layout/footers/footer";
 import SectionTitle from "@/components/blog/blog-grid/section-title";
 import BlogGridArea from "@/components/blog/blog-grid/blog-grid-area";
+import { PAGE_SEO } from "@/lib/seo";
 
 const BlogGridPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="Blog Grid" />
+      <SEO {...PAGE_SEO.blogGrid} />
       <HeaderTwo style_2={true} />
       <SectionTitle/>
       <BlogGridArea/>

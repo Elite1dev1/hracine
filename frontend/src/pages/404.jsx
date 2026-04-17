@@ -7,11 +7,12 @@ import HeaderTwo from "@/layout/headers/header-2";
 import Footer from "@/layout/footers/footer";
 import Wrapper from "@/layout/wrapper";
 import error from '@assets/img/error/error.png';
+import { PAGE_SEO } from "@/lib/seo";
 
 const ErrorPage = () => {
   return (
     <Wrapper>
-      <SEO pageTitle="404" />
+      <SEO {...PAGE_SEO.notFound} />
       <HeaderTwo style_2={true} />
       {/* 404 area start */}
       <section className="tp-error-area pt-110 pb-110" style={{

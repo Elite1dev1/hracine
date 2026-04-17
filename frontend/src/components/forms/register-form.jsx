@@ -8,6 +8,7 @@ import { CloseEye, OpenEye } from "@/svg";
 import ErrorMsg from "../common/error-msg";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { useRegisterUserMutation } from "@/redux/features/auth/authApi";
+import { trackCompleteRegistration } from "@/lib/meta-pixel";
 
 // schema
 const schema = Yup.object().shape({
@@ -39,6 +40,10 @@ const RegisterForm = () => {
         notifyError("Register Failed");
       } else {
         notifySuccess(result?.data?.message);
+        trackCompleteRegistration({
+          content_name: "Account Registration",
+          status: "submitted",
+        });
         // router.push(redirect || "/");
       }
     });
