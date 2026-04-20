@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useCreateConsultationMutation } from '@/redux/features/consultationApi';
 import { notifySuccess, notifyError } from '@/utils/toast';
 import { ArrowRightLong } from '@/svg';
-import { trackLead } from '@/lib/meta-pixel';
+import { trackLead } from '@/lib/gtm';
 // You'll need to add placeholder images
 import consultation_img from '@assets/img/about/about-1.jpeg';
 
@@ -34,6 +34,7 @@ const ConsultationArea = () => {
       const result = await createConsultation(formData).unwrap();
       if (result.success) {
         trackLead({
+          lead_type: 'consultation_booking',
           content_name: 'Consultation Booking',
           content_category: 'consultation',
           status: 'submitted',

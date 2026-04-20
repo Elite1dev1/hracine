@@ -11,7 +11,7 @@ import { useGetProductQuery } from '@/redux/features/productApi';
 import ProductDetailsBreadcrumb from '@/components/breadcrumb/product-details-breadcrumb';
 import ProductDetailsArea from '@/components/product-details/product-details-area';
 import PrdDetailsLoader from '@/components/loader/prd-details-loader';
-import { trackViewContent } from '@/lib/meta-pixel';
+import { trackViewContent } from '@/lib/gtm';
 import { getApiBaseUrl } from "@/utils/apiConfig";
 import { getProductSeo } from "@/lib/seo";
 

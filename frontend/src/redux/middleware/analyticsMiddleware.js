@@ -1,9 +1,9 @@
 import { add_cart_product } from "@/redux/features/cartSlice";
-import { trackAddToCart } from "@/lib/meta-pixel";
+import { trackAddToCart } from "@/lib/gtm";
 
-const META_PIXEL_CURRENCY = "NGN";
+const ANALYTICS_CURRENCY = "NGN";
 
-const metaPixelMiddleware = (store) => (next) => (action) => {
+const analyticsMiddleware = (store) => (next) => (action) => {
   if (!add_cart_product.match(action)) {
     return next(action);
   }
@@ -34,7 +34,7 @@ const metaPixelMiddleware = (store) => (next) => (action) => {
       category: nextCartItem.category?.name || nextCartItem.category,
       quantity: quantityAdded,
       price: nextCartItem.price,
-      currency: META_PIXEL_CURRENCY,
+      currency: ANALYTICS_CURRENCY,
       contentType: nextCartItem.isPreOrder ? "product_group" : "product",
     });
   }
@@ -42,4 +42,4 @@ const metaPixelMiddleware = (store) => (next) => (action) => {
   return result;
 };
 
-export default metaPixelMiddleware;
+export default analyticsMiddleware;

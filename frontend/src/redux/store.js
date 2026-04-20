@@ -8,7 +8,7 @@ import shopFilterSlice from "./features/shop-filter-slice";
 import wishlistSlice from "./features/wishlist-slice";
 import couponSlice from "./features/coupon/couponSlice";
 import orderSlice from "./features/order/orderSlice";
-import metaPixelMiddleware from "./middleware/metaPixelMiddleware";
+import analyticsMiddleware from "./middleware/analyticsMiddleware";
 
 const store = configureStore({
   reducer: {
@@ -23,7 +23,7 @@ const store = configureStore({
     order:orderSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware, metaPixelMiddleware),
+    getDefaultMiddleware().concat(apiSlice.middleware, analyticsMiddleware),
 });
 
 export default store;

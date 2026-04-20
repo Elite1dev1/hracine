@@ -13,7 +13,7 @@ import ErrorMsg from "@/components/common/error-msg";
 import { useGetUserOrderByIdQuery } from "@/redux/features/order/orderApi";
 import PrdDetailsLoader from "@/components/loader/prd-details-loader";
 import { formatCurrency } from "@/utils/currency";
-import { trackPurchase } from "@/lib/meta-pixel";
+import { trackPurchase } from "@/lib/gtm";
 
 
 const SingleOrder = ({ params }) => {
@@ -37,11 +37,12 @@ const SingleOrder = ({ params }) => {
         0
       ),
       items: currentOrder.cart?.map((item) => ({
-        id: item._id,
+        item_id: item._id,
+        item_name: item.title,
+        item_category: item.category?.name || item.category,
+        price: Number(item.price || 0),
         quantity: Number(item.orderQuantity || 0),
-        item_price: Number(item.price || 0),
       })),
-      contents: undefined,
       content_name: "Order Completed",
     });
   }, [order, orderId]);
