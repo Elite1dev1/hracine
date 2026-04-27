@@ -55,7 +55,9 @@ const SEO = ({
         <meta name="twitter:title" content={seo.title} />
         <meta name="twitter:description" content={seo.description} />
         <meta name="twitter:image" content={seo.image} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/logo/favicon.png" />
+        <link rel="shortcut icon" href="/assets/img/logo/favicon.png" />
+        <link rel="apple-touch-icon" href="/assets/img/logo/favicon.png" />
       </Head>
     </>
   );
