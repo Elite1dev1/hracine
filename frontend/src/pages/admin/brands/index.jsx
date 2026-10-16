@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import {
   useAdminGetAllBrandsQuery,
@@ -95,7 +96,7 @@ const AdminBrandsPage = () => {
                 <tr key={brand._id} style={{ borderBottom: '1px solid #dee2e6' }}>
                   <td style={{ padding: '12px' }}>
                     {brand.logo && (
-                      <img
+                      <AdminImage
                         src={brand.logo}
                         alt={brand.name}
                         style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}

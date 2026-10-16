@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import { useAdminAddBrandMutation } from '@/redux/features/admin/adminApi';
@@ -173,7 +174,7 @@ const AddBrandPage = () => {
             </div>
             {formData.logo && (
               <div style={{ marginTop: '10px' }}>
-                <img
+                <AdminImage
                   src={formData.logo}
                   alt="Logo preview"
                   style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'contain', border: '1px solid #ddd', borderRadius: '5px', padding: '5px' }}

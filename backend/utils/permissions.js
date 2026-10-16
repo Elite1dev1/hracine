@@ -8,7 +8,7 @@ const rolePermissions = {
     coupons: ["view", "create", "edit", "delete"],
     orders: ["view", "edit", "delete"],
     users: ["view", "edit", "delete"],
-    consultations: ["view"],
+    consultations: ["view", "edit", "delete"],
     blogs: ["view", "create", "edit", "delete"],
     newsletter: ["view"],
     settings: ["view", "edit"],
@@ -17,7 +17,7 @@ const rolePermissions = {
   "Order Manager": {
     dashboard: ["view"],
     orders: ["view", "edit"],
-    consultations: ["view"],
+    consultations: ["view", "edit"],
     users: ["view"],
   },
   "Store Manager": {

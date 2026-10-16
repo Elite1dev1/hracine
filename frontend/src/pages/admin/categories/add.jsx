@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import { useAdminAddCategoryMutation } from '@/redux/features/admin/adminApi';
@@ -213,7 +214,7 @@ const AddCategoryPage = () => {
             </div>
             {formData.img && (
               <div style={{ marginTop: '10px' }}>
-                <img
+                <AdminImage
                   src={formData.img}
                   alt="Preview"
                   style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover', borderRadius: '5px', border: '1px solid #ddd' }}

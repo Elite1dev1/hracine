@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import {
   useAdminGetAllProductsQuery,
@@ -273,7 +274,7 @@ const AdminProductsPage = () => {
                     />
                   </td>
                   <td style={{ padding: '12px' }}>
-                    <img
+                    <AdminImage
                       src={product.img}
                       alt={product.title}
                       style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}

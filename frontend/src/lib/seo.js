@@ -130,9 +130,9 @@ export const PAGE_SEO = {
     path: "/community",
   }),
   consultation: createSeo({
-    title: `Scalp Consultation | ${BRAND_NAME}`,
+    title: `The Hracine Root Check | ${BRAND_NAME}`,
     description:
-      "Book a Hracine consultation for personalized scalp health advice and a premium hair care routine built for your needs.",
+      "Book a personalised Hracine scalp and hair assessment to understand your care needs and receive the right treatment recommendation.",
     path: "/consultation",
   }),
   wishlist: createSeo({

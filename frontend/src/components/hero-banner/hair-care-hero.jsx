@@ -107,12 +107,12 @@ const HairCareHero = () => {
                     Healthy hair begins with a happy scalp.
                   </p>
                   <div className="tp-slider-btn">
-                    <Link href="/community" className="tp-btn tp-btn-2" style={{ 
+                    <Link href="/shop" className="tp-btn tp-btn-2" style={{
                       padding: 'clamp(12px, 2vw, 15px) clamp(30px, 5vw, 40px)',
                       fontSize: 'clamp(14px, 2vw, 16px)',
                       display: 'inline-block'
                     }}>
-                      Join the Root Tribe
+                      Shop Now
                       {" "} <ArrowRightLong />
                     </Link>
                   </div>

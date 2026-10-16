@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import { 
@@ -343,9 +344,9 @@ const AddProductPage = () => {
                 </div>
                 {formData.img && (
                   <div style={{ marginTop: '10px' }}>
-                    <img 
-                      src={formData.img} 
-                      alt="Main product" 
+                    <AdminImage
+                      src={formData.img}
+                      alt="Main product"
                       style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '5px', border: '1px solid #ddd' }}
                     />
                     <input
@@ -547,7 +548,7 @@ const AddProductPage = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '15px' }}>
                 {formData.imageURLs.map((item, index) => (
                   <div key={index} style={{ position: 'relative' }}>
-                    <img
+                    <AdminImage
                       src={item.img}
                       alt={`Additional ${index + 1}`}
                       style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '5px', border: '1px solid #ddd' }}

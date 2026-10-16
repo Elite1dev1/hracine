@@ -17,7 +17,7 @@ const MOBILE_DRAWER_SECTIONS = [
     label: 'ACCOUNT',
     items: [
       { title: 'My Account', href: '/profile' },
-      { title: 'Consultations', href: '/consultation' },
+      { title: 'Root Check', href: '/consultation' },
     ],
   },
   {

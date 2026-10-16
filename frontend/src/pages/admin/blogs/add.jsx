@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import { useAdminAddBlogMutation } from '@/redux/features/admin/adminApi';
@@ -350,7 +351,7 @@ const AddBlogPage = () => {
                 style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}
               />
               {formData.img && (
-                <img src={formData.img} alt="Preview" style={{ width: '100%', maxWidth: '200px', marginTop: '10px', borderRadius: '5px' }} />
+                <AdminImage src={formData.img} alt="Preview" style={{ width: '100%', maxWidth: '200px', height: 'auto', marginTop: '10px', borderRadius: '5px' }} />
               )}
             </div>
             <div>
@@ -377,7 +378,7 @@ const AddBlogPage = () => {
               />
               <small style={{ color: '#888' }}>Used for list view. If empty, main image will be used.</small>
               {formData.list_img && (
-                <img src={formData.list_img} alt="Preview" style={{ width: '100%', maxWidth: '200px', marginTop: '10px', borderRadius: '5px' }} />
+                <AdminImage src={formData.list_img} alt="Preview" style={{ width: '100%', maxWidth: '200px', height: 'auto', marginTop: '10px', borderRadius: '5px' }} />
               )}
             </div>
           </div>

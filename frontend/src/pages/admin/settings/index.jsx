@@ -18,6 +18,7 @@ const AdminSettingsPage = () => {
   const [freeShippingBannerText, setFreeShippingBannerText] = useState("Free shipping on orders above 25,000");
   const [todayDeliveryPrice, setTodayDeliveryPrice] = useState("60");
   const [sevenDayDeliveryPrice, setSevenDayDeliveryPrice] = useState("20");
+  const [rootCheckFee, setRootCheckFee] = useState("5000");
   const [paystackTestApiKey, setPaystackTestApiKey] = useState("");
   const [paystackLiveApiKey, setPaystackLiveApiKey] = useState("");
   const [paystackMode, setPaystackMode] = useState("test");
@@ -54,6 +55,7 @@ const AdminSettingsPage = () => {
       setSevenDayDeliveryPrice(
         String(data.data.sevenDayDeliveryPrice ?? 20)
       );
+      setRootCheckFee(String(data.data.rootCheckFee ?? 5000));
       setPaystackMode(data.data.paystackMode === "live" ? "live" : "test");
       if (typeof data.data.paystackTestApiKey === "string") {
         setPaystackTestApiKey(data.data.paystackTestApiKey);
@@ -79,18 +81,21 @@ const AdminSettingsPage = () => {
     const preOrderThreshold = Number(preOrderFreeShippingThreshold);
     const todayPrice = Number(todayDeliveryPrice);
     const sevenDayPrice = Number(sevenDayDeliveryPrice);
+    const parsedRootCheckFee = Number(rootCheckFee);
 
     if (
       !Number.isFinite(threshold) ||
       threshold < 0 ||
       !Number.isFinite(preOrderThreshold) ||
       preOrderThreshold < 0 ||
+      !Number.isFinite(parsedRootCheckFee) ||
+      parsedRootCheckFee <= 0 ||
       !Number.isFinite(todayPrice) ||
       todayPrice < 0 ||
       !Number.isFinite(sevenDayPrice) ||
       sevenDayPrice < 0
     ) {
-      toast.error("Please enter valid numeric values greater than or equal to 0");
+      toast.error("Enter valid amounts; the Root Check fee must be greater than 0");
       return;
     }
 
@@ -100,6 +105,7 @@ const AdminSettingsPage = () => {
       freeShippingBannerText,
       todayDeliveryPrice: todayPrice,
       sevenDayDeliveryPrice: sevenDayPrice,
+      rootCheckFee: parsedRootCheckFee,
     };
 
     if (isSuperAdmin) {
@@ -175,6 +181,61 @@ const AdminSettingsPage = () => {
 
         <div style={{ maxWidth: '600px' }}>
           <form onSubmit={handleSubmit}>
+            <div
+              style={{
+                backgroundColor: '#f8f9fa',
+                padding: '20px',
+                borderRadius: '5px',
+                marginBottom: '20px',
+              }}
+            >
+              <h2
+                style={{
+                  marginTop: 0,
+                  marginBottom: '18px',
+                  color: '#2c3e50',
+                  fontSize: 'clamp(1.1rem, 1.55vw, 1.35rem)',
+                  lineHeight: 1.3,
+                }}
+              >
+                Root Check Settings
+              </h2>
+
+              <div>
+                <label
+                  htmlFor="rootCheckFee"
+                  style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontWeight: 'bold',
+                    color: '#34495e',
+                    fontSize: '0.95rem',
+                  }}
+                >
+                  Root Check Fee (₦)
+                </label>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  id="rootCheckFee"
+                  value={rootCheckFee}
+                  onChange={(e) => handleNumericInput(e.target.value, setRootCheckFee)}
+                  placeholder="e.g. 5000"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '5px',
+                    fontSize: '16px',
+                  }}
+                />
+                <p style={{ marginTop: '8px', marginBottom: 0, color: '#7f8c8d', fontSize: '14px' }}>
+                  This amount appears on the Root Check page, booking buttons, credit notice, and FAQ.
+                </p>
+              </div>
+            </div>
+
             <div
               style={{
                 backgroundColor: '#f8f9fa',

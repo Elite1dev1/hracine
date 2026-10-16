@@ -22,7 +22,7 @@ const AdminConsultationsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const consultations = data?.data || [];
+  const consultations = useMemo(() => data?.data || [], [data?.data]);
 
   // Calculate metrics - Move this hook up before any conditional returns
   const metrics = useMemo(() => {
@@ -121,21 +121,21 @@ const AdminConsultationsPage = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       await updateStatus({ id, status: newStatus }).unwrap();
-      toast.success('Consultation status updated successfully');
+      toast.success('Root Check status updated successfully');
       refetch();
     } catch (error) {
-      toast.error(error?.data?.message || 'Failed to update consultation status');
+      toast.error(error?.data?.message || 'Failed to update Root Check status');
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this consultation?')) {
+    if (window.confirm('Are you sure you want to delete this Root Check booking?')) {
       try {
         await deleteConsultation(id).unwrap();
-        toast.success('Consultation deleted successfully');
+        toast.success('Root Check booking deleted successfully');
         refetch();
       } catch (error) {
-        toast.error(error?.data?.message || 'Failed to delete consultation');
+        toast.error(error?.data?.message || 'Failed to delete Root Check booking');
       }
     }
   };
@@ -182,7 +182,7 @@ const AdminConsultationsPage = () => {
     return (
       <AdminLayout>
         <div style={{ textAlign: 'center', padding: '50px', color: '#e74c3c' }}>
-          <div>Error loading consultations</div>
+          <div>Error loading Root Check bookings</div>
           <div style={{ marginTop: '20px', fontSize: '14px', color: '#7f8c8d' }}>
             {error?.data?.message || error?.message || 'Unknown error'}
           </div>
@@ -199,7 +199,7 @@ const AdminConsultationsPage = () => {
       <div className="container-fluid p-4">
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h1 className="h3 mb-0 fw-bold" style={{ color: '#1f2937' }}>Consultations</h1>
+          <h1 className="h3 mb-0 fw-bold" style={{ color: '#1f2937' }}>Root Check Bookings</h1>
         </div>
 
         {/* Metrics Cards */}
@@ -209,7 +209,7 @@ const AdminConsultationsPage = () => {
               <div className="card-body">
                 <div className="d-flex align-items-center">
                   <div className="flex-grow-1">
-                    <p className="text-muted mb-1 small fw-semibold">Total Consultations</p>
+                    <p className="text-muted mb-1 small fw-semibold">Total Root Checks</p>
                     <h3 className="mb-0 fw-bold" style={{ color: '#1f2937' }}>{metrics.total}</h3>
                   </div>
                   <div className="ms-3">
@@ -362,7 +362,7 @@ const AdminConsultationsPage = () => {
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="m22 21-3-3 3-3"></path>
                   </svg>
-                  <p className="mb-0">No consultations found</p>
+                  <p className="mb-0">No Root Check bookings found</p>
                   <small>Try adjusting your filters or search terms</small>
                 </div>
               </div>
@@ -478,7 +478,7 @@ const AdminConsultationsPage = () => {
         {totalPages > 1 && (
           <div className="d-flex justify-content-between align-items-center mt-4">
             <div className="text-muted small">
-              Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, filteredConsultations.length)} of {filteredConsultations.length} consultations
+              Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, filteredConsultations.length)} of {filteredConsultations.length} Root Check bookings
             </div>
             <div className="btn-group" role="group">
               <button 
@@ -546,7 +546,7 @@ const AdminConsultationsPage = () => {
               overflow: 'visible',
             },
           }}
-          contentLabel="Consultation Details"
+          contentLabel="Root Check Details"
           ariaHideApp={false}
         >
           {selectedConsultation && (
@@ -739,6 +739,26 @@ const AdminConsultationsPage = () => {
                       <div className="fw-medium">{formatDate(selectedConsultation.createdAt)}</div>
                     </div>
                   </div>
+                  {selectedConsultation.paymentStatus && (
+                    <div className="bg-light rounded p-3 mt-3">
+                      <div className="row g-3">
+                        <div className="col-md-4">
+                          <div className="small text-muted">Payment</div>
+                          <div className="fw-medium text-capitalize">{selectedConsultation.paymentStatus}</div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="small text-muted">Amount Paid</div>
+                          <div className="fw-medium">
+                            {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(selectedConsultation.amountPaid || 0)}
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="small text-muted">Reference</div>
+                          <div className="fw-medium text-break">{selectedConsultation.paymentReference || 'N/A'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="card-footer bg-white border-top">
@@ -764,7 +784,7 @@ const AdminConsultationsPage = () => {
                       disabled={isDeleting}
                       className="btn btn-danger btn-sm"
                     >
-                      Delete Consultation
+                      Delete Root Check
                     </button>
                   </div>
                   <button 

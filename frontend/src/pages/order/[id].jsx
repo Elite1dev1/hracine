@@ -74,7 +74,7 @@ const SingleOrder = ({ params }) => {
                       <div className="alert alert-success">
                         <h4 className="alert-heading">Pre-order Confirmed 🎉</h4>
                         <p className="text-black mb-0">Hi <strong>{name}</strong>, your pre-order has been placed successfully.</p>
-                        <p className="text-black mb-0">Delivery begins on <strong>{new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)</strong>.</p>
+                        <p className="text-black mb-0">Delivery begins on <strong>{new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>.</p>
                         <p className="text-black mb-0">We&apos;ll keep you updated.</p>
                       </div>
                     ) : (

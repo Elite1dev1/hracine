@@ -12,7 +12,7 @@ const ConsultationPage = () => {
     <Wrapper>
       <SEO {...PAGE_SEO.consultation} />
       <HeaderTwo style_2={true} />
-      <CommonBreadcrumb title="Consultation" subtitle="Consultation" center={true} />
+      <CommonBreadcrumb title="The Hracine Root Check" subtitle="Root Check" center={true} />
       <ConsultationArea/>
       <Footer primary_style={true} />
     </Wrapper>

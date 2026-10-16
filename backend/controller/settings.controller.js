@@ -19,8 +19,11 @@ const isSuperAdmin = (req) =>
 const mapPublicSettings = (settings) => ({
   _id: settings._id,
   freeShippingThreshold: settings.freeShippingThreshold,
+  preOrderFreeShippingThreshold: settings.preOrderFreeShippingThreshold,
+  freeShippingBannerText: settings.freeShippingBannerText,
   todayDeliveryPrice: settings.todayDeliveryPrice,
   sevenDayDeliveryPrice: settings.sevenDayDeliveryPrice,
+  rootCheckFee: settings.rootCheckFee,
   createdAt: settings.createdAt,
   updatedAt: settings.updatedAt,
 });
@@ -69,6 +72,13 @@ const updateAdminSettings = async (req, res, next) => {
     const freeShippingThreshold = parseNonNegativeNumber(
       req.body?.freeShippingThreshold
     );
+    const preOrderFreeShippingThreshold = parseNonNegativeNumber(
+      req.body?.preOrderFreeShippingThreshold
+    );
+    const rootCheckFee = parseNonNegativeNumber(req.body?.rootCheckFee);
+    const freeShippingBannerText = String(
+      req.body?.freeShippingBannerText || ""
+    ).trim();
     const todayDeliveryPrice = parseNonNegativeNumber(
       req.body?.todayDeliveryPrice
     );
@@ -82,13 +92,17 @@ const updateAdminSettings = async (req, res, next) => {
 
     if (
       freeShippingThreshold === null ||
+      preOrderFreeShippingThreshold === null ||
+      rootCheckFee === null ||
+      rootCheckFee <= 0 ||
+      !freeShippingBannerText ||
       todayDeliveryPrice === null ||
       sevenDayDeliveryPrice === null
     ) {
       return res.status(400).json({
         success: false,
         message:
-          "Free shipping threshold, today delivery price, and 7-day delivery price must be numeric values greater than or equal to 0",
+          "Shipping thresholds, Root Check fee, and delivery prices must be valid values",
       });
     }
 
@@ -156,8 +170,11 @@ const updateAdminSettings = async (req, res, next) => {
 
     let settings = await Settings.getSettings();
     settings.freeShippingThreshold = freeShippingThreshold;
+    settings.preOrderFreeShippingThreshold = preOrderFreeShippingThreshold;
+    settings.freeShippingBannerText = freeShippingBannerText;
     settings.todayDeliveryPrice = todayDeliveryPrice;
     settings.sevenDayDeliveryPrice = sevenDayDeliveryPrice;
+    settings.rootCheckFee = rootCheckFee;
     if (hasPaystackPayload) {
       settings.paystackTestApiKey = paystackTestApiKey;
       settings.paystackLiveApiKey = paystackLiveApiKey;

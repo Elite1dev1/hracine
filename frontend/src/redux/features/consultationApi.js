@@ -3,13 +3,20 @@ import { apiSlice } from "../api/apiSlice";
 export const consultationApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    // Create consultation (public)
-    createConsultation: builder.mutation({
+    initializeRootCheckPayment: builder.mutation({
       query: (data) => ({
-        url: "/api/consultation",
+        url: "/api/consultation/initialize-payment",
         method: "POST",
         body: data,
       }),
+    }),
+    verifyRootCheckPayment: builder.mutation({
+      query: (reference) => ({
+        url: "/api/consultation/verify-payment",
+        method: "POST",
+        body: { reference },
+      }),
+      invalidatesTags: ["Consultations"],
     }),
     // Get all consultations (admin only)
     getAllConsultations: builder.query({
@@ -42,7 +49,8 @@ export const consultationApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  useCreateConsultationMutation,
+  useInitializeRootCheckPaymentMutation,
+  useVerifyRootCheckPaymentMutation,
   useGetAllConsultationsQuery,
   useGetConsultationQuery,
   useUpdateConsultationStatusMutation,

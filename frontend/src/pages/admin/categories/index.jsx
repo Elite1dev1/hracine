@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import {
   useAdminGetAllCategoriesQuery,
@@ -91,7 +92,7 @@ const AdminCategoriesPage = () => {
                 <tr key={category._id} style={{ borderBottom: '1px solid #dee2e6' }}>
                   <td style={{ padding: '12px' }}>
                     {category.img && (
-                      <img
+                      <AdminImage
                         src={category.img}
                         alt={category.parent}
                         style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}

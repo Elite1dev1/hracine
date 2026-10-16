@@ -39,17 +39,23 @@ const BlogSidebar = () => {
           <h3 className="tp-sidebar-widget-title">About me</h3>
           <div className="tp-sidebar-widget-content">
             <div className="tp-sidebar-about">
-              <div className="tp-sidebar-about-thumb mb-25">
-                <a href="#">
-                  <Image src={user} alt="user" />
+              <div className="tp-sidebar-about-thumb mb-25" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <a href="#" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Image
+                    src={user}
+                    alt="Mariam, Hracine blogger"
+                    width={160}
+                    height={160}
+                    style={{ display: 'block', objectFit: 'cover', objectPosition: 'center center' }}
+                  />
                 </a>
               </div>
               <div className="tp-sidebar-about-content">
                 <h3 className="tp-sidebar-about-title">
                   <a href="#">Mariam</a>
                 </h3>
-                <span className="tp-sidebar-about-designation">skincare expert</span>
-                <p>Mariam is a passionate skincare expert dedicated to helping individuals achieve healthier skin and scalp through education, research-backed routines, and safe, effective product choices. She shares practical tips, ingredient insights, and simple care routines designed to support long-term skin and hair wellness.</p>
+                <span className="tp-sidebar-about-designation">Blogger</span>
+                <p>Mariam is a hair-care blogger who shares practical, easy-to-follow guidance for healthier scalps and stronger hair. Through honest product reviews, ingredient breakdowns, routine tips, and protective-style inspiration, she helps readers make confident choices and build simple hair-care habits that work for everyday life.</p>
                 <div className="tp-sidebar-about-signature">
                   <Image src={signature} alt="signature" />
                 </div>

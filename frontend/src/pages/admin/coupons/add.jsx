@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import { useAdminAddCouponMutation } from '@/redux/features/admin/adminApi';
@@ -181,9 +182,9 @@ const AddCouponPage = () => {
             </div>
             {formData.logo && (
               <div style={{ marginTop: '10px' }}>
-                <img 
-                  src={formData.logo} 
-                  alt="Preview" 
+                <AdminImage
+                  src={formData.logo}
+                  alt="Preview"
                   style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '5px', border: '1px solid #ddd' }}
                   onError={(e) => {
                     e.target.style.display = 'none';

@@ -16,7 +16,7 @@ const BlogDetailsAuthor = () => {
     >
       <div className="tp-postbox-details-author-thumb">
         <a href="#">
-          <Image src={author_img} alt="author_img" />
+          <Image src={author_img} alt="Mariam, Hracine blogger" style={{ objectFit: 'cover', objectPosition: 'center center' }} />
         </a>
       </div>
       <div className="tp-postbox-details-author-content">
@@ -25,7 +25,7 @@ const BlogDetailsAuthor = () => {
           <a href="#">Mariam</a>
         </h5>
         <p>
-          Mariam is a passionate skincare expert dedicated to helping individuals achieve healthier skin and scalp through education, research-backed routines, and safe, effective product choices. She shares practical tips, ingredient insights, and simple care routines designed to support long-term skin and hair wellness.
+          Mariam is a hair-care blogger who shares practical, easy-to-follow guidance for healthier scalps and stronger hair. Through honest product reviews, ingredient breakdowns, routine tips, and protective-style inspiration, she helps readers make confident choices and build simple hair-care habits that work for everyday life.
         </p>
 
         <div className="tp-postbox-details-author-social">

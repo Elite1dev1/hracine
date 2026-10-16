@@ -102,7 +102,7 @@ const VerifyPayment = () => {
       const errorMessage = error?.data?.message || error?.data?.errorMessages?.[0]?.message || 'Payment verification failed. Please try again.';
       notifyError(errorMessage);
     }
-  }, [verifyPayment, saveOrder, router]);
+  }, [verifyPayment, saveOrder]);
 
   useEffect(() => {
     // Paystack sends both 'reference' and 'trxref' - use trxref if available, otherwise reference

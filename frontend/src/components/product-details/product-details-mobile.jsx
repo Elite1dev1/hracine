@@ -78,7 +78,7 @@ const ProductDetailsMobile = ({ productItem }) => {
   const handleDecrement = () => dispatch(decrement());
 
   const shippingContent = isPreOrder 
-    ? `Delivery begins on ${new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day). We’ll keep you updated.`
+    ? `Delivery begins on ${new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}. We’ll keep you updated.`
     : 'We offer 30-day easy returns. Order before 2:30PM for same-day dispatch. Standard delivery 3–5 business days.';
   const productDetailsContent = [sku && `SKU: ${sku}`, category?.name && `Category: ${category.name}`, tags?.[0] && `Tag: ${tags[0]}`].filter(Boolean).join(' • ') || 'See product info above.';
 
@@ -122,7 +122,7 @@ const ProductDetailsMobile = ({ productItem }) => {
               This is a pre-order item
             </p>
             <p style={{ color: '#555', margin: '3px 0 0 0', fontSize: '12px' }}>
-              Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)
+              Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
         )}

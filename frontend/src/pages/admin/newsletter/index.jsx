@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import Cookies from 'js-cookie';
 import { getApiBaseUrl } from '@/utils/apiConfig';
@@ -14,12 +14,7 @@ const NewsletterSubscribers = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [stats, setStats] = useState(null);
 
-  useEffect(() => {
-    fetchSubscribers();
-    fetchStats();
-  }, [page, search, statusFilter, startDate, endDate]);
-
-  const fetchSubscribers = async () => {
+  const fetchSubscribers = useCallback(async () => {
     try {
       setLoading(true);
       const adminInfo = Cookies.get('adminInfo');
@@ -47,9 +42,9 @@ const NewsletterSubscribers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, statusFilter, startDate, endDate]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/newsletter/stats`);
       const data = await response.json();
@@ -60,7 +55,12 @@ const NewsletterSubscribers = () => {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchSubscribers();
+    fetchStats();
+  }, [fetchSubscribers, fetchStats]);
 
   const handleExport = async () => {
     try {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import {
   useAdminGetAllOrdersQuery,
@@ -292,7 +293,7 @@ const AdminOrdersPage = () => {
                                     justifyContent: 'center'
                                   }}>
                                     {productImage ? (
-                                      <img
+                                      <AdminImage
                                         src={productImage}
                                         alt={item.name || item.title || 'Product'}
                                         style={{ 

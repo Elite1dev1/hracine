@@ -6,55 +6,54 @@ import Image from 'next/image';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const ROLE_MENU_ACCESS = {
+  "Super Admin": [
+    { name: 'Dashboard', icon: '📊', path: '/admin' },
+    { name: 'Products', icon: '📦', path: '/admin/products' },
+    { name: 'Categories', icon: '📁', path: '/admin/categories' },
+    { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
+    { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
+    { name: 'Users', icon: '👥', path: '/admin/users' },
+    { name: 'Orders', icon: '🛒', path: '/admin/orders' },
+    { name: 'Root Checks', icon: '💬', path: '/admin/consultations' },
+    { name: 'Blogs', icon: '📝', path: '/admin/blogs' },
+    {
+      name: 'Marketing',
+      icon: '📧',
+      path: '/admin/marketing',
+      submenu: [
+        { name: 'Newsletter Subscribers', path: '/admin/newsletter' },
+      ],
+    },
+    { name: 'Settings', icon: '⚙️', path: '/admin/settings' },
+    { name: 'Staff Management', icon: '👨‍💼', path: '/admin/staff' },
+  ],
+  "Order Manager": [
+    { name: 'Dashboard', icon: '📊', path: '/admin' },
+    { name: 'Orders', icon: '🛒', path: '/admin/orders' },
+    { name: 'Users', icon: '👥', path: '/admin/users' },
+    { name: 'Root Checks', icon: '💬', path: '/admin/consultations' },
+  ],
+  "Store Manager": [
+    { name: 'Dashboard', icon: '📊', path: '/admin' },
+    { name: 'Products', icon: '📦', path: '/admin/products' },
+    { name: 'Categories', icon: '📁', path: '/admin/categories' },
+    { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
+    { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
+  ],
+  "Support Staff": [
+    { name: 'Dashboard', icon: '📊', path: '/admin' },
+    { name: 'Orders', icon: '🛒', path: '/admin/orders' },
+    { name: 'Root Checks', icon: '💬', path: '/admin/consultations' },
+    { name: 'Users', icon: '👥', path: '/admin/users' },
+  ],
+};
+
 const AdminLayout = ({ children }) => {
   const router = useRouter();
   const [admin, setAdmin] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [menuItems, setMenuItems] = useState([]);
-
-  // Define role-based menu access
-  const roleMenuAccess = {
-    "Super Admin": [
-      { name: 'Dashboard', icon: '📊', path: '/admin' },
-      { name: 'Products', icon: '📦', path: '/admin/products' },
-      { name: 'Categories', icon: '📁', path: '/admin/categories' },
-      { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
-      { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
-      { name: 'Users', icon: '👥', path: '/admin/users' },
-      { name: 'Orders', icon: '🛒', path: '/admin/orders' },
-      { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
-      { name: 'Blogs', icon: '📝', path: '/admin/blogs' },
-      { 
-        name: 'Marketing', 
-        icon: '📧', 
-        path: '/admin/marketing',
-        submenu: [
-          { name: 'Newsletter Subscribers', path: '/admin/newsletter' },
-        ]
-      },
-      { name: 'Settings', icon: '⚙️', path: '/admin/settings' },
-      { name: 'Staff Management', icon: '👨‍💼', path: '/admin/staff' },
-    ],
-    "Order Manager": [
-      { name: 'Dashboard', icon: '📊', path: '/admin' },
-      { name: 'Orders', icon: '🛒', path: '/admin/orders' },
-      { name: 'Users', icon: '👥', path: '/admin/users' },
-      { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
-    ],
-    "Store Manager": [
-      { name: 'Dashboard', icon: '📊', path: '/admin' },
-      { name: 'Products', icon: '📦', path: '/admin/products' },
-      { name: 'Categories', icon: '📁', path: '/admin/categories' },
-      { name: 'Brands', icon: '🏷️', path: '/admin/brands' },
-      { name: 'Coupons', icon: '🎫', path: '/admin/coupons' },
-    ],
-    "Support Staff": [
-      { name: 'Dashboard', icon: '📊', path: '/admin' },
-      { name: 'Orders', icon: '🛒', path: '/admin/orders' },
-      { name: 'Consultations', icon: '💬', path: '/admin/consultations' },
-      { name: 'Users', icon: '👥', path: '/admin/users' },
-    ],
-  };
 
   useEffect(() => {
     const adminInfo = Cookies.get('adminInfo');
@@ -67,7 +66,7 @@ const AdminLayout = ({ children }) => {
         setAdmin(adminData);
         
         // Set menu items based on role
-        const items = roleMenuAccess[adminData.role] || roleMenuAccess["Super Admin"];
+        const items = ROLE_MENU_ACCESS[adminData.role] || ROLE_MENU_ACCESS["Super Admin"];
         setMenuItems(items);
       } catch (error) {
         router.push('/admin/login');

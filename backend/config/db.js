@@ -1,7 +1,21 @@
 const mongoose = require('mongoose');
+const dns = require('node:dns');
 const { secret } = require('./secret');
 
 mongoose.set('strictQuery', false);
+
+// Allow an explicit DNS resolver for networks whose default resolver blocks
+// MongoDB Atlas SRV lookups. Leave unset to keep the system DNS configuration.
+if (secret.mongodb_dns_servers) {
+  const dnsServers = secret.mongodb_dns_servers
+    .split(',')
+    .map(server => server.trim())
+    .filter(Boolean);
+
+  if (dnsServers.length > 0) {
+    dns.setServers(dnsServers);
+  }
+}
 
 // mongodb url
 const MONGO_URI = secret.db_url;

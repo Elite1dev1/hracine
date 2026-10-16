@@ -7,6 +7,7 @@ module.exports.secret = {
   port: process.env.PORT,
   env: process.env.NODE_ENV,
   db_url: process.env.MONGO_URI,
+  mongodb_dns_servers: process.env.MONGODB_DNS_SERVERS,
   token_secret: process.env.TOKEN_SECRET,
   jwt_secret_for_verify: process.env.JWT_SECRET_FOR_VERIFY,
 

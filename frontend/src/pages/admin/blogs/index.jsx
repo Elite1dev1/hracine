@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import {
   useAdminGetAllBlogsQuery,
@@ -91,7 +92,7 @@ const AdminBlogsPage = () => {
               {filteredBlogs.map((blog) => (
                 <tr key={blog._id} style={{ borderBottom: '1px solid #dee2e6' }}>
                   <td style={{ padding: '12px' }}>
-                    <img
+                    <AdminImage
                       src={blog.img}
                       alt={blog.title}
                       style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}

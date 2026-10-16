@@ -41,7 +41,7 @@ const CheckoutOrderArea = ({ checkoutData }) => {
             <li className="tp-order-info-list-header" style={{ display: 'block', backgroundColor: '#fff4f0', padding: '15px', borderLeft: '4px solid #ff5501', marginBottom: '15px' }}>
               <p style={{ color: '#ff5501', fontWeight: 'bold', margin: 0 }}>This is a pre-order item</p>
               <p style={{ color: '#555', fontSize: '14px', margin: '5px 0 0 0' }}>
-                Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)
+                Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
             </li>
           )}

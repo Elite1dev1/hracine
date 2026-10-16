@@ -1,478 +1,264 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useCreateConsultationMutation } from '@/redux/features/consultationApi';
-import { notifySuccess, notifyError } from '@/utils/toast';
+import { useInitializeRootCheckPaymentMutation } from '@/redux/features/consultationApi';
+import { useGetSettingsQuery } from '@/redux/features/admin/adminApi';
+import { notifyError } from '@/utils/toast';
 import { ArrowRightLong } from '@/svg';
 import { trackLead } from '@/lib/gtm';
-// You'll need to add placeholder images
-import consultation_img from '@assets/img/about/about-1.jpeg';
+import consultationImg from '@assets/img/about/about-1.jpeg';
+
+const rootCheckSteps = [
+  { number: '01', title: 'Tell Us About Your Hair', description: 'We discuss your current hair routine, styling habits and the concerns you’re experiencing.' },
+  { number: '02', title: 'Scalp & Hair Assessment', description: 'We assess the condition of your scalp and hair to understand your care needs.' },
+  { number: '03', title: 'Identify Your Care Needs', description: 'We discuss the key areas that need attention and what may be affecting your hair-care routine.' },
+  { number: '04', title: 'Get Your Treatment Recommendation', description: 'Based on your assessment, we recommend the Hracine treatment that best suits your needs.' },
+  { number: '05', title: 'Begin Your Hracine Journey', description: 'Your Root Check leads into a personalised treatment and home-care plan.' },
+];
+
+const rootCheckFor = [
+  'Dry or uncomfortable scalp', 'Frequent scalp buildup', 'Itching or flaking',
+  'Excessively oily scalp', 'Hair breakage', 'Dry or brittle hair',
+  'Difficulty retaining length', 'A hair routine that isn’t working for you',
+  'Uncertainty about what your scalp or hair actually needs',
+];
+
+const treatmentJourney = [
+  { title: 'Root Check', description: 'Understand your scalp and hair.' },
+  { title: 'Personalised Treatment', description: 'Receive care based on your identified needs.' },
+  { title: 'Protective Style', description: 'Finish with a suitable low-tension style where applicable.' },
+  { title: 'Homecare', description: 'Continue your routine with recommended hair-care products.' },
+  { title: 'Follow-Up', description: 'Return for continued scalp and hair care.' },
+];
+
+const treatmentPackages = [
+  { title: 'Root Reset', description: 'A foundational scalp and hair reset for clients looking to refresh and restore their routine.' },
+  { title: 'Root Therapy', description: 'A more targeted scalp and hair treatment based on your Root Check assessment.' },
+  { title: 'Root Ritual', description: 'Our complete Hracine scalp-first hair-care experience.' },
+];
+
+const leaveWith = [
+  'A clearer understanding of your scalp and hair needs', 'Your key areas of concern identified',
+  'Personalised care recommendations', 'A recommended Hracine treatment',
+  'Guidance for maintaining your hair between treatments',
+];
+
+const timeSlots = [
+  '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM',
+];
+
+const formatNaira = (amount) => new Intl.NumberFormat('en-NG', {
+  style: 'currency', currency: 'NGN', minimumFractionDigits: 0, maximumFractionDigits: 0,
+}).format(amount);
 
 const ConsultationArea = () => {
-  const [createConsultation, { isLoading }] = useCreateConsultationMutation();
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [initializeRootCheckPayment, { isLoading }] = useInitializeRootCheckPaymentMutation();
+  const { data: settingsData } = useGetSettingsQuery();
+  const [openFaq, setOpenFaq] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    biggestConcern: '',
-    protectiveStyle: '',
-    preferredDate: '',
-    preferredTime: '',
-    notes: ''
+    name: '', email: '', phone: '', biggestConcern: '', protectiveStyle: '',
+    preferredDate: '', preferredTime: '', notes: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const rootCheckFee = Number(settingsData?.data?.rootCheckFee ?? 5000);
+  const formattedFee = formatNaira(Number.isFinite(rootCheckFee) ? rootCheckFee : 5000);
+
+  const faqs = useMemo(() => [
+    { id: 1, question: 'How much is the Root Check?', answer: `The Hracine Root Check is ${formattedFee}.` },
+    { id: 2, question: 'Does the Root Check fee count toward my treatment?', answer: `Yes. Your ${formattedFee} fee is credited toward your Hracine treatment when you proceed within 7 days.` },
+    { id: 3, question: 'Do I need to know which treatment I want before booking?', answer: 'No. The Root Check is designed to help determine which Hracine treatment is appropriate for your needs.' },
+    { id: 4, question: 'Is the Root Check a medical consultation?', answer: 'No. It is a cosmetic scalp and hair assessment and does not replace medical care.' },
+    { id: 5, question: 'Can I book a treatment without the Root Check?', answer: 'For your first Hracine treatment, we recommend starting with the Root Check so your treatment can be matched to your needs.' },
+  ], [formattedFee]);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const result = await createConsultation(formData).unwrap();
-      if (result.success) {
-        trackLead({
-          lead_type: 'consultation_booking',
-          content_name: 'Consultation Booking',
-          content_category: 'consultation',
-          status: 'submitted',
-        });
-        setShowSuccess(true);
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          biggestConcern: '',
-          protectiveStyle: '',
-          preferredDate: '',
-          preferredTime: '',
-          notes: ''
-        });
-        notifySuccess('Consultation booked successfully! We\'ll be in touch soon.');
-        setTimeout(() => setShowSuccess(false), 5000);
+      const result = await initializeRootCheckPayment(formData).unwrap();
+      if (result.success && result.data?.authorization_url) {
+        trackLead({ lead_type: 'root_check_payment', content_name: 'The Hracine Root Check', content_category: 'consultation', status: 'payment_initialized' });
+        window.location.assign(result.data.authorization_url);
+        return;
       }
+      notifyError('Could not start payment. Please try again.');
     } catch (error) {
-      notifyError(error?.data?.message || 'Failed to book consultation. Please try again.');
+      notifyError(error?.data?.message || 'Failed to start payment. Please try again.');
     }
   };
-
-  const services = [
-    {
-      id: 1,
-      title: 'Scalp + Style Assessment',
-      description: 'We analyze your scalp condition, hair type, and protective style needs.',
-      icon: '🔍'
-    },
-    {
-      id: 2,
-      title: 'Customized Hair Routine',
-      description: 'A daily + weekly plan using Hracine products tailored to your goals.',
-      icon: '✨'
-    },
-    {
-      id: 3,
-      title: 'Ingredient Guidance',
-      description: 'Learn which botanicals and herbs your scalp responds best to.',
-      icon: '🌿'
-    },
-    {
-      id: 4,
-      title: 'Follow-Up Tips',
-      description: 'Get recommendations to maintain moisture, health, and growth.',
-      icon: '💡'
-    }
-  ];
-
-  const steps = [
-    {
-      number: 1,
-      title: 'Book your session',
-      description: 'Choose a time that works for you.'
-    },
-    {
-      number: 2,
-      title: 'Tell us about your hair & scalp',
-      description: 'Fill a short form so we understand your goals.'
-    },
-    {
-      number: 3,
-      title: 'Meet your consultant',
-      description: 'Receive a customized routine + product guide.'
-    }
-  ];
-
-  const faqs = [
-    {
-      id: 1,
-      question: 'How long is the session?',
-      answer: 'Each consultation session typically lasts 30-45 minutes. This gives us enough time to assess your scalp, discuss your goals, and create a personalized routine.'
-    },
-    {
-      id: 2,
-      question: 'Is it virtual?',
-      answer: 'Yes, all our consultations are conducted virtually via video call. This allows you to participate from the comfort of your home at a time that works best for you.'
-    },
-    {
-      id: 3,
-      question: 'Will I need to buy products?',
-      answer: 'No, you are not required to purchase any products. We will recommend products based on your needs, but the decision to purchase is entirely yours.'
-    },
-    {
-      id: 4,
-      question: 'Do I need to show my hair?',
-      answer: 'Yes, showing your hair and scalp during the video consultation helps us provide the most accurate assessment and recommendations. However, we understand privacy concerns and can work with photos if preferred.'
-    }
-  ];
-
-  const [openFaq, setOpenFaq] = useState(null);
-
-  const toggleFaq = (id) => {
-    setOpenFaq(openFaq === id ? null : id);
-  };
-
-  // Generate time slots
-  const timeSlots = [
-    '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-    '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
-  ];
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="tp-consultation-hero-area pt-120 pb-100" style={{ backgroundColor: '#F8F8F8', paddingTop: 'clamp(100px, 15vw, 150px)' }}>
+      <section className="root-check-hero section-space">
         <div className="container">
-          <div className="row align-items-center">
+          <div className="row align-items-center gy-5">
             <div className="col-xl-6 col-lg-6">
-              <div className="tp-consultation-hero-content pr-50">
-                <h1 style={{ fontSize: 'clamp(32px, 6vw, 48px)', marginBottom: '16px', fontWeight: '700', color: '#22160E' }}>
-                  Rooted Consultations
-                </h1>
-                <p style={{ fontSize: 'clamp(15px, 3.2vw, 20px)', lineHeight: '1.7', color: '#55585B', marginBottom: '28px' }}>
-                  A personalized scalp + hair routine designed just for you.
-                </p>
-                <a href="#booking-form" className="tp-btn tp-btn-2 tp-consultation-hero-cta" style={{ padding: '12px 28px', fontSize: '15px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                  Book My Consultation
-                  {" "} <ArrowRightLong />
-                </a>
+              <div className="root-check-hero-copy">
+                <span className="root-check-eyebrow">Scalp-first hair care</span>
+                <h1>The Hracine Root Check</h1>
+                <p className="root-check-lead">A personalised scalp and hair assessment designed to understand what your scalp and hair need before recommending your hair-care treatment.</p>
+                <a href="#booking-form" className="tp-btn tp-btn-2 root-check-button">Book Your Root Check {formattedFee} <ArrowRightLong /></a>
+                <p className="root-check-credit"><strong>Important:</strong> Your {formattedFee} Root Check fee is credited toward your Hracine treatment when you proceed within 7 days.</p>
               </div>
             </div>
             <div className="col-xl-6 col-lg-6">
-              <div className="tp-consultation-hero-image">
-                <Image 
-                  src={consultation_img} 
-                  alt="Consultation" 
-                  className="tp-consultation-hero-main-image"
-                  style={{ borderRadius: '14px', width: '100%', maxWidth: '520px', height: 'auto' }}
-                />
+              <div className="root-check-hero-image">
+                <Image src={consultationImg} alt="A Hracine scalp and hair Root Check" priority />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* What's Inside Section */}
-      <section className="tp-consultation-whats-inside pt-100 pb-100" style={{ backgroundColor: '#22160E' }}>
+      <section className="section-space root-check-dark">
         <div className="container">
-          <div className="row">
-            <div className="col-xxl-12 mb-50">
-              <h2 className="text-center" style={{ fontSize: 'clamp(28px, 5vw, 42px)', marginBottom: '16px', color: '#fff' }}>
-                What&apos;s Inside Your Consultation
-              </h2>
-            </div>
+          <div className="section-heading light">
+            <span className="root-check-eyebrow">Your appointment</span>
+            <h2>What Happens During Your Root Check</h2>
           </div>
-          <div className="row gx-4">
-            {services.map((service) => (
-              <div key={service.id} className="col-xl-3 col-lg-6 col-md-6 mb-30">
-                <div className="tp-consultation-service-card text-center" style={{ 
-                  padding: 'clamp(18px, 4vw, 36px) clamp(14px, 3vw, 24px)', 
-                  backgroundColor: '#fff',
-                  borderRadius: '14px',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                  height: '100%'
-                }}>
-                  <div className="tp-consultation-service-icon mb-25" style={{ fontSize: 'clamp(28px, 7vw, 50px)' }}>
-                    {service.icon}
-                  </div>
-                  <h3 style={{ 
-                    fontSize: 'clamp(16px, 3.2vw, 22px)', 
-                    marginBottom: '12px',
-                    fontWeight: '600',
-                    color: '#22160E'
-                  }}>
-                    {service.title}
-                  </h3>
-                  <p style={{ 
-                    fontSize: 'clamp(13px, 2.6vw, 16px)', 
-                    lineHeight: '1.6', 
-                    color: '#55585B',
-                    margin: 0
-                  }}>
-                    {service.description}
-                  </p>
-                </div>
-              </div>
+          <div className="root-check-steps">
+            {rootCheckSteps.map((step) => (
+              <article className="root-check-step" key={step.number}>
+                <span>{step.number}</span>
+                <div><h3>{step.title}</h3><p>{step.description}</p></div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="tp-consultation-process-area pt-100 pb-100 grey-bg">
+      <section className="section-space root-check-who">
         <div className="container">
-          <div className="row">
-            <div className="col-xxl-12 mb-50">
-              <h2 className="text-center" style={{ fontSize: 'clamp(26px, 4.5vw, 42px)', marginBottom: '40px' }}>
-                How the Consultation Works
-              </h2>
+          <div className="row gy-5 align-items-start">
+            <div className="col-lg-5">
+              <div className="section-heading sticky-heading">
+                <span className="root-check-eyebrow">Is this for you?</span>
+                <h2>Who Is the Root Check For?</h2>
+                <p>The Root Check is for you if you’re experiencing:</p>
+              </div>
+            </div>
+            <div className="col-lg-7">
+              <ul className="root-check-list two-column">{rootCheckFor.map((item) => <li key={item}>{item}</li>)}</ul>
             </div>
           </div>
-          <div className="row">
-            {steps.map((step) => (
-              <div key={step.number} className="col-xl-4 col-lg-4 col-md-6 mb-30">
-                <div className="tp-consultation-step text-center">
-                  <div className="tp-consultation-step-number" style={{ 
-                    width: '60px', 
-                    height: '60px', 
-                    borderRadius: '50%',
-                    backgroundColor: '#f8f8f8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 20px',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  color: '#22160E'
-                }}>
-                  {step.number}
-                  </div>
-                  <h4 style={{ fontSize: '20px', marginBottom: '15px', fontWeight: '600' }}>
-                    {step.title}
-                  </h4>
-                  <p style={{ fontSize: '16px', color: '#55585B', lineHeight: '1.6' }}>
-                    {step.description}
-                  </p>
-                </div>
-              </div>
+        </div>
+      </section>
+
+      <section className="section-space root-check-journey-section">
+        <div className="container">
+          <div className="section-heading centered">
+            <span className="root-check-eyebrow">From assessment to aftercare</span>
+            <h2>The Hracine Treatment Journey</h2>
+          </div>
+          <div className="root-check-journey">
+            {treatmentJourney.map((item, index) => (
+              <React.Fragment key={item.title}>
+                <article className="journey-card">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{item.title}</h3><p>{item.description}</p>
+                </article>
+                {index < treatmentJourney.length - 1 && <div className="journey-arrow" aria-hidden="true">↓</div>}
+              </React.Fragment>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Booking Form Section */}
-      <section id="booking-form" className="tp-consultation-booking-area pt-100 pb-100" style={{ backgroundColor: '#22160E' }}>
+      <section className="section-space root-check-packages">
+        <div className="container">
+          <div className="section-heading centered light">
+            <span className="root-check-eyebrow">Treatment packages</span>
+            <h2>Care That Meets You Where You Are</h2>
+          </div>
+          <div className="row gy-4 justify-content-center">
+            {treatmentPackages.map((item) => (
+              <div className="col-lg-4 col-md-6" key={item.title}>
+                <article className="package-card"><h3>{item.title}</h3><p>{item.description}</p></article>
+              </div>
+            ))}
+          </div>
+          <div className="package-cta">
+            <p>Not sure which treatment you need? Start with the Root Check.</p>
+            <a href="#booking-form">Book Your Root Check {formattedFee}</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space root-check-philosophy">
+        <div className="container">
+          <div className="row gy-5 align-items-center">
+            <div className="col-lg-5">
+              <span className="root-check-eyebrow">The Hracine Philosophy</span>
+              <h2>Care for the scalp.<br />Nourish the strands.<br />Protect the hair.</h2>
+            </div>
+            <div className="col-lg-7">
+              <p className="philosophy-copy">Hracine takes an Ayurvedic-inspired approach to hair care, with the scalp at the centre of the routine. We focus on caring for the scalp, nourishing the hair and building healthier hair-care habits from the root.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space root-check-outcomes">
+        <div className="container">
+          <div className="row gy-5 align-items-center">
+            <div className="col-lg-5">
+              <div className="section-heading">
+                <span className="root-check-eyebrow">Clarity and a plan</span>
+                <h2>What You’ll Leave With</h2><p>After your Root Check, you’ll have:</p>
+              </div>
+            </div>
+            <div className="col-lg-7"><ul className="root-check-list">{leaveWith.map((item) => <li key={item}>{item}</li>)}</ul></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="root-check-disclaimer">
+        <div className="container">
+          <div className="disclaimer-box">
+            <strong>Important Disclaimer</strong>
+            <p>Please note: Hracine provides cosmetic scalp and hair-care services. Our Root Check is not a medical diagnosis or treatment. If your concerns require medical attention, we recommend consulting a qualified healthcare professional.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="booking-form" className="section-space root-check-booking">
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-xl-8 col-lg-10">
-              <div className="tp-consultation-booking-wrapper" style={{ 
-                padding: '60px 40px',
-                backgroundColor: '#fff',
-                borderRadius: '16px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
-              }}>
-                {showSuccess && (
-                  <div className="tp-consultation-success mb-30" style={{
-                    padding: '20px',
-                    backgroundColor: '#d4edda',
-                    border: '1px solid #c3e6cb',
-                    borderRadius: '8px',
-                    color: '#155724'
-                  }}>
-                    <strong>Success!</strong> Your consultation has been booked. We&apos;ll be in touch soon to confirm your appointment.
-                  </div>
-                )}
-                <h2 className="text-center mb-40" style={{ fontSize: '36px' }}>
-                  Book Your Consultation
-                </h2>
+            <div className="col-xl-9 col-lg-10">
+              <div className="booking-card">
+                <div className="section-heading centered">
+                  <span className="root-check-eyebrow">Begin your journey</span>
+                  <h2 className="booking-title">Book Your Root Check {formattedFee}</h2>
+                  <p>Your fee is credited toward your Hracine treatment when you proceed within 7 days.</p>
+                </div>
                 <form onSubmit={handleSubmit}>
-                  <div className="row gx-3">
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px'
-                        }}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px'
-                        }}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Phone (Optional)
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px'
-                        }}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Your biggest scalp/hair concern *
-                      </label>
-                      <select
-                        name="biggestConcern"
-                        value={formData.biggestConcern}
-                        onChange={handleChange}
-                        required
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px',
-                          backgroundColor: '#fff'
-                        }}
-                      >
-                        <option value="">Select a concern</option>
-                        <option value="dry-scalp">Dry Scalp</option>
-                        <option value="itchy-scalp">Itchy Scalp</option>
-                        <option value="hair-loss">Hair Loss</option>
-                        <option value="breakage">Breakage</option>
-                        <option value="lack-of-growth">Lack of Growth</option>
-                        <option value="product-build-up">Product Build-up</option>
-                        <option value="other">Other</option>
+                  <div className="row gx-4">
+                    <div className="col-md-6 form-field"><label htmlFor="root-check-name">Name *</label><input id="root-check-name" type="text" name="name" value={formData.name} onChange={handleChange} required /></div>
+                    <div className="col-md-6 form-field"><label htmlFor="root-check-email">Email *</label><input id="root-check-email" type="email" name="email" value={formData.email} onChange={handleChange} required /></div>
+                    <div className="col-md-6 form-field"><label htmlFor="root-check-phone">Phone (Optional)</label><input id="root-check-phone" type="tel" name="phone" value={formData.phone} onChange={handleChange} /></div>
+                    <div className="col-md-6 form-field">
+                      <label htmlFor="root-check-concern">Your biggest scalp/hair concern *</label>
+                      <select id="root-check-concern" name="biggestConcern" value={formData.biggestConcern} onChange={handleChange} required>
+                        <option value="">Select a concern</option><option value="dry-scalp">Dry or uncomfortable scalp</option><option value="itching-flaking">Itching or flaking</option><option value="oily-scalp">Excessively oily scalp</option><option value="build-up">Frequent scalp buildup</option><option value="breakage">Hair breakage</option><option value="dry-brittle-hair">Dry or brittle hair</option><option value="length-retention">Difficulty retaining length</option><option value="other">Other</option>
                       </select>
                     </div>
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Your protective style *
-                      </label>
-                      <select
-                        name="protectiveStyle"
-                        value={formData.protectiveStyle}
-                        onChange={handleChange}
-                        required
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px',
-                          backgroundColor: '#fff'
-                        }}
-                      >
-                        <option value="">Select a style</option>
-                        <option value="braids">Braids</option>
-                        <option value="locs">Locs</option>
-                        <option value="wigs">Wigs</option>
-                        <option value="natural">Natural</option>
-                        <option value="weaves">Weaves</option>
-                        <option value="twists">Twists</option>
-                        <option value="other">Other</option>
+                    <div className="col-md-6 form-field">
+                      <label htmlFor="root-check-style">Your current or preferred style *</label>
+                      <select id="root-check-style" name="protectiveStyle" value={formData.protectiveStyle} onChange={handleChange} required>
+                        <option value="">Select a style</option><option value="braids">Braids</option><option value="locs">Locs</option><option value="wigs">Wigs</option><option value="natural">Natural</option><option value="weaves">Weaves</option><option value="twists">Twists</option><option value="other">Other</option>
                       </select>
                     </div>
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Preferred Date *
-                      </label>
-                      <input
-                        type="date"
-                        name="preferredDate"
-                        value={formData.preferredDate}
-                        onChange={handleChange}
-                        required
-                        min={new Date().toISOString().split('T')[0]}
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px'
-                        }}
-                      />
+                    <div className="col-md-6 form-field"><label htmlFor="root-check-date">Preferred Date *</label><input id="root-check-date" type="date" name="preferredDate" value={formData.preferredDate} onChange={handleChange} required min={new Date().toISOString().split('T')[0]} /></div>
+                    <div className="col-md-6 form-field">
+                      <label htmlFor="root-check-time">Preferred Time *</label>
+                      <select id="root-check-time" name="preferredTime" value={formData.preferredTime} onChange={handleChange} required><option value="">Select a time</option>{timeSlots.map((time) => <option key={time} value={time}>{time}</option>)}</select>
                     </div>
-                    <div className="col-md-6 mb-20">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Preferred Time *
-                      </label>
-                      <select
-                        name="preferredTime"
-                        value={formData.preferredTime}
-                        onChange={handleChange}
-                        required
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px',
-                          backgroundColor: '#fff'
-                        }}
-                      >
-                        <option value="">Select a time</option>
-                        {timeSlots.map((time) => (
-                          <option key={time} value={time}>{time}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="col-12 mb-30">
-                      <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                        Extra Notes
-                      </label>
-                      <textarea
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                        rows="4"
-                        style={{
-                          width: '100%',
-                          padding: '12px 15px',
-                          border: '1px solid #EAEBED',
-                          borderRadius: '14px',
-                          fontSize: '16px',
-                          resize: 'vertical'
-                        }}
-                      />
-                    </div>
-                    <div className="col-12 text-center">
-                      <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="tp-btn tp-btn-2 tp-consultation-booking-submit"
-                        style={{ padding: '14px 40px', fontSize: '15px', borderRadius: '999px' }}
-                      >
-                        {isLoading ? 'Booking...' : 'Book My Consultation'}
-                        {" "} <ArrowRightLong />
-                      </button>
-                    </div>
+                    <div className="col-12 form-field"><label htmlFor="root-check-notes">Anything else you’d like us to know?</label><textarea id="root-check-notes" name="notes" value={formData.notes} onChange={handleChange} rows="4" /></div>
+                    <div className="col-12 text-center"><button type="submit" disabled={isLoading} className="tp-btn tp-btn-2 root-check-button">{isLoading ? 'Redirecting to Paystack...' : `Pay & Book Your Root Check ${formattedFee}`} <ArrowRightLong /></button></div>
                   </div>
                 </form>
               </div>
@@ -481,111 +267,134 @@ const ConsultationArea = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="tp-consultation-faq-area pt-100 pb-120 grey-bg">
+      <section className="section-space root-check-faq">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-xl-8 col-lg-10">
-              <h2 className="text-center mb-50" style={{ fontSize: '42px' }}>
-                Frequently Asked Questions
-              </h2>
-              <div className="tp-consultation-faq-wrapper">
+              <div className="section-heading centered"><span className="root-check-eyebrow">Good to know</span><h2>Frequently Asked Questions</h2></div>
+              <div className="faq-list">
                 {faqs.map((faq) => (
-                  <div key={faq.id} className="tp-consultation-faq-item mb-15" style={{
-                    backgroundColor: '#fff',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
-                  }}>
-                    <button
-                      onClick={() => toggleFaq(faq.id)}
-                      style={{
-                        width: '100%',
-                        padding: '20px 25px',
-                        textAlign: 'left',
-                        border: 'none',
-                        backgroundColor: 'transparent',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        color: '#22160E'
-                      }}
-                    >
-                      <span>{faq.question}</span>
-                      <span style={{ fontSize: '24px', color: '#55585B' }}>
-                        {openFaq === faq.id ? '−' : '+'}
-                      </span>
-                    </button>
-                    {openFaq === faq.id && (
-                      <div style={{
-                        padding: '0 25px 20px 25px',
-                        fontSize: '16px',
-                        lineHeight: '1.7',
-                        color: '#55585B'
-                      }}>
-                        {faq.answer}
-                      </div>
-                    )}
-                  </div>
+                  <article className="faq-item" key={faq.id}>
+                    <button type="button" onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)} aria-expanded={openFaq === faq.id}><span>{faq.question}</span><span aria-hidden="true">{openFaq === faq.id ? '−' : '+'}</span></button>
+                    {openFaq === faq.id && <p>{faq.answer}</p>}
+                  </article>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <section className="section-space root-check-final">
+        <div className="container text-center">
+          <span className="root-check-eyebrow">The next step is clarity</span>
+          <h2>Your hair-care journey starts at the root.</h2>
+          <p>Understand your scalp. Understand your hair. Know what to do next.</p>
+          <a href="#booking-form" className="tp-btn tp-btn-2 root-check-button">Book Your Root Check {formattedFee} <ArrowRightLong /></a>
+        </div>
+      </section>
+
       <style jsx>{`
-        .tp-consultation-hero-image {
-          display: flex;
-          justify-content: center;
+        :global(html) { scroll-behavior: smooth; }
+        .section-space { padding: 100px 0; }
+        .root-check-hero { background: #f3eee7; padding-top: 130px; overflow: hidden; }
+        .root-check-hero-copy { max-width: 630px; }
+        .root-check-eyebrow { display: inline-block; color: #9a633a; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; margin-bottom: 16px; text-transform: uppercase; }
+        h1, h2, h3 { color: #22160e; }
+        h1 { font-size: clamp(42px, 6vw, 72px); line-height: 1.02; margin-bottom: 24px; }
+        h2 { font-size: clamp(32px, 4.5vw, 50px); line-height: 1.12; margin-bottom: 18px; }
+        .root-check-lead { color: #5d5149; font-size: clamp(17px, 2vw, 21px); line-height: 1.75; margin-bottom: 30px; }
+        .root-check-button { align-items: center; border-radius: 999px; display: inline-flex; font-size: 14px; gap: 10px; padding: 15px 28px; }
+        .root-check-credit { border-left: 3px solid #9a633a; color: #5d5149; font-size: 14px; line-height: 1.6; margin: 24px 0 0; max-width: 590px; padding-left: 16px; }
+        .root-check-hero-image { border-radius: 180px 180px 18px 18px; box-shadow: 0 24px 60px rgba(34, 22, 14, 0.18); margin-left: auto; max-width: 520px; overflow: hidden; }
+        .root-check-hero-image :global(img) { display: block; height: 620px; object-fit: cover; width: 100%; }
+        .section-heading { margin-bottom: 48px; }
+        .section-heading.centered { margin-left: auto; margin-right: auto; max-width: 760px; text-align: center; }
+        .section-heading p { color: #655b54; font-size: 18px; line-height: 1.7; margin: 0; }
+        .section-heading.light h2, .root-check-dark h3 { color: #fff; }
+        .section-heading.light .root-check-eyebrow { color: #d8b18f; }
+        .root-check-dark { background: #22160e; }
+        .root-check-steps { border-top: 1px solid rgba(255,255,255,.18); }
+        .root-check-step { align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,.18); display: grid; gap: 32px; grid-template-columns: 70px 1fr; padding: 28px 0; }
+        .root-check-step > span { color: #d8b18f; font-size: 14px; font-weight: 700; letter-spacing: .15em; }
+        .root-check-step h3 { font-size: 24px; margin: 0 0 8px; }
+        .root-check-step p { color: #c8c1bc; line-height: 1.7; margin: 0; max-width: 720px; }
+        .root-check-who { background: #fff; }
+        .sticky-heading { position: sticky; top: 120px; }
+        .root-check-list { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
+        .root-check-list.two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .root-check-list li { align-items: center; background: #f7f3ee; border-radius: 10px; color: #3d322b; display: flex; font-size: 16px; min-height: 70px; padding: 18px 20px 18px 52px; position: relative; }
+        .root-check-list li::before { color: #9a633a; content: '✓'; font-size: 18px; font-weight: 700; left: 22px; position: absolute; }
+        .root-check-journey-section { background: #f7f3ee; }
+        .root-check-journey { align-items: stretch; display: grid; grid-template-columns: 1fr 30px 1fr 30px 1fr 30px 1fr 30px 1fr; }
+        .journey-card { background: #fff; border: 1px solid #e6ddd3; border-radius: 12px; min-height: 215px; padding: 30px 24px; }
+        .journey-card > span { color: #9a633a; display: block; font-size: 12px; font-weight: 700; letter-spacing: .18em; margin-bottom: 28px; }
+        .journey-card h3 { font-size: 17px; letter-spacing: .06em; margin-bottom: 12px; text-transform: uppercase; }
+        .journey-card p { color: #655b54; line-height: 1.65; margin: 0; }
+        .journey-arrow { align-items: center; color: #9a633a; display: flex; font-size: 25px; justify-content: center; transform: rotate(-90deg); }
+        .root-check-packages { background: #5b3926; }
+        .package-card { background: #fff; border-radius: 12px; height: 100%; padding: 38px 32px; }
+        .package-card h3 { font-size: 22px; letter-spacing: .08em; margin-bottom: 18px; text-transform: uppercase; }
+        .package-card p { color: #655b54; line-height: 1.7; margin: 0; }
+        .package-cta { color: #fff; margin-top: 42px; text-align: center; }
+        .package-cta p { color: #eadfd6; font-size: 18px; margin-bottom: 12px; }
+        .package-cta a { border-bottom: 1px solid #fff; color: #fff; font-weight: 600; padding-bottom: 3px; }
+        .root-check-philosophy { background: #efe3d4; }
+        .root-check-philosophy h2 { font-size: clamp(30px, 4vw, 46px); line-height: 1.25; }
+        .philosophy-copy { color: #4f4239; font-size: clamp(20px, 2.5vw, 28px); line-height: 1.55; margin: 0; }
+        .root-check-outcomes { background: #fff; }
+        .root-check-disclaimer { background: #fff; padding: 0 0 100px; }
+        .disclaimer-box { align-items: flex-start; background: #f7f3ee; border-left: 4px solid #9a633a; display: grid; gap: 20px; grid-template-columns: 200px 1fr; padding: 28px 32px; }
+        .disclaimer-box strong { color: #22160e; font-size: 17px; }
+        .disclaimer-box p { color: #655b54; line-height: 1.7; margin: 0; }
+        .root-check-booking { background: #22160e; }
+        .booking-card { background: #fff; border-radius: 18px; padding: 58px 50px; }
+        .booking-title { font-size: clamp(26px, 3.2vw, 38px); }
+        .form-field { margin-bottom: 22px; }
+        .form-field label { color: #342820; display: block; font-size: 14px; font-weight: 600; margin-bottom: 9px; }
+        .form-field input, .form-field select, .form-field textarea { background: #fff; border: 1px solid #ddd3c8; border-radius: 10px; color: #342820; font-size: 15px; min-height: 52px; padding: 12px 14px; width: 100%; }
+        .form-field textarea { min-height: 115px; resize: vertical; }
+        .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: #9a633a; outline: none; }
+        .root-check-faq { background: #f7f3ee; }
+        .faq-item { background: #fff; border-bottom: 1px solid #e4dbd1; }
+        .faq-item:first-child { border-radius: 12px 12px 0 0; }
+        .faq-item:last-child { border-bottom: 0; border-radius: 0 0 12px 12px; }
+        .faq-item button { align-items: center; background: transparent; border: 0; color: #22160e; display: flex; font-size: 18px; font-weight: 600; justify-content: space-between; padding: 23px 26px; text-align: left; width: 100%; }
+        .faq-item button span:last-child { color: #9a633a; font-size: 25px; margin-left: 20px; }
+        .faq-item p { color: #655b54; line-height: 1.7; margin: 0; padding: 0 60px 24px 26px; }
+        .root-check-final { background: #c9a27e; }
+        .root-check-final h2 { font-size: clamp(36px, 5vw, 58px); }
+        .root-check-final p { color: #4d3829; font-size: 19px; margin-bottom: 30px; }
+        .root-check-final .root-check-eyebrow { color: #5b3926; }
+        @media (max-width: 1199px) {
+          .root-check-journey { grid-template-columns: 1fr; gap: 0; margin: 0 auto; max-width: 700px; }
+          .journey-card { min-height: auto; }
+          .journey-arrow { min-height: 45px; transform: none; }
         }
-
-        .tp-consultation-booking-wrapper :global(input),
-        .tp-consultation-booking-wrapper :global(select),
-        .tp-consultation-booking-wrapper :global(textarea),
-        .tp-consultation-booking-wrapper :global(button) {
-          border-radius: 14px;
+        @media (max-width: 991px) {
+          .section-space { padding: 80px 0; }
+          .root-check-hero { padding-top: 110px; }
+          .root-check-hero-copy { text-align: center; }
+          .root-check-credit { margin-left: auto; margin-right: auto; text-align: left; }
+          .root-check-hero-image { margin: 10px auto 0; }
+          .root-check-hero-image :global(img) { height: 520px; }
+          .sticky-heading { position: static; }
+          .disclaimer-box { grid-template-columns: 1fr; }
         }
-
         @media (max-width: 767px) {
-          .tp-consultation-hero-content {
-            text-align: center;
-            padding-right: 0 !important;
-          }
-
-          .tp-consultation-hero-cta {
-            margin: 0 auto;
-            padding: 11px 22px !important;
-            font-size: 14px !important;
-          }
-
-          .tp-consultation-hero-main-image {
-            max-width: 300px !important;
-            margin: 26px auto 0;
-          }
-
-          .tp-consultation-hero-area :global(.container),
-          .tp-consultation-whats-inside :global(.container),
-          .tp-consultation-process-area :global(.container),
-          .tp-consultation-booking-area :global(.container) {
-            padding-left: 16px;
-            padding-right: 16px;
-          }
-
-          .tp-consultation-booking-wrapper {
-            padding: 28px 18px !important;
-          }
-
-          .tp-consultation-whats-inside :global(.col-xl-3.col-lg-6.col-md-6.mb-30) {
-            margin-bottom: 16px !important;
-          }
-
-          .tp-consultation-booking-submit {
-            padding: 12px 24px !important;
-            font-size: 14px !important;
-          }
+          .section-space { padding: 64px 0; }
+          .root-check-hero { padding-top: 46px; }
+          .root-check-hero-image { border-radius: 110px 110px 14px 14px; max-width: 360px; }
+          .root-check-hero-image :global(img) { height: 410px; }
+          .root-check-button { font-size: 13px; justify-content: center; padding: 13px 20px; }
+          .root-check-step { gap: 12px; grid-template-columns: 45px 1fr; }
+          .root-check-step h3 { font-size: 20px; }
+          .root-check-list.two-column { grid-template-columns: 1fr; }
+          .booking-card { padding: 38px 20px; }
+          .root-check-disclaimer { padding-bottom: 64px; }
+          .disclaimer-box { padding: 24px 20px; }
+          .faq-item button { font-size: 16px; padding: 20px; }
+          .faq-item p { padding: 0 45px 20px 20px; }
         }
       `}</style>
     </>

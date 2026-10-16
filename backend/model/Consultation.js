@@ -44,6 +44,36 @@ const consultationSchema = new mongoose.Schema(
       enum: ["pending", "confirmed", "completed", "cancelled"],
       default: "pending",
     },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
+    paymentReference: {
+      type: String,
+      trim: true,
+      unique: true,
+      sparse: true,
+    },
+    paymentId: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    amountDue: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    amountPaid: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    paidAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

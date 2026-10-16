@@ -58,7 +58,7 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
             This is a pre-order item
           </p>
           <p style={{ color: '#555', margin: '5px 0 0 0', fontSize: '14px' }}>
-            Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} (Launch Day)
+            Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
       )}

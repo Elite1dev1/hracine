@@ -113,7 +113,7 @@ const menu_data = [
   {
     id: 6,
     single_link: true,
-    title: 'Consultations',
+    title: 'Root Check',
     link: '/consultation',
   },
 ]
@@ -161,7 +161,7 @@ export const mobile_menu = [
   {
     id: 7,
     single_link: true,
-    title: 'Consultations',
+    title: 'Root Check',
     link: '/consultation',
   },
   {

@@ -26,6 +26,12 @@ const settingsSchema = new mongoose.Schema(
       required: true,
       default: 20,
     },
+    rootCheckFee: {
+      type: Number,
+      required: true,
+      min: 1,
+      default: 5000,
+    },
     paystackTestApiKey: {
       type: String,
       default: "",
@@ -57,6 +63,7 @@ settingsSchema.statics.getSettings = async function () {
       freeShippingBannerText: "Free shipping on orders above 25,000",
       todayDeliveryPrice: 60,
       sevenDayDeliveryPrice: 20,
+      rootCheckFee: 5000,
       paystackTestApiKey: "",
       paystackLiveApiKey: "",
       paystackMode: "test",
@@ -77,6 +84,10 @@ settingsSchema.statics.getSettings = async function () {
     }
     if (typeof settings.sevenDayDeliveryPrice !== "number") {
       settings.sevenDayDeliveryPrice = 20;
+      isUpdated = true;
+    }
+    if (typeof settings.rootCheckFee !== "number") {
+      settings.rootCheckFee = 5000;
       isUpdated = true;
     }
     if (typeof settings.paystackTestApiKey !== "string") {
