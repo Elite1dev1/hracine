@@ -8,9 +8,10 @@ import { Wishlist, CartTwo } from "@/svg";
 import { add_cart_product } from "@/redux/features/cartSlice";
 import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { formatCurrency } from "@/utils/currency";
+import { formatDiscountPercentage, getProductPricing } from "@/utils/productPricing";
 
 const ProductItemMobile = ({ product }) => {
-  const { _id, img, title, reviews, price, discount, status } = product || {};
+  const { _id, img, title, reviews, status } = product || {};
   const [ratingVal, setRatingVal] = useState(0);
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -61,9 +62,7 @@ const ProductItemMobile = ({ product }) => {
     router.push(`/product-details/${_id}`);
   };
 
-  const currentPrice = discount > 0 
-    ? Number(price) - (Number(price) * Number(discount)) / 100 
-    : Number(price);
+  const { salePrice, hasDiscount, discountPercentage } = getProductPricing(product);
 
   return (
     <div className="tp-product-item-mobile">
@@ -86,6 +85,11 @@ const ProductItemMobile = ({ product }) => {
             <div className="tp-product-mobile-badge">
               <span>Out of Stock</span>
             </div>
+          )}
+          {hasDiscount && (
+            <span className="tp-product-mobile-discount-badge">
+              -{formatDiscountPercentage(discountPercentage)}% OFF
+            </span>
           )}
         </div>
 
@@ -113,8 +117,8 @@ const ProductItemMobile = ({ product }) => {
           {/* Price */}
           <div className="tp-product-mobile-price-wrapper">
             <div className="tp-product-mobile-price-left">
-              <span className="tp-product-mobile-price-current">
-                {formatCurrency(currentPrice)}
+              <span className={`tp-product-mobile-price-current ${hasDiscount ? 'is-sale' : ''}`}>
+                {formatCurrency(salePrice)}
               </span>
             </div>
           </div>

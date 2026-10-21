@@ -8,14 +8,16 @@ import { handleProductModal } from "@/redux/features/productModalSlice";
 import { add_cart_product } from "@/redux/features/cartSlice";
 import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { formatCurrency } from "@/utils/currency";
+import { formatDiscountPercentage, getProductPricing } from "@/utils/productPricing";
 
 const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
-  const { _id, img, title, discount, price, tags,status, isPreOrder } = product || {};
+  const { _id, img, title, tags,status, isPreOrder } = product || {};
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const isAddedToCart = cart_products.some((prd) => prd._id === _id);
   const isAddedToWishlist = wishlist.some((prd) => prd._id === _id);
   const dispatch = useDispatch();
+  const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(product);
 
   // handle add product
   const handleAddProduct = (prd) => {
@@ -36,6 +38,11 @@ const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
         </Link>
 
         <div className="tp-product-badge">
+          {hasDiscount && (
+            <span className="product-hot" style={{ backgroundColor: '#85312c' }}>
+              -{formatDiscountPercentage(discountPercentage)}% OFF
+            </span>
+          )}
           {status === 'out-of-stock' && <span className="product-hot">out-stock</span>}
           {isPreOrder && <span className="product-hot" style={{backgroundColor: '#ff5501'}}>Pre-order</span>}
         </div>
@@ -107,7 +114,12 @@ const ProductItem = ({ product, prdCenter = false,primary_style=false }) => {
           <Link href={`/product-details/${_id}`}>{title}</Link>
         </h3>
         <div className="tp-product-price-wrapper-3">
-          <span className="tp-product-price-3">{formatCurrency(price)}</span>
+          <span className={`tp-product-price-3 ${hasDiscount ? 'new-price' : ''}`} style={hasDiscount ? { color: '#85312c', fontWeight: 700 } : undefined}>
+            {formatCurrency(salePrice)}
+          </span>
+          {hasDiscount && (
+            <span className="tp-product-price-3 old-price"> {formatCurrency(originalPrice)}</span>
+          )}
         </div>
       </div>
     </div>

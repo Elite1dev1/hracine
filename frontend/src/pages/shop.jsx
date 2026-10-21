@@ -10,6 +10,7 @@ import Footer from "@/layout/footers/footer";
 import ShopFilterOffCanvas from "@/components/common/shop-filter-offcanvas";
 import ShopLoader from "@/components/loader/shop/shop-loader";
 import { getShopSeo } from "@/lib/seo";
+import { getProductPricing } from "@/utils/productPricing";
 
 const ShopPage = ({ query, seo }) => {
   const { data: products, isError, isLoading } = useGetAllProductsQuery();
@@ -20,7 +21,8 @@ const ShopPage = ({ query, seo }) => {
   useEffect(() => {
     if (!isLoading && !isError && products?.data?.length > 0) {
       const maxPrice = products.data.reduce((max, product) => {
-        return product.price > max ? product.price : max;
+        const { salePrice } = getProductPricing(product);
+        return salePrice > max ? salePrice : max;
       }, 0);
       setPriceValue([0, maxPrice]);
     }
@@ -69,30 +71,33 @@ const ShopPage = ({ query, seo }) => {
       } else if (selectValue === "Low to High") {
         product_items = products.data
           .slice()
-          .sort((a, b) => Number(a.price) - Number(b.price));
+          .sort((a, b) => getProductPricing(a).salePrice - getProductPricing(b).salePrice);
       } else if (selectValue === "High to Low") {
         product_items = products.data
           .slice()
-          .sort((a, b) => Number(b.price) - Number(a.price));
+          .sort((a, b) => getProductPricing(b).salePrice - getProductPricing(a).salePrice);
       } else if (selectValue === "New Added") {
         product_items = products.data
           .slice()
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else if (selectValue === "On Sale") {
-        product_items = products.data.filter((p) => p.discount > 0);
+        product_items = products.data.filter((p) => getProductPricing(p).hasDiscount);
       } else {
         product_items = products.data;
       }
     }
     // price filter
     product_items = product_items.filter(
-      (p) => p.price >= priceValue[0] && p.price <= priceValue[1]
+      (p) => {
+        const { salePrice } = getProductPricing(p);
+        return salePrice >= priceValue[0] && salePrice <= priceValue[1];
+      }
     );
 
     // status filter
     if (query.status) {
       if (query.status === "on-sale") {
-        product_items = product_items.filter((p) => p.discount > 0);
+        product_items = product_items.filter((p) => getProductPricing(p).hasDiscount);
       } else if (query.status === "in-stock") {
         product_items = product_items.filter((p) => p.status === "in-stock");
       }

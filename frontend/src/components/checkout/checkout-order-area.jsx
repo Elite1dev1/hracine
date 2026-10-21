@@ -4,6 +4,7 @@ import useCartInfo from "@/hooks/use-cart-info";
 import ErrorMsg from "../common/error-msg";
 import { formatCurrency } from "@/utils/currency";
 import { useGetSettingsQuery } from "@/redux/features/admin/adminApi";
+import { getProductPricing } from "@/utils/productPricing";
 
 const CheckoutOrderArea = ({ checkoutData }) => {
   const {
@@ -52,14 +53,22 @@ const CheckoutOrderArea = ({ checkoutData }) => {
           </li>
 
           {/*  item list */}
-          {cart_products.map((item) => (
-            <li key={item._id} className="tp-order-info-list-desc">
+          {cart_products.map((item) => {
+            const { originalPrice, salePrice, hasDiscount } = getProductPricing(item);
+            return <li key={item._id} className="tp-order-info-list-desc">
               <p>
                 {item.title} <span> x {item.orderQuantity}</span>
               </p>
-              <span>{formatCurrency(item.price)}</span>
-            </li>
-          ))}
+              <span>
+                {formatCurrency(salePrice * item.orderQuantity)}
+                {hasDiscount && (
+                  <small style={{ display: 'block', color: '#8a8582', textDecoration: 'line-through' }}>
+                    {formatCurrency(originalPrice * item.orderQuantity)}
+                  </small>
+                )}
+              </span>
+            </li>;
+          })}
 
           {/*  shipping - only show if not qualified for free shipping */}
           {!isFreeShipping && !isLoadingSettings && !allPreOrder && (

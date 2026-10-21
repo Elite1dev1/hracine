@@ -12,6 +12,7 @@ import { notifyError, notifySuccess } from "@/utils/toast";
 import {useInitializePaymentMutation, useVerifyPaymentMutation, useSaveOrderMutation} from "@/redux/features/order/orderApi";
 import { useGetOfferCouponsQuery } from "@/redux/features/coupon/couponApi";
 import { useGetSettingsQuery } from "@/redux/features/admin/adminApi";
+import { getProductPricing } from "@/utils/productPricing";
 
 const useCheckoutSubmit = () => {
   // offerCoupons
@@ -106,7 +107,7 @@ const useCheckoutSubmit = () => {
     );
     const discountProductTotal = result?.reduce(
       (preValue, currentValue) =>
-        preValue + currentValue.price * currentValue.orderQuantity,
+        preValue + getProductPricing(currentValue).salePrice * currentValue.orderQuantity,
       0
     );
     let totalValue = "";
@@ -218,6 +219,15 @@ const useCheckoutSubmit = () => {
     const finalShippingCost = (total >= freeShippingThreshold || isPreOrderFreeShipping) ? 0 : selectedShippingCost;
     const finalShippingOption = (total >= freeShippingThreshold || isPreOrderFreeShipping) ? "free_shipping" : data.shippingOption;
 
+    const checkoutCart = cart_products.map((item) => {
+      const { originalPrice, salePrice } = getProductPricing(item);
+      return {
+        ...item,
+        originalPrice,
+        price: salePrice,
+      };
+    });
+
     let orderInfo = {
       name: `${data.firstName} ${data.lastName}`,
       address: data.address,
@@ -229,7 +239,7 @@ const useCheckoutSubmit = () => {
       zipCode: data.zipCode,
       shippingOption: finalShippingOption,
       status: "pending", // Order model expects lowercase
-      cart: cart_products,
+      cart: checkoutCart,
       paymentMethod: data.payment,
       subTotal: total,
       shippingCost: finalShippingCost,
@@ -254,7 +264,7 @@ const useCheckoutSubmit = () => {
           metadata: {
             orderInfo: JSON.stringify(orderInfo),
             userId: user?._id,
-            cartItems: JSON.stringify(cart_products),
+            cartItems: JSON.stringify(checkoutCart),
           },
         }).unwrap();
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { getProductPricing } from "@/utils/productPricing";
 
 const useCartInfo = () => {
     const [quantity, setQuantity] = useState(0);
@@ -8,8 +9,9 @@ const useCartInfo = () => {
 
     useEffect(() => {
         const cart = cart_products.reduce((cartTotal, cartItem) => {
-            const { price, orderQuantity } = cartItem;
-            const itemTotal = price * orderQuantity;
+            const { salePrice } = getProductPricing(cartItem);
+            const orderQuantity = Number(cartItem.orderQuantity) || 0;
+            const itemTotal = salePrice * orderQuantity;
             cartTotal.total += itemTotal
             cartTotal.quantity += orderQuantity
 

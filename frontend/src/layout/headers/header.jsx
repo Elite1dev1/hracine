@@ -30,8 +30,10 @@ const Header = () => {
   return (
     <>
       <header style={{ position: 'relative', zIndex: 100 }}>
-        <PromoBanner />
-        <div className="tp-header-area p-relative z-index-11">
+        <div className="d-none d-lg-block">
+          <PromoBanner />
+        </div>
+        <div className="tp-header-area tp-header-mobile-compact tp-header-mobile-compact--main p-relative z-index-11">
           {/* header top start  */}
           <div className="tp-header-top black-bg p-relative z-index-1 d-none d-md-block">
             <div className="container">
@@ -157,7 +159,7 @@ const Header = () => {
       {/* sticky header start */}
       <div
         id="header-sticky-2"
-        className={`tp-header-sticky-area ${sticky ? 'header-sticky-2' : ''}`}
+        className={`tp-header-sticky-area tp-header-mobile-compact ${sticky ? 'header-sticky-2' : ''}`}
         style={sticky ? { backgroundColor: '#C47070', background: '#C47070' } : {}}
       >
         <div className="container">

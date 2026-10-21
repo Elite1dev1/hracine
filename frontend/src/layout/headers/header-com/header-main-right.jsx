@@ -69,6 +69,7 @@ const HeaderMainRight = ({ setIsCanvasOpen }) => {
             onClick={() => dispatch(openCartMini())}
             type="button"
             className="tp-header-action-btn cartmini-open-btn"
+            aria-label="Open shopping cart"
           >
             <CartTwo />
             <span className="tp-header-action-badge">{quantity}</span>
@@ -79,6 +80,7 @@ const HeaderMainRight = ({ setIsCanvasOpen }) => {
             onClick={() => setIsCanvasOpen(true)}
             type="button"
             className="tp-header-action-btn tp-offcanvas-open-btn"
+            aria-label="Open navigation menu"
           >
             <Menu />
           </button>

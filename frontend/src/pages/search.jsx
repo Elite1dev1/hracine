@@ -11,6 +11,7 @@ import { useGetAllProductsQuery } from "@/redux/features/productApi";
 import NiceSelect from "@/ui/nice-select";
 import { useState } from "react";
 import { createSeo } from "@/lib/seo";
+import { getProductPricing } from "@/utils/productPricing";
 // internal
 
 export default function SearchPage({ query, seo }) {
@@ -62,13 +63,13 @@ export default function SearchPage({ query, seo }) {
      if (shortValue === "Price low to high") {
       product_items = product_items
         .slice()
-        .sort((a, b) => Number(a.price) - Number(b.price));
+        .sort((a, b) => getProductPricing(a).salePrice - getProductPricing(b).salePrice);
     }
     // Price high to low
     if (shortValue === "Price high to low") {
       product_items = product_items
         .slice()
-        .sort((a, b) => Number(b.price) - Number(a.price));
+        .sort((a, b) => getProductPricing(b).salePrice - getProductPricing(a).salePrice);
     }
     if (product_items.length === 0) {
       content = (

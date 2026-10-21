@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import ErrorMsg from "@/components/common/error-msg";
 import HomePrdLoader from "@/components/loader/home/home-prd-loader";
+import { formatCurrency } from "@/utils/currency";
+import { formatDiscountPercentage, getProductPricing } from "@/utils/productPricing";
 
 const FeaturedRituals = () => {
   const { data: settingsData } = useGetSettingsQuery();
@@ -29,7 +31,9 @@ const FeaturedRituals = () => {
   }
   if (!isLoading && !isError && products?.data?.length > 0) {
     const product_items = products.data.slice(0, 4); // 4 on desktop; mobile shows 2 via CSS
-    content = product_items.map((prd, i) => (
+    content = product_items.map((prd, i) => {
+      const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(prd);
+      return (
       <div key={i} className="col-xl-3 col-lg-3 col-sm-6 tp-featured-rituals-col" style={{
         paddingLeft: '10px',
         paddingRight: '10px',
@@ -82,6 +86,23 @@ const FeaturedRituals = () => {
                 {settingsData?.data?.freeShippingBannerText || "free shipping on orders above #25,000"}
               </div>
             )}
+            {hasDiscount && (
+              <span style={{
+                position: 'absolute',
+                top: 'clamp(8px, 1.5vw, 15px)',
+                left: 'clamp(8px, 1.5vw, 15px)',
+                zIndex: 2,
+                padding: '5px 9px',
+                borderRadius: '20px',
+                backgroundColor: '#85312C',
+                color: '#fff',
+                fontSize: 'clamp(9px, 1.8vw, 11px)',
+                fontWeight: 700,
+                lineHeight: 1.2,
+              }}>
+                -{formatDiscountPercentage(discountPercentage)}% OFF
+              </span>
+            )}
           </div>
           <div className="tp-product-content text-center" style={{
             paddingTop: '0',
@@ -114,6 +135,23 @@ const FeaturedRituals = () => {
             }}>
               {prd.description?.substring(0, 60)}...
             </p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              gap: '4px 8px',
+              marginBottom: 'clamp(10px, 1.5vw, 15px)',
+            }}>
+              <span style={{ color: hasDiscount ? '#85312C' : '#22160E', fontSize: 'clamp(14px, 2.5vw, 18px)', fontWeight: 700 }}>
+                {formatCurrency(salePrice)}
+              </span>
+              {hasDiscount && (
+                <span style={{ color: '#8a8582', fontSize: 'clamp(10px, 1.8vw, 13px)', textDecoration: 'line-through' }}>
+                  {formatCurrency(originalPrice)}
+                </span>
+              )}
+            </div>
             <div className="tp-product-btn" style={{ textAlign: 'center', marginTop: 'auto' }}>
               <Link href={`/product-details/${prd._id}`} className="tp-btn tp-btn-border" style={{
                 padding: 'clamp(6px, 1.5vw, 10px) clamp(16px, 2.5vw, 25px)',
@@ -132,7 +170,8 @@ const FeaturedRituals = () => {
           </div>
         </div>
       </div>
-    ));
+      );
+    });
   }
 
   return (

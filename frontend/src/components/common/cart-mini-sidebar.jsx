@@ -7,6 +7,7 @@ import useCartInfo from '@/hooks/use-cart-info';
 import empty_cart_img from '@assets/img/product/cartmini/empty-cart.png';
 import { closeCartMini, remove_product } from '@/redux/features/cartSlice';
 import { formatCurrency } from '@/utils/currency';
+import { getProductPricing } from '@/utils/productPricing';
 
 const CartMiniSidebar = () => {
   const { cart_products, cartMiniOpen } = useSelector((state) => state.cart);
@@ -38,8 +39,9 @@ const handleCloseCartMini = () => {
               </div>
             </div>
             {cart_products.length > 0 && <div className="cartmini__widget">
-              {cart_products.map((item) => (
-                <div key={item._id} className="cartmini__widget-item">
+              {cart_products.map((item) => {
+                const { originalPrice, salePrice, hasDiscount } = getProductPricing(item);
+                return <div key={item._id} className="cartmini__widget-item">
                   <div className="cartmini__thumb">
                     <Link href={`/product-details/${item._id}`}>
                       <Image src={item.img} width={70} height={60} alt="product img" />
@@ -55,17 +57,18 @@ const handleCloseCartMini = () => {
                       </div>
                     )}
                     <div className="cartmini__price-wrapper">
-                      {item.discount > 0 ? (
-                        <span className="cartmini__price">{formatCurrency(Number(item.price) - (Number(item.price) * Number(item.discount)) / 100)}</span>
-                      ) : (
-                        <span className="cartmini__price">{formatCurrency(item.price)}</span>
+                      <span className="cartmini__price">{formatCurrency(salePrice)}</span>
+                      {hasDiscount && (
+                        <span style={{ marginLeft: '6px', color: '#8a8582', fontSize: '11px', textDecoration: 'line-through' }}>
+                          {formatCurrency(originalPrice)}
+                        </span>
                       )}
                       <span className="cartmini__quantity">{" "}x{item.orderQuantity}</span>
                     </div>
                   </div>
                   <a onClick={() => handleRemovePrd({ title: item.title, id: item._id })} className="cartmini__del cursor-pointer"><i className="fa-regular fa-xmark"></i></a>
-                </div>
-              ))}
+                </div>;
+              })}
             </div>}
             {/* if no item in cart */}
             {cart_products.length === 0 && <div className="cartmini__empty text-center">

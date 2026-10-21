@@ -9,6 +9,7 @@ import ShopHiddenSidebarArea from "@/components/shop/shop-hidden-sidebar-area";
 import ShopFilterOffCanvas from "@/components/common/shop-filter-offcanvas";
 import Footer from "@/layout/footers/footer";
 import ShopHiddenLoader from "@/components/loader/shop/shop-hidden-loader";
+import { getProductPricing } from "@/utils/productPricing";
 
 const ShopHiddenSidebarPage = () => {
   const { data: products, isError, isLoading } = useGetAllProductsQuery();
@@ -20,7 +21,8 @@ const ShopHiddenSidebarPage = () => {
   useEffect(() => {
     if (!isLoading && !isError && products?.data?.length > 0) {
       const maxPrice = products.data.reduce((max, product) => {
-        return product.price > max ? product.price : max;
+        const { salePrice } = getProductPricing(product);
+        return salePrice > max ? salePrice : max;
       }, 0);
       setPriceValue([0, maxPrice]);
     }
@@ -67,17 +69,17 @@ const ShopHiddenSidebarPage = () => {
       } else if (selectValue === "Low to High") {
         product_items = products.data
           .slice()
-          .sort((a, b) => Number(a.price) - Number(b.price));
+          .sort((a, b) => getProductPricing(a).salePrice - getProductPricing(b).salePrice);
       } else if (selectValue === "High to Low") {
         product_items = products.data
           .slice()
-          .sort((a, b) => Number(b.price) - Number(a.price));
+          .sort((a, b) => getProductPricing(b).salePrice - getProductPricing(a).salePrice);
       } else if (selectValue === "New Added") {
         product_items = products.data
           .slice()
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else if (selectValue === "On Sale") {
-        product_items = products.data.filter((p) => p.discount > 0);
+        product_items = products.data.filter((p) => getProductPricing(p).hasDiscount);
       } else {
         product_items = products.data;
       }

@@ -193,6 +193,44 @@ exports.updateProduct = async (req, res,next) => {
   }
 };
 
+// Save the complete global storefront order. Requiring the complete list keeps
+// filtered/search result sets from producing ambiguous positions.
+exports.reorderProducts = async (req, res, next) => {
+  try {
+    const { orderedIds } = req.body || {};
+
+    if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "orderedIds must be a non-empty array",
+      });
+    }
+
+    const normalizedIds = orderedIds.map(String);
+    if (new Set(normalizedIds).size !== normalizedIds.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Each product may appear only once in orderedIds",
+      });
+    }
+
+    const updatedCount = await productServices.reorderProductsService(normalizedIds);
+    res.status(200).json({
+      success: true,
+      message: "Product display order saved successfully",
+      data: { updatedCount },
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    next(error);
+  }
+};
+
 // update product
 exports.reviewProducts = async (req, res,next) => {
   try {

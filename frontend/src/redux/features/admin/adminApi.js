@@ -76,6 +76,14 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["AdminProducts", "Products"],
     }),
+    adminReorderProducts: builder.mutation({
+      query: (orderedIds) => ({
+        url: "/api/product/reorder",
+        method: "PATCH",
+        body: { orderedIds },
+      }),
+      invalidatesTags: ["AdminProducts", "Products", "ProductType", "OfferProducts", "RelatedProducts"],
+    }),
     adminImportProducts: builder.mutation({
       query: (file) => {
         const formData = new FormData();
@@ -283,6 +291,7 @@ export const {
   useAdminAddProductMutation,
   useAdminUpdateProductMutation,
   useAdminDeleteProductMutation,
+  useAdminReorderProductsMutation,
   useAdminImportProductsMutation,
   useAdminGetAllCategoriesQuery,
   useAdminAddCategoryMutation,

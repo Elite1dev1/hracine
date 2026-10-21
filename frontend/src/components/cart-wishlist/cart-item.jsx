@@ -6,11 +6,13 @@ import Link from "next/link";
 import { Close, Minus, Plus } from "@/svg";
 import { add_cart_product, quantityDecrement, remove_product } from "@/redux/features/cartSlice";
 import { formatCurrency } from "@/utils/currency";
+import { getProductPricing } from "@/utils/productPricing";
 
 const CartItem = ({product}) => {
-  const {_id, img,title,price, orderQuantity = 0, isPreOrder } = product || {};
+  const {_id, img,title, orderQuantity = 0, isPreOrder } = product || {};
 
   const dispatch = useDispatch();
+  const { originalPrice, salePrice, hasDiscount } = getProductPricing(product);
 
     // handle add product
     const handleAddProduct = (prd) => {
@@ -45,7 +47,14 @@ const CartItem = ({product}) => {
       </td>
       {/* price */}
       <td className="tp-cart-price">
-        <span>{formatCurrency(price * orderQuantity)}</span>
+        <span style={hasDiscount ? { color: '#85312c', fontWeight: 600 } : undefined}>
+          {formatCurrency(salePrice * orderQuantity)}
+        </span>
+        {hasDiscount && (
+          <small style={{ display: 'block', color: '#8a8582', textDecoration: 'line-through' }}>
+            {formatCurrency(originalPrice * orderQuantity)}
+          </small>
+        )}
       </td>
       {/* quantity */}
       <td className="tp-cart-quantity">

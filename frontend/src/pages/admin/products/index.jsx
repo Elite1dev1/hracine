@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
 import {
   useAdminGetAllProductsQuery,
   useAdminDeleteProductMutation,
-  useAdminExportProductsQuery,
   useAdminImportProductsMutation,
+  useAdminReorderProductsMutation,
 } from '@/redux/features/admin/adminApi';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -16,12 +16,89 @@ const AdminProductsPage = () => {
   const { data, isLoading, error } = useAdminGetAllProductsQuery();
   const [deleteProduct, { isLoading: isDeleting }] = useAdminDeleteProductMutation();
   const [importProducts, { isLoading: isImporting }] = useAdminImportProductsMutation();
+  const [reorderProducts, { isLoading: isSavingOrder }] = useAdminReorderProductsMutation();
   const [searchTerm, setSearchTerm] = useState('');
   const [showImportModal, setShowImportModal] = useState(false);
   const [importFile, setImportFile] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null); // null for bulk, id for single
+  const [isReorderMode, setIsReorderMode] = useState(false);
+  const [orderedProducts, setOrderedProducts] = useState([]);
+  const [draggingId, setDraggingId] = useState(null);
+  const [isOrderDirty, setIsOrderDirty] = useState(false);
+
+  useEffect(() => {
+    if (!isReorderMode) {
+      setOrderedProducts(data?.data || []);
+    }
+  }, [data, isReorderMode]);
+
+  useEffect(() => {
+    if (!isOrderDirty) return undefined;
+
+    const warnAboutUnsavedOrder = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warnAboutUnsavedOrder);
+    return () => window.removeEventListener('beforeunload', warnAboutUnsavedOrder);
+  }, [isOrderDirty]);
+
+  const startReordering = () => {
+    setSearchTerm('');
+    setSelectedProducts([]);
+    setOrderedProducts(data?.data || []);
+    setIsOrderDirty(false);
+    setIsReorderMode(true);
+  };
+
+  const cancelReordering = () => {
+    if (isOrderDirty && !window.confirm('Discard your unsaved product order changes?')) {
+      return;
+    }
+    setOrderedProducts(data?.data || []);
+    setDraggingId(null);
+    setIsOrderDirty(false);
+    setIsReorderMode(false);
+  };
+
+  const moveProduct = (productId, nextIndex) => {
+    setOrderedProducts((current) => {
+      const currentIndex = current.findIndex((product) => product._id === productId);
+      const boundedIndex = Math.max(0, Math.min(nextIndex, current.length - 1));
+      if (currentIndex < 0 || currentIndex === boundedIndex) return current;
+
+      const next = [...current];
+      const [movedProduct] = next.splice(currentIndex, 1);
+      next.splice(boundedIndex, 0, movedProduct);
+      return next;
+    });
+    setIsOrderDirty(true);
+  };
+
+  const handleDragStart = (event, productId) => {
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', productId);
+    setDraggingId(productId);
+  };
+
+  const handleDragEnter = (targetId) => {
+    if (!draggingId || draggingId === targetId) return;
+    const targetIndex = orderedProducts.findIndex((product) => product._id === targetId);
+    moveProduct(draggingId, targetIndex);
+  };
+
+  const handleSaveOrder = async () => {
+    try {
+      const result = await reorderProducts(orderedProducts.map((product) => product._id)).unwrap();
+      toast.success(result?.message || 'Product display order saved successfully');
+      setIsOrderDirty(false);
+      setIsReorderMode(false);
+    } catch (error) {
+      toast.error(error?.data?.message || 'Failed to save product display order');
+    }
+  };
 
   const handleSelectProduct = (productId) => {
     setSelectedProducts(prev => 
@@ -130,7 +207,8 @@ const AdminProductsPage = () => {
   }
 
   const products = data?.data || [];
-  const filteredProducts = products.filter((product) =>
+  const displayedProducts = isReorderMode ? orderedProducts : products;
+  const filteredProducts = displayedProducts.filter((product) =>
     product.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -148,6 +226,32 @@ const AdminProductsPage = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
           <h1 style={{ margin: 0, color: '#2c3e50' }}>Products Management</h1>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+            {isReorderMode ? (
+              <>
+                <button
+                  onClick={cancelReordering}
+                  disabled={isSavingOrder}
+                  style={{ padding: '10px 20px', backgroundColor: '#95a5a6', color: 'white', border: 'none', borderRadius: '5px', cursor: isSavingOrder ? 'not-allowed' : 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveOrder}
+                  disabled={!isOrderDirty || isSavingOrder}
+                  style={{ padding: '10px 20px', backgroundColor: '#27ae60', color: 'white', border: 'none', borderRadius: '5px', cursor: !isOrderDirty || isSavingOrder ? 'not-allowed' : 'pointer', opacity: !isOrderDirty || isSavingOrder ? 0.65 : 1 }}
+                >
+                  {isSavingOrder ? 'Saving order...' : 'Save order'}
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={startReordering}
+                disabled={products.length < 2}
+                style={{ padding: '10px 20px', backgroundColor: '#8e5c5c', color: 'white', border: 'none', borderRadius: '5px', cursor: products.length < 2 ? 'not-allowed' : 'pointer', opacity: products.length < 2 ? 0.65 : 1 }}
+              >
+                Reorder Products
+              </button>
+            )}
             {selectedProducts.length > 0 && (
               <button
                 onClick={() => handleDeleteClick(null)}
@@ -166,7 +270,7 @@ const AdminProductsPage = () => {
                 🗑️ Delete Selected ({selectedProducts.length})
               </button>
             )}
-            <button
+            {!isReorderMode && <button
               onClick={() => handleExport('xlsx')}
               style={{
                 padding: '10px 20px',
@@ -178,8 +282,8 @@ const AdminProductsPage = () => {
               }}
             >
               📥 Export Excel
-            </button>
-            <button
+            </button>}
+            {!isReorderMode && <button
               onClick={() => handleExport('csv')}
               style={{
                 padding: '10px 20px',
@@ -191,8 +295,8 @@ const AdminProductsPage = () => {
               }}
             >
               📥 Export CSV
-            </button>
-            <button
+            </button>}
+            {!isReorderMode && <button
               onClick={() => setShowImportModal(true)}
               style={{
                 padding: '10px 20px',
@@ -204,8 +308,8 @@ const AdminProductsPage = () => {
               }}
             >
               📤 Import Products
-            </button>
-            <Link 
+            </button>}
+            {!isReorderMode && <Link
               href="/admin/products/add"
               style={{
                 padding: '10px 20px',
@@ -216,9 +320,15 @@ const AdminProductsPage = () => {
               }}
             >
               + Add Product
-            </Link>
+            </Link>}
           </div>
         </div>
+
+        {isReorderMode && (
+          <div role="status" style={{ marginBottom: '16px', padding: '12px 16px', backgroundColor: '#fff7ed', border: '1px solid #f1d2b6', borderRadius: '6px', color: '#70472f' }}>
+            Drag products by the handle, use the arrow buttons, or enter a position. Reordering uses the complete product list; search and normal management actions are disabled until you save or cancel.
+          </div>
+        )}
 
         <div style={{ marginBottom: '20px' }}>
           <input
@@ -226,12 +336,15 @@ const AdminProductsPage = () => {
             placeholder="Search products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            disabled={isReorderMode}
             style={{
               width: '100%',
               padding: '10px',
               border: '1px solid #ddd',
               borderRadius: '5px',
               fontSize: '16px',
+              backgroundColor: isReorderMode ? '#f3f4f6' : 'white',
+              cursor: isReorderMode ? 'not-allowed' : 'text',
             }}
           />
         </div>
@@ -240,14 +353,15 @@ const AdminProductsPage = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
-                <th style={{ padding: '12px', textAlign: 'left', width: '50px' }}>
-                  <input
+                <th style={{ padding: '12px', textAlign: 'left', width: isReorderMode ? '72px' : '50px' }}>
+                  {isReorderMode ? 'Move' : <input
                     type="checkbox"
                     checked={filteredProducts.length > 0 && selectedProducts.length === filteredProducts.length}
                     onChange={handleSelectAll}
                     style={{ cursor: 'pointer', width: '18px', height: '18px' }}
-                  />
+                  />}
                 </th>
+                <th style={{ padding: '12px', textAlign: 'left', width: '110px' }}>Position</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Image</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Title</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Price</th>
@@ -257,21 +371,56 @@ const AdminProductsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product) => (
+              {filteredProducts.map((product, index) => (
                 <tr 
                   key={product._id} 
+                  onDragOver={isReorderMode ? (event) => event.preventDefault() : undefined}
+                  onDragEnter={isReorderMode ? () => handleDragEnter(product._id) : undefined}
+                  onDrop={isReorderMode ? (event) => { event.preventDefault(); setDraggingId(null); } : undefined}
                   style={{ 
                     borderBottom: '1px solid #dee2e6',
-                    backgroundColor: selectedProducts.includes(product._id) ? '#f0f8ff' : 'transparent'
+                    backgroundColor: draggingId === product._id ? '#fff2e8' : selectedProducts.includes(product._id) ? '#f0f8ff' : 'transparent',
+                    opacity: draggingId === product._id ? 0.65 : 1,
+                    transition: 'background-color 150ms ease, opacity 150ms ease, transform 150ms ease',
                   }}
                 >
                   <td style={{ padding: '12px' }}>
-                    <input
+                    {isReorderMode ? (
+                      <button
+                        type="button"
+                        draggable
+                        onDragStart={(event) => handleDragStart(event, product._id)}
+                        onDragEnd={() => setDraggingId(null)}
+                        aria-label={`Drag ${product.title} to a new display position`}
+                        title="Drag to reorder"
+                        style={{ border: 'none', background: 'transparent', color: '#6b7280', cursor: 'grab', fontSize: '23px', lineHeight: 1, padding: '8px', touchAction: 'none' }}
+                      >
+                        &#8942;&#8942;
+                      </button>
+                    ) : <input
                       type="checkbox"
                       checked={selectedProducts.includes(product._id)}
                       onChange={() => handleSelectProduct(product._id)}
                       style={{ cursor: 'pointer', width: '18px', height: '18px' }}
-                    />
+                    />}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {isReorderMode ? (
+                      <input
+                        type="number"
+                        min="1"
+                        max={orderedProducts.length}
+                        value={index + 1}
+                        onChange={(event) => {
+                          const position = Number(event.target.value);
+                          if (Number.isInteger(position) && position >= 1) {
+                            moveProduct(product._id, position - 1);
+                          }
+                        }}
+                        aria-label={`Display position for ${product.title}`}
+                        style={{ width: '72px', padding: '6px 8px', border: '1px solid #cbd5e1', borderRadius: '4px' }}
+                      />
+                    ) : (product.sortOrder || products.findIndex((item) => item._id === product._id) + 1)}
                   </td>
                   <td style={{ padding: '12px' }}>
                     <AdminImage
@@ -307,7 +456,28 @@ const AdminProductsPage = () => {
                     </span>
                   </td>
                   <td style={{ padding: '12px' }}>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    {isReorderMode ? (
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <button
+                          type="button"
+                          onClick={() => moveProduct(product._id, index - 1)}
+                          disabled={index === 0}
+                          aria-label={`Move ${product.title} up`}
+                          style={{ padding: '5px 10px', border: '1px solid #cbd5e1', borderRadius: '3px', background: 'white', cursor: index === 0 ? 'not-allowed' : 'pointer', opacity: index === 0 ? 0.45 : 1 }}
+                        >
+                          &uarr;
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveProduct(product._id, index + 1)}
+                          disabled={index === orderedProducts.length - 1}
+                          aria-label={`Move ${product.title} down`}
+                          style={{ padding: '5px 10px', border: '1px solid #cbd5e1', borderRadius: '3px', background: 'white', cursor: index === orderedProducts.length - 1 ? 'not-allowed' : 'pointer', opacity: index === orderedProducts.length - 1 ? 0.45 : 1 }}
+                        >
+                          &darr;
+                        </button>
+                      </div>
+                    ) : <div style={{ display: 'flex', gap: '10px' }}>
                       <Link 
                         href={`/admin/products/edit/${product._id}`}
                         style={{
@@ -337,7 +507,7 @@ const AdminProductsPage = () => {
                       >
                         Delete
                       </button>
-                    </div>
+                    </div>}
                   </td>
                 </tr>
               ))}

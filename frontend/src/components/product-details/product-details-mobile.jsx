@@ -3,15 +3,15 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Rating } from 'react-simple-star-rating';
 import { useDispatch, useSelector } from 'react-redux';
-import { Minus, Plus } from '@/svg';
+import { Minus, Plus, Wishlist } from '@/svg';
 import { add_cart_product, increment, decrement } from '@/redux/features/cartSlice';
 import { add_to_wishlist } from '@/redux/features/wishlist-slice';
 import { handleModalClose } from '@/redux/features/productModalSlice';
 import { formatCurrency } from '@/utils/currency';
+import { formatDiscountPercentage, getProductPricing } from '@/utils/productPricing';
 import ReviewForm from '../forms/review-form';
 import ReviewItem from './review-item';
 
-const CTA_BG = '#6b2824';
 const DESC_MAX_LEN = 120;
 
 const ProductDetailsMobile = ({ productItem }) => {
@@ -21,8 +21,7 @@ const ProductDetailsMobile = ({ productItem }) => {
     imageURLs,
     title,
     description,
-    price,
-    discount,
+    quantity,
     status,
     reviews,
     category,
@@ -47,9 +46,27 @@ const ProductDetailsMobile = ({ productItem }) => {
   const images = imageURLs?.length ? imageURLs.map((i) => i.img) : (img ? [img] : []);
   const ratingVal = reviews?.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews.length : 0;
   const inStock = status !== 'out-of-stock';
-  const displayPrice = discount > 0 ? Number(price) - (Number(price) * Number(discount)) / 100 : Number(price);
+  const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(productItem);
+  const totalPrice = salePrice * orderQuantity;
+  const originalTotalPrice = originalPrice * orderQuantity;
+  const maxQuantity = Number(quantity) > 0 ? Number(quantity) : null;
+  const isAtMaxQuantity = maxQuantity !== null && orderQuantity >= maxQuantity;
   const needsReadMore = description && description.length > DESC_MAX_LEN;
-  const shortDesc = description ? (needsReadMore ? description.substring(0, DESC_MAX_LEN) + '...' : description) : '';
+  const shortDesc = (() => {
+    if (!description || !needsReadMore) return description || '';
+    const excerpt = description.slice(0, DESC_MAX_LEN + 1);
+    const lastWordBreak = excerpt.lastIndexOf(' ');
+    return `${excerpt.slice(0, lastWordBreak > 0 ? lastWordBreak : DESC_MAX_LEN).trim()}…`;
+  })();
+  const launchDateValue = launchDate ? new Date(launchDate) : null;
+  const formattedLaunchDate = launchDateValue && !Number.isNaN(launchDateValue.getTime())
+    ? launchDateValue.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+  const availabilityLabel = !inStock
+    ? 'Out of Stock'
+    : isPreOrder
+      ? 'Available for pre-order'
+      : 'In Stock';
 
   const goSlide = useCallback((dir) => {
     setSlideIndex((i) => {
@@ -61,9 +78,10 @@ const ProductDetailsMobile = ({ productItem }) => {
   const handleTouchStart = (e) => setTouchStart(e.targetTouches[0].clientX);
   const handleTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
   const handleTouchEnd = () => {
-    if (touchStart == null || touchEnd == null) return;
-    const diff = touchStart - touchEnd;
-    if (Math.abs(diff) > 50) goSlide(diff > 0 ? 1 : -1);
+    if (touchStart != null && touchEnd != null) {
+      const diff = touchStart - touchEnd;
+      if (Math.abs(diff) > 50) goSlide(diff > 0 ? 1 : -1);
+    }
     setTouchStart(null);
     setTouchEnd(null);
   };
@@ -74,7 +92,9 @@ const ProductDetailsMobile = ({ productItem }) => {
   const handleWishlist = () => {
     dispatch(add_to_wishlist(productItem));
   };
-  const handleIncrement = () => dispatch(increment());
+  const handleIncrement = () => {
+    if (!isAtMaxQuantity) dispatch(increment(maxQuantity));
+  };
   const handleDecrement = () => dispatch(decrement());
 
   const shippingContent = isPreOrder 
@@ -100,16 +120,44 @@ const ProductDetailsMobile = ({ productItem }) => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        aria-label={`${title || 'Product'} image gallery`}
       >
         <div className="tp-pdm-gallery-track" style={{ transform: `translateX(-${slideIndex * 100}%)` }}>
           {images.map((src, i) => (
             <div key={i} className="tp-pdm-gallery-slide">
-              <Image src={src} alt={title || 'Product'} fill sizes="100vw" style={{ objectFit: 'contain' }} />
+              <Image
+                src={src}
+                alt={images.length > 1 ? `${title || 'Product'} - image ${i + 1}` : (title || 'Product')}
+                fill
+                sizes="(max-width: 991px) 100vw, 0px"
+                priority={i === 0}
+                style={{ objectFit: 'contain' }}
+              />
             </div>
           ))}
         </div>
+        {images.length > 1 && (
+          <div className="tp-pdm-gallery-dots" role="tablist" aria-label="Choose product image">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`tp-pdm-dot ${slideIndex === i ? 'active' : ''}`}
+                onClick={() => setSlideIndex(i)}
+                aria-label={`Show product image ${i + 1}`}
+                aria-selected={slideIndex === i}
+                role="tab"
+              />
+            ))}
+          </div>
+        )}
         {status === 'out-of-stock' && (
           <span className="tp-pdm-badge tp-pdm-badge-out">Out of stock</span>
+        )}
+        {hasDiscount && (
+          <span className="tp-pdm-badge tp-pdm-badge-sale">
+            -{formatDiscountPercentage(discountPercentage)}% OFF
+          </span>
         )}
       </div>
 
@@ -117,23 +165,38 @@ const ProductDetailsMobile = ({ productItem }) => {
       <div className="tp-pdm-info">
         <h1 className="tp-pdm-title">{title}</h1>
         {isPreOrder && (
-          <div className="tp-pdm-preorder-notice mb-15" style={{ backgroundColor: '#fff4f0', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #ff5501' }}>
-            <p style={{ color: '#ff5501', fontWeight: 'bold', margin: 0, fontSize: '14px' }}>
+          <div className="tp-pdm-preorder-notice">
+            <p className="tp-pdm-preorder-title">
               This is a pre-order item
             </p>
-            <p style={{ color: '#555', margin: '3px 0 0 0', fontSize: '12px' }}>
-              Delivery begins on {new Date(launchDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
+            {formattedLaunchDate && (
+              <p className="tp-pdm-preorder-date">
+                Delivery begins on {formattedLaunchDate}
+              </p>
+            )}
           </div>
         )}
-        <p className="tp-pdm-price">{formatCurrency(displayPrice)}</p>
+        <div className="tp-pdm-price-row">
+          <p className={`tp-pdm-price ${hasDiscount ? 'is-sale' : ''}`}>
+            {formatCurrency(salePrice)}
+          </p>
+          {hasDiscount && (
+            <span className="tp-pdm-price-original">{formatCurrency(originalPrice)}</span>
+          )}
+        </div>
         <div className="tp-pdm-meta">
           <div className="tp-pdm-rating">
-            <Rating allowFraction size={18} initialValue={ratingVal} readonly fillColor="#111" emptyColor="#ddd" />
-            <span className="tp-pdm-review-count">({reviews?.length || 0} reviews)</span>
+            {reviews?.length ? (
+              <>
+                <Rating allowFraction size={18} initialValue={ratingVal} readonly fillColor="#6b2824" emptyColor="#ddd" />
+                <span className="tp-pdm-review-count">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+              </>
+            ) : (
+              <span className="tp-pdm-rating-empty">No reviews yet</span>
+            )}
           </div>
-          <span className={`tp-pdm-stock ${inStock ? 'in' : 'out'}`}>
-            {inStock ? 'In Stock' : 'Out of Stock'}
+          <span className={`tp-pdm-stock ${!inStock ? 'out' : isPreOrder ? 'preorder' : 'in'}`}>
+            {availabilityLabel}
           </span>
         </div>
       </div>
@@ -152,49 +215,49 @@ const ProductDetailsMobile = ({ productItem }) => {
         </div>
       )}
 
-      {/* 4. Main CTA section (Floating footer style) */}
-      <div className="tp-pdm-footer">
-        <div className="tp-pdm-footer-inner">
-          <button
-            type="button"
-            className="tp-pdm-add-cart"
-            onClick={handleAddCart}
-            disabled={!inStock}
-          >
-            {isPreOrder ? 'Pre-order' : 'Add to Cart'}
-          </button>
-          <button
-            type="button"
-            className="tp-pdm-buy-now"
-            onClick={() => {
-              handleAddCart();
-              router.push('/cart');
-            }}
-            disabled={!inStock}
-          >
-            {isPreOrder ? 'Pre-order' : 'Buy Now'}
-          </button>
-        </div>
-      </div>
-
-      {/* 5. Quantity pill */}
+      {/* 4. Quantity */}
       <div className="tp-pdm-qty">
         <span className="tp-pdm-qty-label">Quantity</span>
         <div className="tp-pdm-qty-pill">
-          <button type="button" className="tp-pdm-qty-btn" onClick={handleDecrement} aria-label="Decrease">
+          <button
+            type="button"
+            className="tp-pdm-qty-btn"
+            onClick={handleDecrement}
+            aria-label="Decrease quantity"
+            disabled={orderQuantity <= 1}
+          >
             <Minus />
           </button>
           <span className="tp-pdm-qty-num">{orderQuantity}</span>
-          <button type="button" className="tp-pdm-qty-btn" onClick={handleIncrement} aria-label="Increase">
+          <button
+            type="button"
+            className="tp-pdm-qty-btn"
+            onClick={handleIncrement}
+            aria-label="Increase quantity"
+            disabled={isAtMaxQuantity}
+          >
             <Plus />
           </button>
         </div>
       </div>
 
-      {/* 6. Add to Wishlist (secondary) */}
+      {/* 5. Secondary cart action */}
+      <div className="tp-pdm-footer">
+        <button
+          type="button"
+          className="tp-pdm-add-cart"
+          onClick={handleAddCart}
+          disabled={!inStock}
+        >
+          {isPreOrder ? 'Add pre-order to cart' : 'Add to Cart'}
+        </button>
+      </div>
+
+      {/* 6. Add to Wishlist */}
       <div className="tp-pdm-wishlist-row">
         <button type="button" className="tp-pdm-wishlist-btn" onClick={handleWishlist}>
-          ♡ Add to Wishlist
+          <Wishlist />
+          <span>Add to Wishlist</span>
         </button>
       </div>
 
@@ -249,12 +312,15 @@ const ProductDetailsMobile = ({ productItem }) => {
         ))}
       </div>
 
-      {/* Spacer for sticky bar */}
-      <div className="tp-pdm-spacer" />
-
-      {/* 9. Sticky bottom CTA */}
+      {/* 8. Sticky bottom CTA */}
       <div className="tp-pdm-sticky-bar">
-        <span className="tp-pdm-sticky-price">{formatCurrency(displayPrice)}</span>
+        <div className="tp-pdm-sticky-price-group">
+          <span className="tp-pdm-sticky-label">Total</span>
+          <span className="tp-pdm-sticky-price">{formatCurrency(totalPrice)}</span>
+          {hasDiscount && (
+            <span className="tp-pdm-sticky-original">{formatCurrency(originalTotalPrice)}</span>
+          )}
+        </div>
         {inStock ? (
           <button
             type="button"
@@ -265,11 +331,11 @@ const ProductDetailsMobile = ({ productItem }) => {
               router.push('/cart');
             }}
           >
-            Buy Now
+            {isPreOrder ? 'Pre-order' : 'Buy Now'}
           </button>
         ) : (
           <button type="button" className="tp-pdm-sticky-cta tp-pdm-sticky-preorder" disabled>
-            Pre-Order
+            Out of Stock
           </button>
         )}
       </div>

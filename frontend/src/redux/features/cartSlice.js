@@ -41,7 +41,11 @@ export const cartSlice = createSlice({
       setLocalStorage("cart_products", state.cart_products);
     },
     increment: (state, { payload }) => {
-      state.orderQuantity = state.orderQuantity + 1;
+      const nextQuantity = state.orderQuantity + 1;
+      const maximumQuantity = Number(payload);
+      state.orderQuantity = Number.isFinite(maximumQuantity) && maximumQuantity > 0
+        ? Math.min(nextQuantity, maximumQuantity)
+        : nextQuantity;
     },
     decrement: (state, { payload }) => {
       state.orderQuantity =

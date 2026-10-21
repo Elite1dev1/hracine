@@ -10,10 +10,12 @@ import { add_cart_product } from "@/redux/features/cartSlice";
 import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { add_to_compare } from "@/redux/features/compareSlice";
 import { formatCurrency } from "@/utils/currency";
+import { formatDiscountPercentage, getProductPricing } from "@/utils/productPricing";
 
 const ShopListItem = ({ product }) => {
-  const { _id, img, category, title, reviews, price, discount, tags, description } = product || {};
+  const { _id, img, category, title, reviews, tags, description } = product || {};
   const dispatch = useDispatch()
+  const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(product);
   const [ratingVal, setRatingVal] = useState(0);
   useEffect(() => {
     if (reviews && reviews.length > 0) {
@@ -46,6 +48,12 @@ const ShopListItem = ({ product }) => {
         <Link href={`/product-details/${_id}`}>
           <Image src={img} alt="product img" width={350} height={310} />
         </Link>
+
+        {hasDiscount && (
+          <span className="product-hot" style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 2, padding: '5px 9px', borderRadius: '999px', backgroundColor: '#85312c', color: '#fff', fontSize: '11px', fontWeight: 700 }}>
+            -{formatDiscountPercentage(discountPercentage)}% OFF
+          </span>
+        )}
 
         {/* <!-- product action --> */}
         <div className="tp-product-action-2 tp-product-action-blackStyle">
@@ -95,15 +103,15 @@ const ShopListItem = ({ product }) => {
             <Rating allowFraction size={16} initialValue={ratingVal} readonly={true} />
           </div>
           <div className="tp-product-price-wrapper-2">
-            {discount > 0 ? (
+            {hasDiscount ? (
               <>
-                <span className="tp-product-price-2 new-price">{formatCurrency(Number(price) - (Number(price) * Number(discount)) / 100)}</span>
+                <span className="tp-product-price-2 new-price" style={{ color: '#85312c', fontWeight: 700 }}>{formatCurrency(salePrice)}</span>
                 <span className="tp-product-price-2 old-price">
-                  {" "} {formatCurrency(price)}
+                  {" "} {formatCurrency(originalPrice)}
                 </span>
               </>
             ) : (
-              <span className="tp-product-price-2 new-price">{formatCurrency(price)}</span>
+              <span className="tp-product-price-2 new-price">{formatCurrency(salePrice)}</span>
             )}
           </div>
           <p>

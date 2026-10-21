@@ -155,6 +155,13 @@ const productsSchema = mongoose.Schema({
     default: 0,
     min: 0
   },
+  // Lower values are displayed first when the storefront uses its default sort.
+  // This remains optional so existing products can be backfilled safely.
+  sortOrder: {
+    type: Number,
+    min: 1,
+    index: true,
+  },
   ingredients: {
     type: String,
     required: false,

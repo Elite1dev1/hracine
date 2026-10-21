@@ -24,8 +24,10 @@ const HeaderThree = () => {
   return (
     <>
       <header>
-        <PromoBanner />
-        <div id="header-sticky" className={`tp-header-area tp-header-style-transparent-white tp-header-transparent tp-header-sticky has-dark-logo tp-header-height ${sticky ? 'header-sticky' : ''}`}>
+        <div className="d-none d-lg-block">
+          <PromoBanner />
+        </div>
+        <div id="header-sticky" className={`tp-header-area tp-header-style-transparent-white tp-header-transparent tp-header-sticky has-dark-logo tp-header-height tp-header-mobile-compact tp-header-mobile-compact--alternate ${sticky ? 'header-sticky' : ''}`}>
           <div className="tp-header-bottom-3 pl-35 pr-35">
             <div className="container-fluid">
               <div className="row align-items-center">
@@ -79,14 +81,14 @@ const HeaderThree = () => {
                         <span className="tp-header-action-badge">{wishlist.length}</span>
                       </Link>
                     </div>
-                    <div className="tp-header-action-item d-none d-sm-block">
-                      <button onClick={() => dispatch(openCartMini())} type="button" className="tp-header-action-btn cartmini-open-btn">
+                    <div className="tp-header-action-item">
+                      <button onClick={() => dispatch(openCartMini())} type="button" className="tp-header-action-btn cartmini-open-btn" aria-label="Open shopping cart">
                         <CartTwo />
                         <span className="tp-header-action-badge">{quantity}</span>
                       </button>
                     </div>
                     <div className="tp-header-action-item d-lg-none">
-                      <button onClick={() => setIsCanvasOpen(true)} type="button" className="tp-header-action-btn tp-offcanvas-open-btn">
+                      <button onClick={() => setIsCanvasOpen(true)} type="button" className="tp-header-action-btn tp-offcanvas-open-btn" aria-label="Open navigation menu">
                         <Menu />
                       </button>
                     </div>

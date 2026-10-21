@@ -51,6 +51,8 @@ router.get("/stock-out", productController.stockOutProducts);
 router.get('/export/all', verifyToken, authorizePermission("products", "view"), productController.exportProducts);
 // Import products
 router.post('/import', verifyToken, authorizePermission("products", "create"), upload.single('file'), productController.importProducts);
+// Reorder products (must be before /:type so "reorder" is not treated as a product type)
+router.patch('/reorder', verifyToken, authorizePermission("products", "edit"), productController.reorderProducts);
 // edit product (requires store manager or super admin)
 router.patch("/edit-product/:id", verifyToken, authorizePermission("products", "edit"), productController.updateProduct);
 // get Products ByType (MUST be last to avoid catching other routes)

@@ -78,9 +78,11 @@ const HeaderTwo = ({ style_2 = false }) => {
   return (
     <>
       <header style={{ position: 'relative', zIndex: 100 }}>
-        <PromoBanner />
+        <div className="d-none d-lg-block">
+          <PromoBanner />
+        </div>
         <div
-          className={`tp-header-area tp-header-style-${style_2 ? 'primary' : 'darkRed'} tp-header-height ${isHomeNavbar ? "" : "tp-header-non-home"
+          className={`tp-header-area tp-header-style-${style_2 ? 'primary' : 'darkRed'} tp-header-height tp-header-mobile-compact ${isHomeNavbar ? "" : "tp-header-non-home"
             }`}
         >
           <div className="tp-header-top-2 p-relative z-index-11 tp-header-top-border d-none d-md-block">
@@ -179,7 +181,7 @@ const HeaderTwo = ({ style_2 = false }) => {
                           </Link>
                         </div>
                         <div className="tp-header-action-item">
-                          <button onClick={() => dispatch(openCartMini())} className="tp-header-action-btn cartmini-open-btn" >
+                          <button onClick={() => dispatch(openCartMini())} className="tp-header-action-btn cartmini-open-btn" aria-label="Open shopping cart">
                             <CartTwo />
                             <span className="tp-header-action-badge">{quantity}</span>
                           </button>
@@ -200,7 +202,7 @@ const HeaderTwo = ({ style_2 = false }) => {
                           </div>
                         )}
                         <div className="tp-header-action-item tp-header-hamburger mr-20 d-xl-none">
-                          <button onClick={() => setIsCanvasOpen(true)} type="button" className="tp-offcanvas-open-btn">
+                          <button onClick={() => setIsCanvasOpen(true)} type="button" className="tp-offcanvas-open-btn" aria-label="Open navigation menu">
                             <Menu />
                           </button>
                         </div>

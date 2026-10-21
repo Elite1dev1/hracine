@@ -2,9 +2,55 @@ const Brand = require("../model/Brand");
 const Category = require("../model/Category");
 const Product = require("../model/Products");
 
+const hasValidSortOrder = (product) =>
+  Number.isInteger(product?.sortOrder) && product.sortOrder > 0;
+
+// MongoDB does not guarantee natural query order. This comparator also gives
+// legacy products without sortOrder a deterministic position until an admin
+// saves an order (or a new product triggers the automatic backfill).
+const sortProductsByDisplayOrder = (products) => products.sort((a, b) => {
+  const aHasOrder = hasValidSortOrder(a);
+  const bHasOrder = hasValidSortOrder(b);
+
+  if (aHasOrder && bHasOrder && a.sortOrder !== b.sortOrder) {
+    return a.sortOrder - b.sortOrder;
+  }
+  if (aHasOrder !== bHasOrder) {
+    return aHasOrder ? -1 : 1;
+  }
+
+  const createdDifference = new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+  if (createdDifference !== 0) return createdDifference;
+  return String(a._id).localeCompare(String(b._id));
+});
+
+const ensureDisplayOrder = async () => {
+  const products = await Product.find({}).select("_id sortOrder createdAt").lean();
+  if (products.every(hasValidSortOrder)) {
+    return products.reduce((max, product) => Math.max(max, product.sortOrder), 0);
+  }
+
+  const orderedProducts = sortProductsByDisplayOrder(products);
+  const operations = orderedProducts.map((product, index) => ({
+    updateOne: {
+      filter: { _id: product._id },
+      update: { $set: { sortOrder: index + 1 } },
+    },
+  }));
+
+  if (operations.length > 0) {
+    await Product.bulkWrite(operations, { ordered: true });
+  }
+  return orderedProducts.length;
+};
+
 // create product service
 exports.createProductService = async (data) => {
-  const product = await Product.create(data);
+  const lastPosition = await ensureDisplayOrder();
+  const product = await Product.create({
+    ...data,
+    sortOrder: lastPosition + 1,
+  });
   const { _id: productId, brand, category } = product;
   //update Brand
   await Brand.updateOne(
@@ -22,7 +68,9 @@ exports.createProductService = async (data) => {
 // create all product service
 exports.addAllProductService = async (data) => {
   await Product.deleteMany();
-  const products = await Product.insertMany(data);
+  const products = await Product.insertMany(
+    data.map((product, index) => ({ ...product, sortOrder: index + 1 }))
+  );
   for (const product of products) {
     await Brand.findByIdAndUpdate(product.brand.id, {
       $push: { products: product._id },
@@ -37,7 +85,7 @@ exports.addAllProductService = async (data) => {
 // get product data
 exports.getAllProductsService = async () => {
   const products = await Product.find({}).populate("reviews");
-  return products;
+  return sortProductsByDisplayOrder(products);
 };
 
 // get type of product service
@@ -60,13 +108,12 @@ exports.getProductTypeService = async (req) => {
     products = await Product.find({
       comingSoon: true,
     }).populate("reviews");
+    sortProductsByDisplayOrder(products);
     
-    // Fallback: If no free shipping on orders above #25,000 products, return random products from all types
+    // Fallback to the first products in the configured storefront order.
     if (products.length === 0) {
       const allProducts = await Product.find({}).populate("reviews");
-      // Shuffle and return up to 4 random products
-      const shuffled = allProducts.sort(() => 0.5 - Math.random());
-      products = shuffled.slice(0, 4);
+      products = sortProductsByDisplayOrder(allProducts).slice(0, 4);
     }
   } else if (query.featured === "true") {
     if (shouldQueryAllTypes) {
@@ -80,6 +127,7 @@ exports.getProductTypeService = async (req) => {
         featured: true,
       }).populate("reviews");
     }
+    sortProductsByDisplayOrder(products);
   } else if (query.topSellers === "true") {
     if (shouldQueryAllTypes) {
       products = await Product.find({})
@@ -98,6 +146,7 @@ exports.getProductTypeService = async (req) => {
     } else {
       products = await Product.find({ productType: type }).populate("reviews");
     }
+    sortProductsByDisplayOrder(products);
   }
   return products;
 };
@@ -108,7 +157,7 @@ exports.getOfferTimerProductService = async (query) => {
     productType: query,
     "offerDate.endDate": { $gt: new Date() },
   }).populate("reviews");
-  return products;
+  return sortProductsByDisplayOrder(products);
 };
 
 // get popular product service by type
@@ -187,8 +236,36 @@ exports.getRelatedProductService = async (productId) => {
     "category.name": currentProduct.category.name,
     _id: { $ne: productId }, // Exclude the current product ID
   });
-  return relatedProducts;
+  return sortProductsByDisplayOrder(relatedProducts);
 };
+
+exports.reorderProductsService = async (orderedIds) => {
+  const products = await Product.find({}).select("_id").lean();
+  const existingIds = new Set(products.map((product) => String(product._id)));
+
+  if (
+    orderedIds.length !== existingIds.size ||
+    orderedIds.some((id) => !existingIds.has(String(id)))
+  ) {
+    const error = new Error("The product list changed. Refresh the page and try again.");
+    error.statusCode = 409;
+    throw error;
+  }
+
+  await Product.bulkWrite(
+    orderedIds.map((id, index) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: { $set: { sortOrder: index + 1 } },
+      },
+    })),
+    { ordered: true }
+  );
+
+  return orderedIds.length;
+};
+
+exports.sortProductsByDisplayOrder = sortProductsByDisplayOrder;
 
 // update a product
 exports.updateProductService = async (id, currProduct) => {
@@ -269,7 +346,7 @@ exports.getReviewsProducts = async () => {
 
   const products = result.filter(p => p.reviews.length > 0)
 
-  return products;
+  return sortProductsByDisplayOrder(products);
 };
 
 // get Reviews Products

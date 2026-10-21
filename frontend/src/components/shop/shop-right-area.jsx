@@ -9,6 +9,7 @@ import ShopListItem from "./shop-list-item";
 import ShopTopLeft from "./shop-top-left";
 import ShopTopRight from "./shop-top-right";
 import ResetButton from "./shop-filter/reset-button";
+import { getProductPricing } from "@/utils/productPricing";
 
 const ShopRightArea = ({
   all_products,
@@ -30,7 +31,8 @@ const ShopRightArea = ({
 
   // max price
   const maxPrice = all_products.reduce((max, product) => {
-    return product.price > max ? product.price : max;
+    const { salePrice } = getProductPricing(product);
+    return salePrice > max ? salePrice : max;
   }, 0);
   return (
     <>

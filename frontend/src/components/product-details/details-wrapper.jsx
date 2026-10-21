@@ -12,12 +12,14 @@ import { add_to_wishlist } from '@/redux/features/wishlist-slice';
 import { add_to_compare } from '@/redux/features/compareSlice';
 import { handleModalClose } from '@/redux/features/productModalSlice';
 import { formatCurrency } from '@/utils/currency';
+import { formatDiscountPercentage, getProductPricing } from '@/utils/productPricing';
 
 const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBottom = false }) => {
-  const { sku, img, title, imageURLs, category, description, discount, price, status, reviews, tags, offerDate, ingredients, howToUse, keyBenefits, isPreOrder, launchDate } = productItem || {};
+  const { sku, img, title, imageURLs, category, description, status, reviews, tags, offerDate, ingredients, howToUse, keyBenefits, isPreOrder, launchDate } = productItem || {};
   const [ratingVal, setRatingVal] = useState(0);
   const [textMore, setTextMore] = useState(false);
   const dispatch = useDispatch()
+  const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(productItem);
 
   useEffect(() => {
     if (reviews && reviews.length > 0) {
@@ -51,6 +53,11 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
         <span>{category.name}</span>
       </div>
       <h3 className="tp-product-details-title">{title}</h3>
+      {hasDiscount && (
+        <span style={{ display: 'inline-block', marginBottom: '14px', padding: '5px 10px', borderRadius: '999px', backgroundColor: '#85312c', color: '#fff', fontSize: '12px', fontWeight: 700 }}>
+          -{formatDiscountPercentage(discountPercentage)}% OFF
+        </span>
+      )}
 
       {isPreOrder && (
         <div className="tp-product-details-preorder-notice mb-20" style={{ backgroundColor: '#fff4f0', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #ff5501' }}>
@@ -118,15 +125,15 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
 
       {/* price */}
       <div className="tp-product-details-price-wrapper mb-20">
-        {discount > 0 ? (
+        {hasDiscount ? (
           <>
-            <span className="tp-product-details-price old-price">{formatCurrency(price)}</span>
+            <span className="tp-product-details-price old-price">{formatCurrency(originalPrice)}</span>
             <span className="tp-product-details-price new-price">
-              {" "}{formatCurrency(Number(price) - (Number(price) * Number(discount)) / 100)}
+              {" "}{formatCurrency(salePrice)}
             </span>
           </>
         ) : (
-          <span className="tp-product-details-price new-price">{formatCurrency(price)}</span>
+          <span className="tp-product-details-price new-price">{formatCurrency(salePrice)}</span>
         )}
       </div>
 
