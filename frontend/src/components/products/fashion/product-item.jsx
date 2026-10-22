@@ -11,6 +11,7 @@ import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { add_to_compare } from "@/redux/features/compareSlice";
 import { formatCurrency } from "@/utils/currency";
 import { formatDiscountPercentage, getProductPricing } from "@/utils/productPricing";
+import { getRatedReviewStats } from "@/utils/reviews";
 
 const ProductItem = ({ product, style_2 = false }) => {
   const { _id, img, category, title, reviews, tags, status, isPreOrder } = product || {};
@@ -23,14 +24,7 @@ const ProductItem = ({ product, style_2 = false }) => {
   const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(product);
 
   useEffect(() => {
-    if (reviews && reviews.length > 0) {
-      const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length;
-      setRatingVal(rating);
-    } else {
-      setRatingVal(0);
-    }
+    setRatingVal(getRatedReviewStats(reviews).average);
   }, [reviews]);
 
   // handle add product

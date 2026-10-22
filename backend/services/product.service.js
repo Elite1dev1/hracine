@@ -84,7 +84,7 @@ exports.addAllProductService = async (data) => {
 
 // get product data
 exports.getAllProductsService = async () => {
-  const products = await Product.find({}).populate("reviews");
+  const products = await Product.find({}).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
   return sortProductsByDisplayOrder(products);
 };
 
@@ -102,17 +102,17 @@ exports.getProductTypeService = async (req) => {
     products = await Product.find({})
       .sort({ createdAt: -1 })
       .limit(8)
-      .populate("reviews");
+      .populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
   } else if (query.comingSoon === "true") {
     // Get products marked as free shipping on orders above #25,000 from ALL product types
     products = await Product.find({
       comingSoon: true,
-    }).populate("reviews");
+    }).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     sortProductsByDisplayOrder(products);
     
     // Fallback to the first products in the configured storefront order.
     if (products.length === 0) {
-      const allProducts = await Product.find({}).populate("reviews");
+      const allProducts = await Product.find({}).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
       products = sortProductsByDisplayOrder(allProducts).slice(0, 4);
     }
   } else if (query.featured === "true") {
@@ -120,12 +120,12 @@ exports.getProductTypeService = async (req) => {
       // Get featured products from ALL product types
       products = await Product.find({
         featured: true,
-      }).populate("reviews");
+      }).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     } else {
       products = await Product.find({
         productType: type,
         featured: true,
-      }).populate("reviews");
+      }).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     }
     sortProductsByDisplayOrder(products);
   } else if (query.topSellers === "true") {
@@ -133,18 +133,18 @@ exports.getProductTypeService = async (req) => {
       products = await Product.find({})
         .sort({ sellCount: -1 })
         .limit(8)
-        .populate("reviews");
+        .populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     } else {
       products = await Product.find({ productType: type })
         .sort({ sellCount: -1 })
         .limit(8)
-        .populate("reviews");
+        .populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     }
   } else {
     if (shouldQueryAllTypes) {
-      products = await Product.find({}).populate("reviews");
+      products = await Product.find({}).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     } else {
-      products = await Product.find({ productType: type }).populate("reviews");
+      products = await Product.find({ productType: type }).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
     }
     sortProductsByDisplayOrder(products);
   }
@@ -156,7 +156,7 @@ exports.getOfferTimerProductService = async (query) => {
   const products = await Product.find({
     productType: query,
     "offerDate.endDate": { $gt: new Date() },
-  }).populate("reviews");
+  }).populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
   return sortProductsByDisplayOrder(products);
 };
 
@@ -165,21 +165,21 @@ exports.getPopularProductServiceByType = async (type) => {
   const products = await Product.find({ productType: type })
     .sort({ "reviews.length": -1 })
     .limit(8)
-    .populate("reviews");
+    .populate({ path: "reviews", match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] } });
   return products;
 };
 
 exports.getTopRatedProductService = async () => {
   const products = await Product.find({
     reviews: { $exists: true, $ne: [] },
-  }).populate("reviews");
+  }).populate({ path: "reviews", match: { $and: [{ $or: [{ isPublished: true }, { isPublished: { $exists: false } }] }, { rating: { $gte: 1, $lte: 5 } }] } });
 
   const topRatedProducts = products.map((product) => {
     const totalRating = product.reviews.reduce(
-      (sum, review) => sum + review.rating,
+      (sum, review) => sum + (Number(review.rating) || 0),
       0
     );
-    const averageRating = totalRating / product.reviews.length;
+    const averageRating = product.reviews.length ? totalRating / product.reviews.length : 0;
 
     return {
       ...product.toObject(),
@@ -187,9 +187,10 @@ exports.getTopRatedProductService = async () => {
     };
   });
 
-  topRatedProducts.sort((a, b) => b.rating - a.rating);
+  const ratedProducts = topRatedProducts.filter((product) => product.reviews.length > 0);
+  ratedProducts.sort((a, b) => b.rating - a.rating);
 
-  return topRatedProducts;
+  return ratedProducts;
 };
 
 
@@ -210,6 +211,7 @@ exports.getProductService = async (id) => {
   try {
     const product = await Product.findById(id).populate({
       path: "reviews",
+      match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] },
       populate: { path: "userId", select: "name email imageURL" },
     });
     console.log(product);
@@ -341,6 +343,7 @@ exports.getReviewsProducts = async () => {
   })
     .populate({
       path: "reviews",
+      match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] },
       populate: { path: "userId", select: "name email imageURL" },
     });
 

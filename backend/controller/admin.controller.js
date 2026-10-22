@@ -605,14 +605,22 @@ const getDashboardStats = async (req, res, next) => {
     const mostReviewedProducts = await Product.find({
       reviews: { $exists: true, $ne: [] }
     })
-      .populate('reviews')
+      .populate({
+        path: 'reviews',
+        match: {
+          $and: [
+            { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] },
+            { rating: { $gte: 1, $lte: 5 } },
+          ],
+        },
+      })
       .sort({ 'reviews.length': -1 })
       .limit(10)
       .select('title img price brand reviews');
     
     const mostReviewed = mostReviewedProducts.map(product => {
-      const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
-      const averageRating = totalRating / product.reviews.length;
+      const totalRating = product.reviews.reduce((sum, review) => sum + Number(review.rating), 0);
+      const averageRating = product.reviews.length ? totalRating / product.reviews.length : 0;
       return {
         _id: product._id,
         title: product.title,

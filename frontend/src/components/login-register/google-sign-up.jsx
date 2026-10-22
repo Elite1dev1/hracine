@@ -11,6 +11,16 @@ const GoogleSignUp = () => {
   const [signUpProvider, {}] = useSignUpProviderMutation();
   const router = useRouter();
   const { redirect } = router.query;
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
+
+  if (!googleClientId) {
+    return (
+      <span role="status" className="text-muted">
+        Google sign-in is unavailable. Continue with email.
+      </span>
+    );
+  }
+
   // handleGoogleSignIn
   const handleGoogleSignIn = (user) => {
     if (user) {

@@ -7,6 +7,7 @@ import { Rating } from "react-simple-star-rating";
 import { add_cart_product } from "@/redux/features/cartSlice";
 import { remove_compare_product } from "@/redux/features/compareSlice";
 import { formatCurrency } from "@/utils/currency";
+import { getRatedReviewStats } from "@/utils/reviews";
 
 const CompareArea = () => {
   const { compareItems } = useSelector((state) => state.compare);
@@ -106,7 +107,7 @@ const CompareArea = () => {
                               <Rating
                                 allowFraction
                                 size={16}
-                                initialValue={item.reviews.length > 0 ? item.reviews.reduce((acc, review) => acc + review.rating, 0) / item.reviews.length : 0}
+                                initialValue={getRatedReviewStats(item.reviews).average}
                                 readonly={true}
                               />
                             </div>

@@ -100,8 +100,8 @@ const FooterTwo = () => {
                       <ul>
                         <li><a href="#">Our Story</a></li>
                         <li><a href="#">Careers</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="/privacy.html">Privacy Policy</a></li>
+                        <li><Link href="/index.html">Terms & Conditions</Link></li>
                         <li><a href="#">Latest Stories</a></li>
                         <li><a href="#">Contact Us</a></li>
                       </ul>
@@ -145,8 +145,8 @@ const FooterTwo = () => {
                         <ul>
                           <li><a href="#">Our Story</a></li>
                           <li className="d-none d-md-block"><a href="#">Careers</a></li>
-                          <li><a href="#">Privacy Policy</a></li>
-                          <li><a href="#">Terms & Conditions</a></li>
+                          <li><a href="/privacy.html">Privacy Policy</a></li>
+                          <li><Link href="/index.html">Terms & Conditions</Link></li>
                           <li><a href="#">Latest Stories</a></li>
                           <li><a href="#">Contact Us</a></li>
                         </ul>

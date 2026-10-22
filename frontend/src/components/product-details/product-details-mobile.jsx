@@ -11,6 +11,7 @@ import { formatCurrency } from '@/utils/currency';
 import { formatDiscountPercentage, getProductPricing } from '@/utils/productPricing';
 import ReviewForm from '../forms/review-form';
 import ReviewItem from './review-item';
+import { getRatedReviewStats } from '@/utils/reviews';
 
 const DESC_MAX_LEN = 120;
 
@@ -44,7 +45,7 @@ const ProductDetailsMobile = ({ productItem }) => {
   const [touchEnd, setTouchEnd] = useState(null);
 
   const images = imageURLs?.length ? imageURLs.map((i) => i.img) : (img ? [img] : []);
-  const ratingVal = reviews?.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews.length : 0;
+  const { average: ratingVal, count: ratedReviewCount } = getRatedReviewStats(reviews);
   const inStock = status !== 'out-of-stock';
   const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(productItem);
   const totalPrice = salePrice * orderQuantity;
@@ -186,13 +187,13 @@ const ProductDetailsMobile = ({ productItem }) => {
         </div>
         <div className="tp-pdm-meta">
           <div className="tp-pdm-rating">
-            {reviews?.length ? (
+            {ratedReviewCount ? (
               <>
                 <Rating allowFraction size={18} initialValue={ratingVal} readonly fillColor="#6b2824" emptyColor="#ddd" />
-                <span className="tp-pdm-review-count">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+                <span className="tp-pdm-review-count">({ratedReviewCount} {ratedReviewCount === 1 ? 'review' : 'reviews'})</span>
               </>
             ) : (
-              <span className="tp-pdm-rating-empty">No reviews yet</span>
+              <span className="tp-pdm-rating-empty">{reviews?.length ? 'No ratings yet' : 'No reviews yet'}</span>
             )}
           </div>
           <span className={`tp-pdm-stock ${!inStock ? 'out' : isPreOrder ? 'preorder' : 'in'}`}>

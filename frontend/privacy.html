@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f1">
+  <meta name="description" content="Learn how Hracine collects, uses, and protects your personal information.">
+  <title>Privacy Policy — Hracine</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f7f1;
+      --surface: #fffefa;
+      --ink: #1e3129;
+      --muted: #70786d;
+      --green: #284d3c;
+      --green-deep: #1d3d30;
+      --green-soft: #e9eee7;
+      --line: #e7e6dc;
+      --accent: #c4805b;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --sans: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      height: 76px;
+      padding: 0 clamp(24px, 6vw, 92px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(40, 77, 60, .1);
+      background: rgba(248, 247, 241, .94);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color .2s ease;
+    }
+
+    .back-link:hover { color: var(--green-deep); }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      color: var(--green-deep);
+      font-family: var(--serif);
+      font-size: 25px;
+      letter-spacing: -.06em;
+    }
+
+    .brand-mark {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #a9b6a4;
+      border-radius: 50% 50% 50% 4px;
+      transform: rotate(-45deg);
+    }
+
+    .brand-mark svg { transform: rotate(45deg); }
+
+    .topbar-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 342px;
+      padding: 76px 24px 75px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: #eef0e8;
+      isolation: isolate;
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      width: 340px;
+      height: 340px;
+      border: 1px solid rgba(40, 77, 60, .12);
+      border-radius: 50%;
+    }
+
+    .hero::before { left: -185px; top: -170px; }
+    .hero::after { right: -180px; bottom: -225px; width: 440px; height: 440px; }
+
+    .hero-inner { max-width: 700px; }
+
+    .eyebrow {
+      margin: 0 0 17px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--green-deep);
+      font-family: var(--serif);
+      font-size: clamp(48px, 7vw, 74px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1.05;
+    }
+
+    .hero-copy {
+      max-width: 550px;
+      margin: 20px auto 0;
+      color: #5d6b60;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 25px;
+      padding: 7px 13px;
+      border: 1px solid rgba(40, 77, 60, .14);
+      border-radius: 30px;
+      color: #526255;
+      font-size: 12px;
+      letter-spacing: .015em;
+    }
+
+    .updated svg { color: var(--green); }
+
+    .page-layout {
+      width: min(1130px, calc(100% - 48px));
+      margin: 66px auto 100px;
+      display: grid;
+      grid-template-columns: 238px minmax(0, 1fr);
+      align-items: start;
+      gap: clamp(38px, 7vw, 92px);
+    }
+
+    .contents {
+      position: sticky;
+      top: 28px;
+      padding: 23px 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 254, 250, .7);
+    }
+
+    .contents-title {
+      margin: 0 0 15px 8px;
+      color: #70786d;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .contents ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .contents li + li { margin-top: 2px; }
+
+    .contents a {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      padding: 5px 8px;
+      border-radius: 4px;
+      color: #667067;
+      font-size: 12px;
+      line-height: 1.45;
+      text-decoration: none;
+      transition: color .2s ease, background .2s ease;
+    }
+
+    .contents a:hover,
+    .contents a[aria-current="location"] {
+      background: var(--green-soft);
+      color: var(--green-deep);
+    }
+
+    .contents a span {
+      min-width: 18px;
+      color: #9a9e91;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .policy { min-width: 0; }
+
+    .intro {
+      margin: 0 0 40px;
+      padding: 0 0 30px;
+      border-bottom: 1px solid var(--line);
+      color: #59655b;
+      font-size: 15px;
+    }
+
+    .intro p { margin: 0 0 12px; }
+    .intro p:last-child { margin-bottom: 0; }
+
+    .policy-section {
+      padding: 0 0 31px;
+      margin: 0 0 29px;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 26px;
+    }
+
+    .policy-section:last-child { border-bottom: 0; }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin: 0 0 16px;
+    }
+
+    .section-number {
+      color: var(--accent);
+      font-family: var(--serif);
+      font-size: 15px;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--green-deep);
+      font-family: var(--serif);
+      font-size: clamp(23px, 3vw, 29px);
+      font-weight: 400;
+      letter-spacing: -.025em;
+      line-height: 1.25;
+    }
+
+    h3 {
+      margin: 21px 0 8px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .015em;
+    }
+
+    .policy-section p {
+      margin: 0 0 12px;
+      color: #59655b;
+    }
+
+    .policy-section p:last-child { margin-bottom: 0; }
+
+    .policy-section ul {
+      margin: 9px 0 15px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .policy-section li {
+      position: relative;
+      margin: 6px 0;
+      padding-left: 20px;
+      color: #59655b;
+    }
+
+    .policy-section li::before {
+      position: absolute;
+      top: .78em;
+      left: 2px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #a8b49e;
+      content: "";
+    }
+
+    .contact-card {
+      position: relative;
+      overflow: hidden;
+      margin-top: 6px;
+      padding: 31px 34px;
+      border-radius: 7px;
+      background: var(--green-deep);
+      color: #f8f7f1;
+    }
+
+    .contact-card::after {
+      position: absolute;
+      top: -70px;
+      right: -55px;
+      width: 190px;
+      height: 190px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 50%;
+      content: "";
+      pointer-events: none;
+    }
+
+    .contact-card .eyebrow { margin-bottom: 9px; color: #c9d6c5; }
+    .contact-card h2 { margin-bottom: 9px; color: #fffefa; }
+    .contact-card p { margin: 0 0 16px; color: #d0d9ce; font-size: 14px; }
+
+    .contact-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 21px;
+      color: #fffefa;
+      font-size: 13px;
+    }
+
+    .contact-details a { text-underline-offset: 3px; }
+
+    .footer {
+      min-height: 74px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      color: #7e8579;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .topbar { height: 66px; padding-inline: 22px; }
+      .topbar-label { font-size: 10px; }
+      .hero { min-height: 300px; padding: 60px 24px; }
+      .hero-copy { font-size: 15px; }
+      .page-layout {
+        width: min(620px, calc(100% - 40px));
+        margin-top: 38px;
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+      .contents { position: static; padding: 17px 17px 15px; }
+      .contents ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .contents li + li { margin-top: 0; }
+      .contents a { padding: 6px 7px; font-size: 11px; }
+      .intro { margin-bottom: 32px; }
+    }
+
+    @media (max-width: 420px) {
+      .brand { font-size: 22px; }
+      .topbar-label { letter-spacing: .08em; }
+      .hero { min-height: 285px; }
+      .contents ol { grid-template-columns: 1fr; }
+      .section-heading { gap: 10px; }
+      .contact-card { padding: 26px 23px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    @media print {
+      body { background: #fff; color: #111; font-size: 11pt; }
+      .topbar, .contents, .footer { display: none; }
+      .hero { min-height: 0; padding: 25px 0; background: #fff; }
+      .hero::before, .hero::after { display: none; }
+      .page-layout { width: 100%; margin: 20px 0; display: block; }
+      .policy-section { break-inside: avoid; }
+      .contact-card { background: #fff; color: #111; border: 1px solid #aaa; }
+      .contact-card h2, .contact-card p, .contact-details { color: #111; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" id="top">
+    <a class="back-link" href="/" onclick="if (history.length > 1) { event.preventDefault(); history.back(); }"><span aria-hidden="true">&#8592;</span> Back</a>
+    <a class="brand" href="#top" aria-label="Hracine privacy policy home">
+      
+        
+          <path d="M3 12.8C4.4 8.5 7.2 5.1 13 2.8C12.2 8.1 9.6 12.9 3 12.8Z" stroke="#41634d" stroke-width="1.1" stroke-linejoin="round"/>
+          <path d="M4 12C6.2 9.2 8.6 7.2 11.5 5.3" stroke="#41634d" stroke-width="1.1" stroke-linecap="round"/>
+        </svg>
+      </span>
+      Hracine
+    </a>
+    <span class="topbar-label">Privacy &amp; care</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-inner">
+        <p class="eyebrow">A little more about how we care</p>
+        <h1 id="page-title">Privacy policy</h1>
+        <p class="hero-copy">Your trust matters to us. Here’s a clear guide to the information we collect and the choices you have.</p>
+        <span class="updated">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6.1" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M8 4.5V8l2.4 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Last updated: October 22, 2026
+        </span>
+      </div>
+    </section>
+
+    <div class="page-layout">
+      <nav class="contents" aria-label="Privacy policy contents">
+        <p class="contents-title">In this policy</p>
+        <ol>
+          <li><a href="#who-we-are"><span>01</span>Who we are</a></li>
+          <li><a href="#information-we-collect"><span>02</span>Information we collect</a></li>
+          <li><a href="#automatic-information"><span>03</span>Information collected automatically</a></li>
+          <li><a href="#cookies"><span>04</span>Cookies &amp; similar technologies</a></li>
+          <li><a href="#how-we-use"><span>05</span>How we use your information</a></li>
+          <li><a href="#marketing"><span>06</span>Marketing communications</a></li>
+          <li><a href="#sharing"><span>07</span>How we share your information</a></li>
+          <li><a href="#third-party-links"><span>08</span>Third-party links</a></li>
+          <li><a href="#retention"><span>09</span>Data retention</a></li>
+          <li><a href="#security"><span>10</span>Data security</a></li>
+          <li><a href="#your-rights"><span>11</span>Your privacy rights</a></li>
+          <li><a href="#children"><span>12</span>Children’s privacy</a></li>
+          <li><a href="#international-transfers"><span>13</span>International data transfers</a></li>
+          <li><a href="#changes"><span>14</span>Changes to this policy</a></li>
+          <li><a href="#contact"><span>15</span>Contact us</a></li>
+        </ol>
+      </nav>
+
+      <article class="policy">
+        <div class="intro">
+          <p>Hracine (“Hracine,” “we,” “us,” or “our”) respects your privacy and is committed to protecting the personal information you provide when you visit our website, purchase our products, contact us, subscribe to our communications, or otherwise interact with our services.</p>
+          <p>This Privacy Policy explains what information we collect, how we use it, how we protect it, when we may share it, and the choices available to you.</p>
+          <p>By using our website, hracine.com, you agree to the practices described in this Privacy Policy.</p>
+        </div>
+
+        <section class="policy-section" id="who-we-are">
+          <div class="section-heading"><span class="section-number">01</span><h2>Who we are</h2></div>
+          <p>Hracine is a scalp-first haircare brand providing hair and scalp care products, educational content, and related services.</p>
+          <p>Business name: Hracine<br>Website: hracine.com<br>Email: <a href="mailto:hello.hracine@gmail.com">hello.hracine@gmail.com</a><br>Business address: Lagos, Nigeria</p>
+          <p>For privacy-related questions or requests, you may contact us using the details above.</p>
+        </section>
+
+        <section class="policy-section" id="information-we-collect">
+          <div class="section-heading"><span class="section-number">02</span><h2>Information we collect</h2></div>
+          <p>We may collect information that you voluntarily provide to us and information that is automatically collected when you use our website.</p>
+          <h3>A. Information you provide directly</h3>
+          <p>Depending on how you interact with Hracine, we may collect:</p>
+          <ul>
+            <li>Full name</li>
+            <li>Email address</li>
+            <li>Phone number</li>
+            <li>Billing and delivery address</li>
+            <li>Shipping information</li>
+            <li>Order and purchase history</li>
+            <li>Payment and transaction information</li>
+            <li>Account information, where applicable</li>
+            <li>Information submitted through contact or consultation forms</li>
+            <li>Hair and scalp information voluntarily provided when using our consultation services</li>
+            <li>Product preferences</li>
+            <li>Reviews, feedback, comments, photographs, or other content you voluntarily submit</li>
+            <li>Information provided when subscribing to our newsletter or marketing communications</li>
+            <li>Any other information you voluntarily provide to us</li>
+          </ul>
+          <p>We do not intentionally request sensitive personal information unless it is necessary for a service you have specifically chosen to use.</p>
+          <h3>B. Payment information</h3>
+          <p>When you make a purchase, payment information may be processed by third-party payment providers.</p>
+          <p>Hracine may receive information such as your payment status, transaction reference, payment method, and other transaction-related information, but we generally do not directly store your complete card number, PIN, CVV, or other full payment credentials.</p>
+          <p>Payment providers process your information according to their own privacy policies and terms.</p>
+        </section>
+
+        <section class="policy-section" id="automatic-information">
+          <div class="section-heading"><span class="section-number">03</span><h2>Information collected automatically</h2></div>
+          <p>When you visit our website, certain information may be collected automatically, including:</p>
+          <ul>
+            <li>IP address</li>
+            <li>Browser type</li>
+            <li>Device type</li>
+            <li>Operating system</li>
+            <li>Pages visited</li>
+            <li>Time spent on pages</li>
+            <li>Referring website or source</li>
+            <li>General location information</li>
+            <li>Website interactions and usage information</li>
+            <li>Cookies and similar technologies</li>
+          </ul>
+          <p>We may use this information to understand how visitors use our website, improve our services, maintain website security, and measure marketing performance.</p>
+        </section>
+
+        <section class="policy-section" id="cookies">
+          <div class="section-heading"><span class="section-number">04</span><h2>Cookies and similar technologies</h2></div>
+          <p>Hracine may use cookies, pixels, tags, analytics tools, and similar technologies.</p>
+          <p>These technologies may help us:</p>
+          <ul>
+            <li>Keep our website functioning properly</li>
+            <li>Remember user preferences</li>
+            <li>Understand website traffic and usage</li>
+            <li>Improve website performance</li>
+            <li>Measure advertising and marketing campaigns</li>
+            <li>Understand which products and content are most relevant to visitors</li>
+            <li>Provide and measure personalized advertising where applicable</li>
+          </ul>
+          <p>Third-party providers, including analytics and advertising providers, may also use cookies or similar technologies when you visit our website.</p>
+          <p>If we use Google advertising products, Google and its partners may use cookies to serve or personalize advertising based on a user's previous visits to our website or other websites. Google requires publishers using its advertising products to disclose these practices in their privacy policies.</p>
+          <p>You may be able to manage cookies through your browser settings and, where applicable, through our cookie consent tools.</p>
+        </section>
+
+        <section class="policy-section" id="how-we-use">
+          <div class="section-heading"><span class="section-number">05</span><h2>How we use your information</h2></div>
+          <p>We may use your information to:</p>
+          <ul>
+            <li>Process and deliver orders</li>
+            <li>Provide customer support</li>
+            <li>Communicate with you about purchases or enquiries</li>
+            <li>Process payments</li>
+            <li>Provide consultation or customer services</li>
+            <li>Respond to questions, requests, and feedback</li>
+            <li>Send order confirmations and important service communications</li>
+            <li>Send newsletters, promotions, product updates, and marketing communications where permitted</li>
+            <li>Improve our products, website, services, and customer experience</li>
+            <li>Understand customer preferences and website usage</li>
+            <li>Measure advertising and marketing performance</li>
+            <li>Detect, prevent, and investigate fraud, abuse, or unauthorized activity</li>
+            <li>Protect the security of our website and business</li>
+            <li>Comply with legal and regulatory obligations</li>
+            <li>Enforce our Terms of Service</li>
+            <li>Carry out other purposes disclosed to you at the time information is collected</li>
+          </ul>
+        </section>
+
+        <section class="policy-section" id="marketing">
+          <div class="section-heading"><span class="section-number">06</span><h2>Marketing communications</h2></div>
+          <p>If you subscribe to our marketing communications, we may send you information about:</p>
+          <ul>
+            <li>New products</li>
+            <li>Promotions and discounts</li>
+            <li>Hair and scalp education</li>
+            <li>Hracine news</li>
+            <li>Offers and campaigns</li>
+            <li>Relevant content and updates</li>
+          </ul>
+          <p>You can unsubscribe from marketing emails at any time by clicking the unsubscribe link contained in the email or contacting us directly.</p>
+          <p>Even if you opt out of marketing communications, we may still send essential communications relating to your orders, transactions, account, or services you have requested.</p>
+        </section>
+
+        <section class="policy-section" id="sharing">
+          <div class="section-heading"><span class="section-number">07</span><h2>How we share your information</h2></div>
+          <p>We do not sell your personal information for money.</p>
+          <p>We may share information with trusted third parties where necessary to operate our business and provide our services.</p>
+          <p>These parties may include:</p>
+          <ul>
+            <li>Payment processors</li>
+            <li>Delivery and logistics providers</li>
+            <li>Website hosting providers</li>
+            <li>E-commerce service providers</li>
+            <li>Email and communication platforms</li>
+            <li>Analytics providers</li>
+            <li>Advertising and marketing platforms</li>
+            <li>Customer service providers</li>
+            <li>Professional advisers</li>
+            <li>IT and security providers</li>
+            <li>Government, regulatory, or law enforcement authorities where legally required</li>
+          </ul>
+          <p>Third-party service providers are expected to process information only for legitimate business purposes and in accordance with applicable requirements.</p>
+          <p>If Google services or advertising products are used on our website, Google may process certain information in connection with those services. Google also requires publishers to disclose relevant data collection, cookies, web beacons, IP addresses, and other identifiers associated with Google products.</p>
+        </section>
+
+        <section class="policy-section" id="third-party-links">
+          <div class="section-heading"><span class="section-number">08</span><h2>Third-party links</h2></div>
+          <p>Our website may contain links to third-party websites, platforms, social media pages, payment providers, or other services.</p>
+          <p>We are not responsible for the privacy practices, security, or content of third-party websites.</p>
+          <p>We encourage you to review the privacy policies of any third-party service before providing your personal information.</p>
+        </section>
+
+        <section class="policy-section" id="retention">
+          <div class="section-heading"><span class="section-number">09</span><h2>Data retention</h2></div>
+          <p>We retain personal information only for as long as reasonably necessary for the purposes described in this Privacy Policy, including fulfilling orders, providing services, maintaining business and transaction records, resolving disputes, preventing fraud, and complying with legal obligations.</p>
+          <p>When information is no longer required, we may securely delete, anonymize, or otherwise dispose of it in accordance with applicable requirements.</p>
+        </section>
+
+        <section class="policy-section" id="security">
+          <div class="section-heading"><span class="section-number">10</span><h2>Data security</h2></div>
+          <p>We take reasonable technical and organizational measures to protect personal information against unauthorized access, loss, misuse, alteration, or disclosure.</p>
+          <p>However, no method of transmitting information over the internet or storing information electronically is completely secure. Therefore, we cannot guarantee absolute security.</p>
+        </section>
+
+        <section class="policy-section" id="your-rights">
+          <div class="section-heading"><span class="section-number">11</span><h2>Your privacy rights</h2></div>
+          <p>Depending on your location and applicable law, you may have rights concerning your personal information, including the right to:</p>
+          <ul>
+            <li>Request access to information we hold about you</li>
+            <li>Request correction of inaccurate information</li>
+            <li>Request deletion of your personal information</li>
+            <li>Request restriction of certain processing</li>
+            <li>Object to certain uses of your information</li>
+            <li>Withdraw consent where processing is based on consent</li>
+            <li>Opt out of marketing communications</li>
+            <li>Request information about how your data is used or shared</li>
+          </ul>
+          <p>To make a privacy request, contact us at <a href="mailto:hello.hracine@gmail.com">hello.hracine@gmail.com</a>.</p>
+          <p>We may need to verify your identity before completing certain requests.</p>
+        </section>
+
+        <section class="policy-section" id="children">
+          <div class="section-heading"><span class="section-number">12</span><h2>Children's privacy</h2></div>
+          <p>Our website and products are not intentionally directed toward children under the age of 13.</p>
+          <p>We do not knowingly collect personal information from children under 13.</p>
+          <p>If you believe that a child has provided personal information to us, please contact us so that we can take appropriate steps to remove the information.</p>
+        </section>
+
+        <section class="policy-section" id="international-transfers">
+          <div class="section-heading"><span class="section-number">13</span><h2>International data transfers</h2></div>
+          <p>Because we may work with service providers located in different countries, your information may be processed or stored outside the country where you live.</p>
+          <p>Where required, we will take reasonable steps to ensure that applicable legal and contractual safeguards are used when personal information is transferred internationally.</p>
+        </section>
+
+        <section class="policy-section" id="changes">
+          <div class="section-heading"><span class="section-number">14</span><h2>Changes to this privacy policy</h2></div>
+          <p>We may update this Privacy Policy from time to time to reflect changes to our business, services, technology, or legal requirements.</p>
+          <p>When we make changes, we will update the “Last Updated” date at the top of this page.</p>
+          <p>We encourage you to review this Privacy Policy periodically.</p>
+        </section>
+
+        <section class="contact-card" id="contact">
+          <p class="eyebrow">We’re here to help</p>
+          <h2>Contact us</h2>
+          <p>If you have questions, concerns, or requests relating to this Privacy Policy or the way Hracine handles your personal information, please contact us. We will make reasonable efforts to respond to legitimate privacy requests within a reasonable period.</p>
+          <div class="contact-details">
+            <a href="mailto:hello.hracine@gmail.com">hello.hracine@gmail.com</a>
+            <a href="https://hracine.com">hracine.com</a>
+            <a href="tel:07080926022">07080926022</a>
+            <span>Lagos, Nigeria</span>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>Hracine · Thoughtful care, from root to tip.</span>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll(".policy-section[id], .contact-card[id]");
+    const links = document.querySelectorAll(".contents a");
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          links.forEach((link) => {
+            if (link.getAttribute("href") === `#${entry.target.id}`) {
+              link.setAttribute("aria-current", "location");
+            } else {
+              link.removeAttribute("aria-current");
+            }
+          });
+        });
+      }, { rootMargin: "-15% 0px -70% 0px" });
+
+      sections.forEach((section) => observer.observe(section));
+    }
+  </script>
+</body>
+</html>

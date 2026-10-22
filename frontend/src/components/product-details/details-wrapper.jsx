@@ -13,23 +13,18 @@ import { add_to_compare } from '@/redux/features/compareSlice';
 import { handleModalClose } from '@/redux/features/productModalSlice';
 import { formatCurrency } from '@/utils/currency';
 import { formatDiscountPercentage, getProductPricing } from '@/utils/productPricing';
+import { getRatedReviewStats } from '@/utils/reviews';
 
 const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBottom = false }) => {
   const { sku, img, title, imageURLs, category, description, status, reviews, tags, offerDate, ingredients, howToUse, keyBenefits, isPreOrder, launchDate } = productItem || {};
   const [ratingVal, setRatingVal] = useState(0);
+  const ratedReviewCount = getRatedReviewStats(reviews).count;
   const [textMore, setTextMore] = useState(false);
   const dispatch = useDispatch()
   const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(productItem);
 
   useEffect(() => {
-    if (reviews && reviews.length > 0) {
-      const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length;
-      setRatingVal(rating);
-    } else {
-      setRatingVal(0);
-    }
+    setRatingVal(getRatedReviewStats(reviews).average);
   }, [reviews]);
 
   // handle add product
@@ -76,11 +71,11 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
           <span>{status}</span>
         </div>
         <div className="tp-product-details-rating-wrapper d-flex align-items-center mb-10">
-          <div className="tp-product-details-rating">
+          {ratedReviewCount > 0 && <div className="tp-product-details-rating">
             <Rating allowFraction size={16} initialValue={ratingVal} readonly={true} />
-          </div>
+          </div>}
           <div className="tp-product-details-reviews">
-            <span>({reviews && reviews.length > 0 ? reviews.length : 0} Review)</span>
+            <span>({ratedReviewCount} {ratedReviewCount === 1 ? 'Review' : 'Reviews'})</span>
           </div>
         </div>
       </div>

@@ -96,8 +96,8 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                     <ul>
                       <li><a href="#">Our Story</a></li>
                       <li><a href="#">Careers</a></li>
-                      <li><a href="#">Privacy Policy</a></li>
-                      <li><a href="#">Terms & Conditions</a></li>
+                      <li><a href="/privacy.html">Privacy Policy</a></li>
+                      <li><Link href="/index.html">Terms & Conditions</Link></li>
                       <li><a href="#">Latest Stories</a></li>
                       <li><a href="#">Contact Us</a></li>
                     </ul>
@@ -183,8 +183,8 @@ const Footer = ({ style_2 = false, style_3 = false, primary_style = false }) => 
                     <div className="tp-footer-mobile-accordion-inner">
                       <ul>
                         <li><Link href="/about">Our Story</Link></li>
-                        <li><Link href="#">Privacy Policy</Link></li>
-                        <li><Link href="#">Terms &amp; Conditions</Link></li>
+                        <li><Link href="/privacy.html">Privacy Policy</Link></li>
+                        <li><Link href="/index.html">Terms &amp; Conditions</Link></li>
                         <li><Link href="/blog">Latest Stories</Link></li>
                         <li><Link href="/contact">Contact Us</Link></li>
                       </ul>

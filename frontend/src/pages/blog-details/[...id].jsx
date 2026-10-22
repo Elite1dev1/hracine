@@ -11,7 +11,8 @@ import { useRouter } from "next/router";
 
 const BlogDetailsPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const routeId = router.query.id;
+  const id = Array.isArray(routeId) ? routeId.join("/") : routeId;
   const { data, isLoading, error } = useGetSingleBlogQuery(id, {
     skip: !id,
   });

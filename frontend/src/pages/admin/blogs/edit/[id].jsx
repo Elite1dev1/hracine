@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import { getApiBaseUrl } from '@/utils/apiConfig';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import { normalizeBlogSlug } from '@/utils/blogSlug';
 
 const EditBlogPage = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const EditBlogPage = () => {
       if (blog) {
         setFormData({
           title: blog.title || '',
-          slug: blog.slug || '',
+          slug: normalizeBlogSlug(blog.slug || ''),
           metaTitle: blog.metaTitle || blog.title || '',
           metaDescription: blog.metaDescription || blog.sm_desc?.substring(0, 160) || '',
           keywords: blog.keywords || [],
@@ -195,7 +196,10 @@ const EditBlogPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateBlog({ id, data: formData }).unwrap();
+      await updateBlog({
+        id,
+        data: { ...formData, slug: normalizeBlogSlug(formData.slug) },
+      }).unwrap();
       toast.success('Blog updated successfully!');
       router.push('/admin/blogs');
     } catch (error) {
@@ -244,6 +248,10 @@ const EditBlogPage = () => {
                 name="slug"
                 value={formData.slug}
                 onChange={handleChange}
+                onBlur={() => setFormData((prev) => ({
+                  ...prev,
+                  slug: normalizeBlogSlug(prev.slug),
+                }))}
                 required
                 placeholder="blog-post-title"
                 style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}

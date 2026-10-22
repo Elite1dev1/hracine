@@ -29,7 +29,11 @@ const BlogItem = ({blog}) => {
 
         <div className="tp-blog-tag">
           <span><i className="fa-light fa-tag"></i></span>
-          {blog.tags.map((t,i) => <a key={i} href="#">Tablet,</a>)}
+          {blog.tags?.map((tag, i) => (
+            <a key={`${tag}-${i}`} href="#">
+              {tag}{i < blog.tags.length - 1 ? ',' : ''}
+            </a>
+          ))}
         </div>
 
         <p>{blog.sm_desc}</p>

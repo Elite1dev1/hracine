@@ -102,7 +102,7 @@ const BlogDetailsAreaTwo = ({blog}) => {
 
 
                   {/* PostboxDetailsNav */}
-                  <PostboxDetailsNav />
+                  <PostboxDetailsNav blog={blog} />
                   {/* PostboxDetailsNav */}
 
                   {/* author details start */}

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { Rating } from "react-simple-star-rating";
@@ -9,10 +9,10 @@ import { add_cart_product } from "@/redux/features/cartSlice";
 import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { formatCurrency } from "@/utils/currency";
 import { formatDiscountPercentage, getProductPricing } from "@/utils/productPricing";
+import { getRatedReviewStats } from "@/utils/reviews";
 
 const ProductItemMobile = ({ product }) => {
   const { _id, img, title, reviews, status } = product || {};
-  const [ratingVal, setRatingVal] = useState(0);
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const isAddedToCart = cart_products.some((prd) => prd._id === _id);
@@ -20,16 +20,7 @@ const ProductItemMobile = ({ product }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  useEffect(() => {
-    if (reviews && reviews.length > 0) {
-      const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length;
-      setRatingVal(rating);
-    } else {
-      setRatingVal(0);
-    }
-  }, [reviews]);
+  const reviewStats = getRatedReviewStats(reviews);
 
   // handle add product
   const handleAddProduct = (e) => {
@@ -62,7 +53,7 @@ const ProductItemMobile = ({ product }) => {
     router.push(`/product-details/${_id}`);
   };
 
-  const { salePrice, hasDiscount, discountPercentage } = getProductPricing(product);
+  const { originalPrice, salePrice, hasDiscount, discountPercentage } = getProductPricing(product);
 
   return (
     <div className="tp-product-item-mobile">
@@ -100,19 +91,24 @@ const ProductItemMobile = ({ product }) => {
             {title}
           </h3>
 
-          {/* Star Rating - Optional */}
-          {ratingVal > 0 && (
-            <div className="tp-product-mobile-rating">
-              <Rating 
-                allowFraction 
-                size={12} 
-                initialValue={ratingVal} 
-                readonly={true}
-                fillColor="#FFB800"
-                emptyColor="#E5E5E5"
-              />
-            </div>
-          )}
+          {/* Keep rating space consistent, and show only verified review data. */}
+          <div className={`tp-product-mobile-rating ${reviewStats.count ? '' : 'is-empty'}`}>
+            {reviewStats.count ? (
+              <>
+                <Rating
+                  allowFraction
+                  size={12}
+                  initialValue={reviewStats.average}
+                  readonly={true}
+                  fillColor="#D99A33"
+                  emptyColor="#E5E5E5"
+                />
+                <span className="tp-product-mobile-review-count">({reviewStats.count})</span>
+              </>
+            ) : (
+              <span className="tp-product-mobile-no-reviews">No reviews yet</span>
+            )}
+          </div>
 
           {/* Price */}
           <div className="tp-product-mobile-price-wrapper">
@@ -120,6 +116,11 @@ const ProductItemMobile = ({ product }) => {
               <span className={`tp-product-mobile-price-current ${hasDiscount ? 'is-sale' : ''}`}>
                 {formatCurrency(salePrice)}
               </span>
+              {hasDiscount && (
+                <span className="tp-product-mobile-price-original">
+                  {formatCurrency(originalPrice)}
+                </span>
+              )}
             </div>
           </div>
 

@@ -26,4 +26,5 @@ module.exports.secret = {
   paystack_public_key: process.env.PAYSTACK_PUBLIC_KEY,
   client_url: process.env.STORE_URL, 
   admin_url:process.env.ADMIN_URL, 
+  google_client_id: process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 }

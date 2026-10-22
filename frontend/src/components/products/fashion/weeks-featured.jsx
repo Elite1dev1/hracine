@@ -9,6 +9,7 @@ import { ArrowRightLong, NextLongArr, PrevLongArr, TextShapeLine } from '@/svg';
 import ErrorMsg from '@/components/common/error-msg';
 import { HomeTwoFeaturedPrdLoader } from '@/components/loader';
 import { formatCurrency } from '@/utils/currency';
+import { getRatedReviewStats } from '@/utils/reviews';
 
 // slider setting 
 const slider_setting = {
@@ -80,7 +81,7 @@ const WeeksFeatured = () => {
                   )}
                 </div>
                 <div className="tp-product-rating-icon tp-product-rating-icon-2">
-                  <Rating allowFraction size={16} initialValue={reviews && reviews.length > 0 ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length : 0} readonly={true} />
+                  <Rating allowFraction size={16} initialValue={getRatedReviewStats(reviews).average} readonly={true} />
                 </div>
                 <div className="tp-featured-btn">
                   <Link href={`/product-details/${_id}`} className="tp-btn tp-btn-border tp-btn-border-sm">Shop Now

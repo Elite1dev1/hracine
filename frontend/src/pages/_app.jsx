@@ -6,6 +6,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import GTM from "@/components/analytics/gtm";
 import Script from "next/script";
 import { GTM_ID } from "@/lib/gtm";
+import MetaPixel from "@/components/analytics/meta-pixel";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
@@ -26,6 +27,7 @@ export default function App({ Component, pageProps }) {
       ) : null}
       <Provider store={store}>
         <GTM />
+        <MetaPixel />
         <div id="root">
           <Component {...pageProps} />
         </div>

@@ -154,6 +154,7 @@ exports.getSingleProduct = async (req,res,next) => {
     console.log(req.params.id);
     const product = await Product.findById(req.params.id).populate({
       path: "reviews",
+      match: { $or: [{ isPublished: true }, { isPublished: { $exists: false } }] },
       populate: { path: "userId", select: "name email imageURL" },
     });
     

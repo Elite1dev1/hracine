@@ -76,6 +76,32 @@ export const adminApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["AdminProducts", "Products"],
     }),
+
+    // Product reviews
+    adminGetReviews: builder.query({
+      query: (filters = {}) => {
+        const params = new URLSearchParams();
+        Object.entries(filters).forEach(([key, value]) => value && params.set(key, value));
+        return `/api/review/admin${params.toString() ? `?${params.toString()}` : ""}`;
+      },
+      providesTags: ["AdminReviews"],
+    }),
+    adminCreateReview: builder.mutation({
+      query: (data) => ({ url: "/api/review/admin", method: "POST", body: data }),
+      invalidatesTags: ["AdminReviews", "AdminProducts", "Products", "Product", "ProductType", "OfferProducts", "PopularProducts", "TopRatedProducts"],
+    }),
+    adminImportReviews: builder.mutation({
+      query: (reviews) => ({ url: "/api/review/admin/import", method: "POST", body: { reviews } }),
+      invalidatesTags: ["AdminReviews", "AdminProducts", "Products", "Product", "ProductType", "OfferProducts", "PopularProducts", "TopRatedProducts"],
+    }),
+    adminUpdateReview: builder.mutation({
+      query: ({ id, data }) => ({ url: `/api/review/admin/${id}`, method: "PATCH", body: data }),
+      invalidatesTags: ["AdminReviews", "AdminProducts", "Products", "Product", "ProductType", "OfferProducts", "PopularProducts", "TopRatedProducts"],
+    }),
+    adminDeleteReview: builder.mutation({
+      query: (id) => ({ url: `/api/review/admin/${id}`, method: "DELETE" }),
+      invalidatesTags: ["AdminReviews", "AdminProducts", "Products", "Product", "ProductType", "OfferProducts", "PopularProducts", "TopRatedProducts"],
+    }),
     adminReorderProducts: builder.mutation({
       query: (orderedIds) => ({
         url: "/api/product/reorder",
@@ -291,6 +317,11 @@ export const {
   useAdminAddProductMutation,
   useAdminUpdateProductMutation,
   useAdminDeleteProductMutation,
+  useAdminGetReviewsQuery,
+  useAdminCreateReviewMutation,
+  useAdminImportReviewsMutation,
+  useAdminUpdateReviewMutation,
+  useAdminDeleteReviewMutation,
   useAdminReorderProductsMutation,
   useAdminImportProductsMutation,
   useAdminGetAllCategoriesQuery,

@@ -6,19 +6,23 @@
 
 // Mobile Product Card
 .tp-product-item-mobile {
-  display: block;
+  display: flex;
   text-decoration: none;
   color: inherit;
-  margin-bottom: 16px;
+  min-width: 0;
+  height: 100%;
+  margin-bottom: 0;
   text-align: left; // Left-align by default
 
   .tp-product-mobile-card {
     background: #fff;
-    border-radius: 8px;
+    border: 1px solid #eee8e5;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(65, 38, 31, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 
@@ -32,7 +36,8 @@
       width: 100%;
       padding-top: 100%; // 1:1 aspect ratio
       overflow: hidden;
-      background: #f9f9f9;
+      flex: 0 0 auto;
+      background: #f8f4f1;
 
       .tp-product-mobile-image-wrapper {
         position: absolute;
@@ -47,6 +52,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center;
       }
 
       .tp-product-mobile-badge {
@@ -80,7 +86,7 @@
     }
 
   .tp-product-mobile-content {
-    padding: 12px;
+    padding: 10px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -88,11 +94,12 @@
   }
 
   .tp-product-mobile-title {
-    font-size: 13px;
-    font-weight: 400;
-    color: #905d49; // Match navbar background color
-    margin: 0 0 6px 0;
-    line-height: 1.4;
+    height: 38px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #4a302b;
+    margin: 0 0 5px !important;
+    line-height: 1.35 !important;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -100,13 +107,33 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left !important; // Left-aligned, same as price
-    min-height: 36px;
+    min-height: 38px;
+    max-height: 38px;
   }
 
   .tp-product-mobile-rating {
-    margin-bottom: 6px; // Reduced from 8px
+    height: 20px !important;
+    min-height: 20px !important;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
+    gap: 4px;
+
+    .tp-rating {
+      display: inline-flex;
+    }
+  }
+
+  .tp-product-mobile-review-count,
+  .tp-product-mobile-no-reviews {
+    color: #827773;
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .tp-product-mobile-no-reviews {
+    font-style: italic;
   }
 
   .tp-product-mobile-price-wrapper {
@@ -114,21 +141,24 @@
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
-    margin-bottom: 4px; // Drastically reduced from 12px
+    min-height: 34px;
+    margin-bottom: 4px;
   }
 
   .tp-product-mobile-price-left {
     display: flex;
     align-items: center;
-    gap: 4px 7px;
+    gap: 2px 6px;
     flex-wrap: wrap;
     flex: 1;
+    min-width: 0;
   }
 
   .tp-product-mobile-price-current {
     font-size: 12px;
     font-weight: 700;
-    color: #1a1a1a;
+    line-height: 1.25;
+    color: #27201e;
 
     &.is-sale {
       color: #85312c;
@@ -147,7 +177,8 @@
   @media (max-width: 359px) {
     .tp-product-mobile-price-left {
       align-items: flex-start;
-      flex-direction: column;
+      justify-content: center;
+      column-gap: 6px;
     }
   }
 
@@ -157,24 +188,28 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-top: 0; // Removed auto margin
-    padding-top: 2px; // Drastically reduced from 8px - icons sit much closer to price
+    margin-top: auto;
+    height: 44px;
+    min-height: 44px;
+    padding-top: 4px;
   }
 
   .tp-product-mobile-bag-btn,
   .tp-product-mobile-wishlist-btn {
     flex: 1;
-    min-height: 44px;
+    min-height: 40px !important;
+    height: 40px !important;
     min-width: 44px;
     background: #f9f9f9;
     border: 1px solid #e5e5e5;
-    border-radius: 6px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    padding: 0;
+    padding: 0 !important;
+    box-sizing: border-box !important;
 
     &:active {
       transform: scale(0.95);
@@ -204,25 +239,26 @@
   }
 
   .tp-product-mobile-bag-btn {
+    background: #85312c;
+    border-color: #85312c;
+
     svg {
-      color: #1a1a1a;
-      stroke: #1a1a1a;
+      color: #fff;
+      stroke: #fff;
     }
 
+    &:hover,
     &.added {
-      background: #85312c;
-      border-color: #85312c;
+      background: #6d2824;
+      border-color: #6d2824;
 
       svg {
         color: #fff;
         stroke: #fff;
       }
-
-      &:hover {
-        background: #6d2824;
-        border-color: #6d2824;
-      }
     }
+
+    &:disabled { background: #d8c5c3; border-color: #d8c5c3; }
   }
 
   .tp-product-mobile-wishlist-btn {
@@ -232,16 +268,16 @@
     }
 
     &.active {
-      background: #fff5f7;
-      border-color: #ff3b5c;
+      background: #fbf0ed;
+      border-color: #85312c;
 
       svg {
-        fill: #ff3b5c;
-        stroke: #ff3b5c;
+        fill: #85312c;
+        stroke: #85312c;
       }
 
       &:hover {
-        background: #ffeef2;
+        background: #f5e6e2;
       }
     }
   }
@@ -251,8 +287,10 @@
 .tp-shop-grid-mobile {
   display: none;
   grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
   gap: 12px;
-  padding: 0 16px;
+  padding: 0 12px;
+  min-width: 0;
 
   @media #{$xs, $sm, $md} {
     display: grid;
@@ -769,6 +807,20 @@
 
 // Mobile Shop Area Adjustments
 @media #{$xs, $sm, $md} {
+  // The shop breadcrumb is deliberately hidden on mobile. The shared 80px
+  // breadcrumb spacer duplicates the compact header space on this route.
+  .breadcrumb__area.tp-shop-breadcrumb {
+    min-height: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+  }
+
+  .tp-shop-area {
+    padding-top: 12px !important;
+    padding-bottom: 48px;
+    overflow-x: clip;
+  }
+
   .tp-shop-area {
     .container {
       padding-left: 0;

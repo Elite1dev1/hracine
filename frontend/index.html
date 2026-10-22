@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f6f1">
+  <meta name="description" content="Read the Hracine Terms of Service. Clear information about our products, orders, and your use of our website.">
+  <title>Terms of Service — Hracine</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f6f1;
+      --white: #fffefa;
+      --ink: #29251f;
+      --muted: #726d63;
+      --line: #e6e1d7;
+      --olive: #646b4b;
+      --olive-dark: #4d5438;
+      --clay: #b78168;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 32px; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    .progress {
+      position: fixed;
+      z-index: 20;
+      inset: 0 auto auto 0;
+      width: 0;
+      height: 3px;
+      background: var(--clay);
+    }
+    .topbar {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(24px, 7vw, 108px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(248, 246, 241, .94);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color .2s ease;
+    }
+    .back-link:hover { color: var(--olive-dark); }
+    .brand {
+      text-decoration: none;
+      font-family: var(--serif);
+      font-size: 27px;
+      letter-spacing: .12em;
+      line-height: 1;
+    }
+    .brand span { color: var(--olive); }
+    .top-link {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .2s ease;
+    }
+    .top-link:hover { color: var(--olive-dark); }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(64px, 9vw, 124px) 24px 76px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(ellipse at 50% 110%, rgba(183, 129, 104, .13), transparent 46%),
+        var(--paper);
+    }
+    .eyebrow {
+      margin: 0 0 20px;
+      color: var(--olive);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(44px, 7vw, 78px);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: 1.06;
+    }
+    .hero-copy {
+      max-width: 510px;
+      margin: 22px auto 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .hero-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .hero-meta::before, .hero-meta::after {
+      width: 28px;
+      height: 1px;
+      background: #c9c1b3;
+      content: "";
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 720px);
+      gap: clamp(52px, 9vw, 140px);
+      max-width: 1190px;
+      margin: 0 auto;
+      padding: 84px 32px 110px;
+      align-items: start;
+    }
+    .contents {
+      position: sticky;
+      top: 34px;
+      max-height: calc(100vh - 68px);
+      overflow: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #d0c9bd transparent;
+    }
+    .contents-label {
+      margin: 0 0 19px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .contents ol {
+      display: grid;
+      gap: 3px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .contents a {
+      display: block;
+      padding: 5px 8px 5px 12px;
+      border-left: 1px solid transparent;
+      color: #777267;
+      font-size: 12px;
+      line-height: 1.5;
+      text-decoration: none;
+      transition: color .18s ease, border-color .18s ease;
+    }
+    .contents a:hover, .contents a.active {
+      border-color: var(--olive);
+      color: var(--olive-dark);
+    }
+    .contents a.active { font-weight: 600; }
+    .contents > details > summary { display: none; }
+    .terms { min-width: 0; }
+    .intro {
+      margin: 0 0 48px;
+      padding: 25px 28px;
+      border: 1px solid var(--line);
+      background: rgba(255, 254, 250, .72);
+      color: #5d584f;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+    .term-section {
+      padding: 0 0 32px;
+      margin: 0 0 34px;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 30px;
+    }
+    .term-section:last-of-type { border: 0; }
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 17px;
+      margin: 0 0 17px;
+    }
+    .section-number {
+      flex: 0 0 auto;
+      color: var(--clay);
+      font-family: var(--serif);
+      font-size: 15px;
+      font-style: italic;
+    }
+    h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(23px, 3vw, 29px);
+      font-weight: 400;
+      letter-spacing: -.02em;
+      line-height: 1.3;
+    }
+    .term-section p {
+      margin: 0 0 13px;
+      color: #5d584f;
+    }
+    .term-section p:last-child { margin-bottom: 0; }
+    .term-section ul {
+      display: grid;
+      gap: 6px;
+      margin: 8px 0 16px;
+      padding: 0;
+      list-style: none;
+    }
+    .term-section li {
+      position: relative;
+      padding-left: 20px;
+      color: #5d584f;
+    }
+    .term-section li::before {
+      position: absolute;
+      top: .83em;
+      left: 1px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--clay);
+      content: "";
+    }
+    .contact-card {
+      padding: 30px 32px;
+      background: #eeece3;
+    }
+    .contact-card h2 { margin-bottom: 12px; }
+    .contact-card p { margin: 0 0 7px; color: #5d584f; }
+    .contact-card a {
+      color: var(--olive-dark);
+      text-decoration-color: #aab098;
+      text-underline-offset: 3px;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 27px clamp(24px, 7vw, 108px);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+    .back-top {
+      color: var(--olive-dark);
+      text-decoration: none;
+    }
+
+    @media (max-width: 760px) {
+      .topbar { min-height: 66px; padding-inline: 22px; }
+      .brand { font-size: 24px; }
+      .hero { padding: 65px 24px 58px; }
+      .hero-copy { font-size: 14px; }
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 34px;
+        padding: 43px 22px 72px;
+      }
+      .contents {
+        position: static;
+        max-height: none;
+        padding: 0;
+      }
+      .contents details {
+        border: 1px solid var(--line);
+        background: rgba(255, 254, 250, .72);
+      }
+      .contents > details > summary { display: block; }
+      .contents summary {
+        padding: 14px 16px;
+        color: var(--olive-dark);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .14em;
+        list-style-position: inside;
+        text-transform: uppercase;
+      }
+      .contents ol { padding: 0 14px 14px; }
+      .contents-label { display: none; }
+      .intro { margin-bottom: 37px; padding: 21px; font-size: 17px; }
+      .term-section { padding-bottom: 26px; margin-bottom: 27px; }
+      .contact-card { padding: 25px 22px; }
+      .footer { padding: 22px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+    @media print {
+      body { background: #fff; color: #000; font-size: 11pt; }
+      .progress, .topbar, .contents, .footer, .hero-meta { display: none !important; }
+      .hero { padding: 24px 0; background: none; }
+      .layout { display: block; max-width: none; padding: 24px 0; }
+      .intro, .contact-card { background: none; }
+      .term-section { break-inside: avoid; border-color: #ccc; }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="progress" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="back-link" href="/" onclick="if (history.length > 1) { event.preventDefault(); history.back(); }"><span aria-hidden="true">&#8592;</span> Back</a>
+    <a class="brand" href="#top" aria-label="Hracine home">HRA<span>C</span>INE</a>
+    <a class="top-link" href="mailto:hello.hracine@gmail.com">Get in touch <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">The details, thoughtfully considered</p>
+      <h1 id="page-title">Terms of Service</h1>
+      <p class="hero-copy">A little clarity goes a long way. Here’s what to know when you visit Hracine or shop our hair and scalp care.</p>
+      <div class="hero-meta">Last updated October 22, 2026</div>
+    </section>
+
+    <div class="layout">
+      <nav class="contents" aria-label="On this page">
+        <p class="contents-label">On this page</p>
+        <details open>
+          <summary>On this page</summary>
+          <ol>
+            <li><a href="#about">About Hracine</a></li>
+            <li><a href="#eligibility">Eligibility</a></li>
+            <li><a href="#products">Products and product information</a></li>
+            <li><a href="#hair-scalp">Hair and scalp information</a></li>
+            <li><a href="#orders">Orders</a></li>
+            <li><a href="#pricing">Pricing and payment</a></li>
+            <li><a href="#shipping">Shipping and delivery</a></li>
+            <li><a href="#returns">Returns, exchanges and refunds</a></li>
+            <li><a href="#safety">Product use and safety</a></li>
+            <li><a href="#intellectual-property">Intellectual property</a></li>
+            <li><a href="#user-content">User-generated content</a></li>
+            <li><a href="#prohibited-use">Prohibited use</a></li>
+            <li><a href="#third-party">Third-party services and links</a></li>
+            <li><a href="#disclaimer">Disclaimer</a></li>
+            <li><a href="#liability">Limitation of liability</a></li>
+            <li><a href="#indemnification">Indemnification</a></li>
+            <li><a href="#privacy">Privacy</a></li>
+            <li><a href="#changes">Changes to these terms</a></li>
+            <li><a href="#governing-law">Governing law</a></li>
+            <li><a href="#contact">Contact us</a></li>
+          </ol>
+        </details>
+      </nav>
+
+      <article class="terms">
+        <p class="intro">Welcome to Hracine. These Terms of Service (“Terms”) govern your access to and use of the Hracine website, products, content, services, and related features. By accessing or using our website, purchasing our products, submitting information through our website, or otherwise interacting with Hracine, you agree to be bound by these Terms. If you do not agree with these Terms, please do not use our website or services.</p>
+
+        <section class="term-section" id="about">
+          <h2 class="section-heading"><span class="section-number">01</span> About Hracine</h2>
+          <p>Hracine is a scalp-first haircare brand offering hair and scalp care products, educational resources, consultations, and related services.</p>
+          <p>Our website may provide information about hair care, scalp care, product ingredients, routines, and general beauty and wellness practices.</p>
+        </section>
+        <section class="term-section" id="eligibility">
+          <h2 class="section-heading"><span class="section-number">02</span> Eligibility</h2>
+          <p>By using our website, you confirm that:</p>
+          <ul><li>You are legally capable of entering into an agreement under applicable law; and</li><li>The information you provide to us is accurate and not misleading.</li></ul>
+          <p>If you are using our website on behalf of another person or organization, you confirm that you have the authority to accept these Terms on their behalf.</p>
+        </section>
+        <section class="term-section" id="products">
+          <h2 class="section-heading"><span class="section-number">03</span> Products and product information</h2>
+          <p>We make reasonable efforts to ensure that product descriptions, ingredients, photographs, prices, availability, and other information displayed on our website are accurate. However:</p>
+          <ul><li>Product colors and appearance may vary depending on your device or screen.</li><li>Packaging may change from time to time.</li><li>Product availability may change without notice.</li><li>We reserve the right to correct errors or inaccuracies.</li><li>We may modify or discontinue products at any time.</li></ul>
+          <p>We do not guarantee that every product, description, image, or piece of information on the website will always be complete, accurate, or current.</p>
+        </section>
+        <section class="term-section" id="hair-scalp">
+          <h2 class="section-heading"><span class="section-number">04</span> Hair and scalp information</h2>
+          <p>Hracine provides haircare and scalp-care products and educational information. Information provided on our website, social media platforms, product pages, blog posts, consultations, or other Hracine materials is intended for general informational and cosmetic purposes.</p>
+          <p>Our products and information are not intended to diagnose, treat, cure, or prevent any disease or medical condition. Individual hair and scalp results may vary.</p>
+          <p>If you have a persistent, severe, or unusual scalp or hair condition, or if you experience a reaction to a product, discontinue use and consult an appropriately qualified healthcare professional.</p>
+          <p>Before using a new product, we recommend reviewing the ingredient list and performing a patch test where appropriate.</p>
+        </section>
+        <section class="term-section" id="orders">
+          <h2 class="section-heading"><span class="section-number">05</span> Orders</h2>
+          <p>When you place an order through our website, you are making an offer to purchase the selected products. We reserve the right to accept or decline an order for legitimate reasons, including:</p>
+          <ul><li>Product availability</li><li>Pricing or listing errors</li><li>Suspected fraud</li><li>Incorrect customer information</li><li>Delivery limitations</li><li>Technical errors</li><li>Other circumstances affecting our ability to fulfill the order</li></ul>
+          <p>An order confirmation does not necessarily mean that the order has been finally accepted if circumstances require cancellation or correction.</p>
+        </section>
+        <section class="term-section" id="pricing">
+          <h2 class="section-heading"><span class="section-number">06</span> Pricing and payment</h2>
+          <p>All prices displayed on our website are stated in the currency indicated at checkout. We reserve the right to change product prices, promotions, discounts, and offers at any time.</p>
+          <p>Price changes will not affect an order that has already been successfully confirmed, except where required to correct an obvious pricing or technical error.</p>
+          <p>Payments may be processed through third-party payment providers. You agree to provide accurate and complete payment and billing information.</p>
+        </section>
+        <section class="term-section" id="shipping">
+          <h2 class="section-heading"><span class="section-number">07</span> Shipping and delivery</h2>
+          <p>We will make reasonable efforts to process and deliver orders within the estimated timeframe communicated at checkout or through our customer service channels. Delivery times may vary depending on:</p>
+          <ul><li>Location</li><li>Courier availability</li><li>Weather</li><li>Public holidays</li><li>Customs or regulatory requirements</li><li>Incorrect delivery information</li><li>Other circumstances outside our reasonable control</li></ul>
+          <p>Hracine is not responsible for delays caused by circumstances beyond our reasonable control. Customers are responsible for providing accurate delivery information.</p>
+        </section>
+        <section class="term-section" id="returns">
+          <h2 class="section-heading"><span class="section-number">08</span> Returns, exchanges and refunds</h2>
+          <p>Our return, exchange, and refund practices are governed by the applicable Hracine Return &amp; Refund Policy. Where a separate Return &amp; Refund Policy applies, that policy forms part of these Terms. Customers should review the applicable policy before placing an order.</p>
+          <p>Due to the nature of our haircare products, we do not accept returns or exchanges for opened or used products. If you receive a damaged, defective, or incorrect item, please contact us within 24 hours of delivery with your order details and clear photos of the product. Where applicable, we may offer a replacement or refund.</p>
+        </section>
+        <section class="term-section" id="safety">
+          <h2 class="section-heading"><span class="section-number">09</span> Product use and safety</h2>
+          <p>You agree to use Hracine products only as directed on the product packaging, product page, or other instructions provided by Hracine. You should:</p>
+          <ul><li>Read product labels before use.</li><li>Review the ingredients before purchasing.</li><li>Follow the recommended directions.</li><li>Avoid using products in ways not intended by Hracine.</li><li>Stop using a product if you experience an adverse reaction.</li></ul>
+          <p>Hracine is not responsible for problems resulting from misuse, improper storage, failure to follow instructions, or use contrary to product directions.</p>
+        </section>
+        <section class="term-section" id="intellectual-property">
+          <h2 class="section-heading"><span class="section-number">10</span> Intellectual property</h2>
+          <p>All content appearing on the Hracine website, including but not limited to:</p>
+          <ul><li>Logos</li><li>Brand names</li><li>Product names</li><li>Product photographs</li><li>Graphics</li><li>Videos</li><li>Text</li><li>Designs</li><li>Illustrations</li><li>Website layouts</li><li>Blog content</li><li>Marketing materials</li></ul>
+          <p>is owned by or licensed to Hracine unless otherwise stated. You may not reproduce, copy, distribute, modify, sell, publish, or commercially exploit Hracine content without our prior written permission.</p>
+          <p>You may access and use our website for personal and lawful purposes only.</p>
+        </section>
+        <section class="term-section" id="user-content">
+          <h2 class="section-heading"><span class="section-number">11</span> User-generated content</h2>
+          <p>If you submit reviews, photographs, testimonials, comments, videos, feedback, or other content to Hracine, you confirm that:</p>
+          <ul><li>You have the right to submit the content.</li><li>The content does not violate another person's rights.</li><li>The content is not fraudulent or misleading.</li><li>The content does not contain unlawful or harmful material.</li></ul>
+          <p>By submitting content to Hracine, you grant us a non-exclusive, worldwide, royalty-free license to use, reproduce, display, adapt, publish, and distribute that content for legitimate business, marketing, promotional, and communication purposes, subject to applicable law.</p>
+          <p>Where required, we will seek appropriate permission before using identifiable customer content for promotional purposes.</p>
+        </section>
+        <section class="term-section" id="prohibited-use">
+          <h2 class="section-heading"><span class="section-number">12</span> Prohibited use</h2>
+          <p>You agree not to use our website to:</p>
+          <ul><li>Violate any applicable law or regulation</li><li>Commit fraud</li><li>Attempt unauthorized access to our systems</li><li>Introduce malicious software or code</li><li>Interfere with website functionality</li><li>Scrape or reproduce our content for unauthorized commercial purposes</li><li>Impersonate Hracine or another person</li><li>Submit false or misleading information</li><li>Abuse promotions, discounts, or referral programs</li><li>Engage in activity that could harm Hracine, our customers, or our service providers</li></ul>
+          <p>We reserve the right to restrict or terminate access where we reasonably believe these Terms have been violated.</p>
+        </section>
+        <section class="term-section" id="third-party">
+          <h2 class="section-heading"><span class="section-number">13</span> Third-party services and links</h2>
+          <p>Our website may integrate with or link to third-party services, including payment providers, analytics platforms, social media platforms, delivery providers, advertising platforms, and other technology providers.</p>
+          <p>Hracine does not control these third parties and is not responsible for their content, availability, security, policies, or practices. Your use of third-party services may be subject to their separate terms and privacy policies.</p>
+        </section>
+        <section class="term-section" id="disclaimer">
+          <h2 class="section-heading"><span class="section-number">14</span> Disclaimer</h2>
+          <p>To the maximum extent permitted by applicable law, the Hracine website and its content are provided on an “as available” and “as is” basis. We do not guarantee that:</p>
+          <ul><li>The website will always be available or uninterrupted.</li><li>The website will always be free from errors.</li><li>All information will always be complete or current.</li><li>Products will produce a particular result for every customer.</li><li>Website content will meet every individual expectation or requirement.</li></ul>
+          <p>Hair growth, scalp health, and other product results can vary significantly between individuals.</p>
+        </section>
+        <section class="term-section" id="liability">
+          <h2 class="section-heading"><span class="section-number">15</span> Limitation of liability</h2>
+          <p>To the maximum extent permitted by applicable law, Hracine will not be responsible for indirect, incidental, consequential, or special losses arising from your use of our website or products.</p>
+          <p>Nothing in these Terms is intended to exclude or limit liability that cannot legally be excluded or limited under applicable law.</p>
+        </section>
+        <section class="term-section" id="indemnification">
+          <h2 class="section-heading"><span class="section-number">16</span> Indemnification</h2>
+          <p>To the extent permitted by law, you agree to indemnify and hold Hracine, its owners, employees, contractors, service providers, and representatives harmless from claims, losses, liabilities, damages, costs, and expenses arising from:</p>
+          <ul><li>Your violation of these Terms</li><li>Your misuse of our website or products</li><li>Your violation of another person's rights</li><li>Information or content you submit to us</li><li>Your unlawful use of our services</li></ul>
+        </section>
+        <section class="term-section" id="privacy">
+          <h2 class="section-heading"><span class="section-number">17</span> Privacy</h2>
+          <p>Your use of our website is also governed by our Privacy Policy, which explains how we collect, use, store, and protect personal information.</p>
+        </section>
+        <section class="term-section" id="changes">
+          <h2 class="section-heading"><span class="section-number">18</span> Changes to these terms</h2>
+          <p>We may update these Terms from time to time. When we make changes, we will update the “Last Updated” date at the top of this page.</p>
+          <p>Your continued use of our website after updated Terms are posted constitutes acceptance of the revised Terms, to the extent permitted by applicable law.</p>
+        </section>
+        <section class="term-section" id="governing-law">
+          <h2 class="section-heading"><span class="section-number">19</span> Governing law</h2>
+          <p>These Terms shall be governed by and interpreted in accordance with the laws of the Federal Republic of Nigeria, unless applicable law requires otherwise.</p>
+          <p>Any dispute arising from these Terms or your use of the Hracine website shall be subject to the jurisdiction of the appropriate courts in Nigeria, unless otherwise required by applicable law.</p>
+        </section>
+        <section class="contact-card" id="contact" aria-labelledby="contact-title">
+          <h2 id="contact-title"><span class="section-number">20</span> Contact us</h2>
+          <p>If you have questions regarding these Terms, please contact:</p>
+          <p><strong>Hracine</strong></p>
+          <p>Email: <a href="mailto:hello.hracine@gmail.com">hello.hracine@gmail.com</a></p>
+          <p>Website: <a href="https://hracine.com">hracine.com</a></p>
+          <p>Phone: <a href="tel:+2347080926022">07080926022</a></p>
+          <p>Address: Lagos, Nigeria</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Hracine. All rights reserved.</span>
+    <a class="back-top" href="#top">Back to top ↑</a>
+  </footer>
+  <script>
+    const progress = document.querySelector('.progress');
+    const contentsDetails = document.querySelector('.contents details');
+    const mobileContents = window.matchMedia('(max-width: 760px)');
+    const sectionLinks = [...document.querySelectorAll('.contents a')];
+    const sections = sectionLinks.map(link => document.querySelector(link.getAttribute('href')));
+    let scheduled = false;
+
+    contentsDetails.open = !mobileContents.matches;
+    mobileContents.addEventListener('change', event => {
+      contentsDetails.open = !event.matches;
+    });
+
+    function updatePagePosition() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = `${scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0}%`;
+
+      let activeIndex = 0;
+      sections.forEach((section, index) => {
+        if (section && section.getBoundingClientRect().top <= 150) activeIndex = index;
+      });
+      sectionLinks.forEach((link, index) => {
+        if (index === activeIndex) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+        link.classList.toggle('active', index === activeIndex);
+      });
+      scheduled = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!scheduled) {
+        scheduled = true;
+        window.requestAnimationFrame(updatePagePosition);
+      }
+    }, { passive: true });
+    window.addEventListener('resize', updatePagePosition);
+    sectionLinks.forEach(link => link.addEventListener('click', () => {
+      if (mobileContents.matches) contentsDetails.open = false;
+    }));
+    updatePagePosition();
+  </script>
+</body>
+</html>

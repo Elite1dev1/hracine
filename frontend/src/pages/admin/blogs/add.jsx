@@ -6,6 +6,7 @@ import { useAdminAddBlogMutation } from '@/redux/features/admin/adminApi';
 import { toast } from 'react-toastify';
 import { getApiBaseUrl } from '@/utils/apiConfig';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import { normalizeBlogSlug } from '@/utils/blogSlug';
 
 const AddBlogPage = () => {
   const router = useRouter();
@@ -183,7 +184,10 @@ const AddBlogPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addBlog(formData).unwrap();
+      await addBlog({
+        ...formData,
+        slug: normalizeBlogSlug(formData.slug),
+      }).unwrap();
       toast.success('Blog added successfully!');
       router.push('/admin/blogs');
     } catch (error) {
@@ -222,6 +226,10 @@ const AddBlogPage = () => {
                 name="slug"
                 value={formData.slug}
                 onChange={handleChange}
+                onBlur={() => setFormData((prev) => ({
+                  ...prev,
+                  slug: normalizeBlogSlug(prev.slug),
+                }))}
                 required
                 placeholder="blog-post-title"
                 style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}

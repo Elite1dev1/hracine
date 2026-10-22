@@ -3,20 +3,15 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 import { formatCurrency } from "@/utils/currency";
+import { getRatedReviewStats } from "@/utils/reviews";
 
 const ProductSmItem = ({ product }) => {
   const {_id, img, category, title,price, reviews } = product || {};
   const [ratingVal, setRatingVal] = useState(0);
+  const ratedReviewCount = getRatedReviewStats(reviews).count;
 
   useEffect(() => {
-    if (reviews && reviews.length > 0) {
-      const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length;
-      setRatingVal(rating);
-    } else {
-      setRatingVal(0);
-    }
+    setRatingVal(getRatedReviewStats(reviews).average);
   }, [reviews]);
 
   return (
@@ -43,7 +38,7 @@ const ProductSmItem = ({ product }) => {
             <Rating allowFraction size={16} initialValue={ratingVal} readonly={true} />
           </div>
           <div className="tp-product-rating-text">
-          ({reviews && reviews.length > 0 ? reviews.length : 0} Review)
+          ({ratedReviewCount} {ratedReviewCount === 1 ? 'Review' : 'Reviews'})
           </div>
         </div>
         <div className="tp-product-price-wrapper">

@@ -11,12 +11,18 @@ const BlogDetailsAuthor = () => {
 
   return (
     <div
-      className="tp-postbox-details-author d-flex flex-column align-items-center"
+      className="tp-postbox-details-author tp-blog-article-author d-flex align-items-center"
       data-bg-color="#F4F7F9"
     >
       <div className="tp-postbox-details-author-thumb">
         <a href="#">
-          <Image src={author_img} alt="Mariam, Hracine blogger" style={{ objectFit: 'cover', objectPosition: 'center center' }} />
+          <Image
+            src={author_img}
+            alt="Mariam, Hracine blogger"
+            width={90}
+            height={90}
+            style={{ objectFit: 'cover', objectPosition: 'center center' }}
+          />
         </a>
       </div>
       <div className="tp-postbox-details-author-content">

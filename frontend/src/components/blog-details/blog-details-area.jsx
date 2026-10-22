@@ -58,33 +58,37 @@ const BlogDetailsArea = ({blog}) => {
                   <p>No content available.</p>
                 )}
 
-                <div className="tp-postbox-details-share-wrapper">
-                  <div className="row">
-                    <div className="col-xl-8 col-lg-6">
-                      <div className="tp-postbox-details-tags tagcloud">
-                        <span>Tags:</span>
-                        {blog?.tags && blog.tags.length > 0 ? (
+                <div className="tp-postbox-details-share-wrapper tp-blog-article-footer">
+                  <div className="tp-blog-article-footer-top">
+                    <div className="tp-postbox-details-tags tp-blog-article-tags">
+                      <span className="tp-blog-article-footer-label">Tags</span>
+                      <div className="tp-blog-article-tag-list">
+                        {blog?.tags?.length > 0 ? (
                           blog.tags.map((tag, index) => (
-                            <a key={index} href="#">{tag}</a>
+                            <a key={`${tag}-${index}`} href="#">{tag}</a>
                           ))
                         ) : (
-                          <span>No tags</span>
+                          <span className="tp-blog-article-empty-tags">No tags</span>
                         )}
                       </div>
                     </div>
-                    <div className="col-xl-4 col-lg-6">
-                      <div className="tp-postbox-details-share">
-                        <span>Share:</span>
-                        <a href={instagramShare.link} className="me-1" target="_blank" rel="noreferrer">
-                          <i className={instagramShare.icon}></i>
-                        </a>
-                      </div>
+                    <div className="tp-postbox-details-share tp-blog-article-share">
+                      <span className="tp-blog-article-footer-label">Share</span>
+                      <a
+                        href={instagramShare.link}
+                        className="tp-blog-article-share-button"
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="Share on Instagram"
+                      >
+                        <i className={instagramShare.icon}></i>
+                      </a>
                     </div>
                   </div>
                 </div>
 
                 {/* PostboxDetailsNav */}
-                <PostboxDetailsNav />
+                <PostboxDetailsNav blog={blog} />
                 {/* PostboxDetailsNav */}
 
                 {/* author details start */}

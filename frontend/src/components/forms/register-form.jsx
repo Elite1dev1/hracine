@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
+import Link from "next/link";
 // internal
 import { CloseEye, OpenEye } from "@/svg";
 import ErrorMsg from "../common/error-msg";
@@ -117,7 +118,8 @@ const RegisterForm = () => {
             type="checkbox"
           />
           <label htmlFor="remember">
-            I accept the terms of the Service & <a href="#">Privacy Policy</a>.
+            I accept the <Link href="/index.html">Terms and Conditions</Link> &{" "}
+            <Link href="/privacy.html">Privacy Policy</Link>.
           </label>
           <ErrorMsg msg={errors.remember?.message} />
         </div>

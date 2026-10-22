@@ -21,15 +21,28 @@ exports.getPublishedBlogsService = async () => {
 
 // get single blog service (by ID or slug)
 exports.getSingleBlogService = async (identifier) => {
+  const rawIdentifier = String(identifier || '').trim();
+
   // Check if identifier is a valid MongoDB ObjectId (24 hex characters)
-  const isObjectId = /^[0-9a-fA-F]{24}$/.test(identifier);
+  const isObjectId = /^[0-9a-fA-F]{24}$/.test(rawIdentifier);
   
   let blog;
   if (isObjectId) {
-    blog = await Blog.findById(identifier);
+    blog = await Blog.findById(rawIdentifier);
   } else {
-    // Try to find by slug
-    blog = await Blog.findOne({ slug: identifier });
+    // Accept normal slugs as well as legacy slugs saved with a leading slash
+    // and/or "blog/" path prefix.
+    const pathSlug = rawIdentifier.replace(/^\/+/, '');
+    const normalizedSlug = pathSlug.replace(/^blog\//i, '');
+    const slugCandidates = [...new Set([
+      rawIdentifier,
+      pathSlug,
+      normalizedSlug,
+      `/${pathSlug}`,
+      `blog/${normalizedSlug}`,
+      `/blog/${normalizedSlug}`,
+    ])];
+    blog = await Blog.findOne({ slug: { $in: slugCandidates } });
   }
   
   if (!blog) {

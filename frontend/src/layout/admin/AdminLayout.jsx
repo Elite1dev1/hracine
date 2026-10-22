@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const ROLE_MENU_ACCESS = {
   "Super Admin": [
+    { name: 'Product Reviews', icon: '★', path: '/admin/reviews' },
     { name: 'Dashboard', icon: '📊', path: '/admin' },
     { name: 'Products', icon: '📦', path: '/admin/products' },
     { name: 'Categories', icon: '📁', path: '/admin/categories' },
@@ -35,6 +36,7 @@ const ROLE_MENU_ACCESS = {
     { name: 'Root Checks', icon: '💬', path: '/admin/consultations' },
   ],
   "Store Manager": [
+    { name: 'Product Reviews', icon: '★', path: '/admin/reviews' },
     { name: 'Dashboard', icon: '📊', path: '/admin' },
     { name: 'Products', icon: '📦', path: '/admin/products' },
     { name: 'Categories', icon: '📁', path: '/admin/categories' },

@@ -1,9 +1,11 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
 const User = require("../model/User");
 const { sendEmail } = require("../config/email");
 const { generateToken, tokenForVerify } = require("../utils/token");
 const { secret } = require("../config/secret");
+const googleOAuthClient = new OAuth2Client();
 
 /** Base URL for email links (from STORE_URL). Must be set in production. */
 const getClientBaseUrl = () => {
@@ -321,9 +323,52 @@ exports.updateUser = async (req, res,next) => {
 // signUpWithProvider
 exports.signUpWithProvider = async (req, res,next) => {
   try {
-    const user = jwt.decode(req.params.token);
-    const isAdded = await User.findOne({ email: user.email });
+    const credential = req.body?.credential;
+    if (typeof credential !== "string" || !credential) {
+      return res.status(400).send({
+        status: "fail",
+        message: "A Google credential is required.",
+      });
+    }
+
+    if (!secret.google_client_id) {
+      return res.status(503).send({
+        status: "fail",
+        message: "Google sign-in is not configured on the server.",
+      });
+    }
+
+    let user;
+    try {
+      const ticket = await googleOAuthClient.verifyIdToken({
+        idToken: credential,
+        audience: secret.google_client_id,
+      });
+      user = ticket.getPayload();
+    } catch {
+      return res.status(401).send({
+        status: "fail",
+        message: "The Google credential is invalid or expired.",
+      });
+    }
+
+    if (!user?.sub || !user?.email || user.email_verified !== true) {
+      return res.status(401).send({
+        status: "fail",
+        message: "A verified Google account is required.",
+      });
+    }
+
+    const email = user.email.trim().toLowerCase();
+    const isAdded = await User.findOne({ email });
     if (isAdded) {
+      if (isAdded.status !== "active") {
+        return res.status(403).send({
+          status: "fail",
+          message: "Your account is not active yet.",
+        });
+      }
+
       const token = generateToken(isAdded);
       res.status(200).send({
         status: "success",
@@ -342,8 +387,8 @@ exports.signUpWithProvider = async (req, res,next) => {
       });
     } else {
       const newUser = new User({
-        name: user.name,
-        email: user.email,
+        name: user.name || "Google User",
+        email,
         imageURL: user.picture,
         status: 'active'
       });

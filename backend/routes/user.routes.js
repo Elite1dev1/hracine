@@ -18,6 +18,6 @@ router.get('/confirmEmail/:token', userController.confirmEmail);
 // updateUser
 router.put('/update-user/:id', userController.updateUser);
 // register or login with google
-router.post("/register/:token", userController.signUpWithProvider);
+router.post("/register", userController.signUpWithProvider);
 
 module.exports = router;

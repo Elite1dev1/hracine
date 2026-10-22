@@ -3,6 +3,7 @@ const rolePermissions = {
   "Super Admin": {
     dashboard: ["view"],
     products: ["view", "create", "edit", "delete"],
+    reviews: ["view", "create", "edit", "delete"],
     categories: ["view", "create", "edit", "delete"],
     brands: ["view", "create", "edit", "delete"],
     coupons: ["view", "create", "edit", "delete"],
@@ -23,6 +24,7 @@ const rolePermissions = {
   "Store Manager": {
     dashboard: ["view"],
     products: ["view", "create", "edit", "delete"],
+    reviews: ["view", "create", "edit", "delete"],
     categories: ["view", "create", "edit", "delete"],
     brands: ["view", "create", "edit", "delete"],
     coupons: ["view", "create", "edit", "delete"],

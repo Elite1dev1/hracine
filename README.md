@@ -88,6 +88,13 @@ To get started with Shofy, follow these steps:
 
 4. Configure environment variables.
 
+   For Google sign-in, set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` in
+   `frontend/.env.local` to the OAuth 2.0 **Web application** client ID from
+   Google Cloud Console. Add each storefront origin (for local development,
+   `http://localhost:3000`) to that OAuth client's Authorized JavaScript
+   origins, then restart the frontend. Until this value is set, Google sign-in
+   is unavailable and email sign-in remains available.
+
 5. Build the project:
 
    ```bash
