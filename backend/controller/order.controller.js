@@ -15,6 +15,35 @@ const getActivePaystackSecretKey = async () => {
   return configuredKey || secret.paystack_secret_key || "";
 };
 
+const getVerifiedPaystackTransaction = (reference, secretKey) =>
+  new Promise((resolve, reject) => {
+    const options = {
+      hostname: "api.paystack.co",
+      port: 443,
+      path: `/transaction/verify/${encodeURIComponent(reference)}`,
+      method: "GET",
+      headers: { Authorization: `Bearer ${secretKey}` },
+    };
+    const request = https.request(options, (response) => {
+      let data = "";
+      response.on("data", (chunk) => { data += chunk; });
+      response.on("end", () => {
+        try {
+          const result = JSON.parse(data);
+          if (response.statusCode >= 200 && response.statusCode < 300 && result.status) {
+            resolve(result.data);
+          } else {
+            reject(new Error("Paystack could not confirm this transaction"));
+          }
+        } catch (error) {
+          reject(error);
+        }
+      });
+    });
+    request.on("error", reject);
+    request.end();
+  });
+
 // initialize-payment (Paystack)
 exports.initializePayment = async (req, res, next) => {
   try {
@@ -235,7 +264,59 @@ exports.verifyPayment = async (req, res, next) => {
 // addOrder
 exports.addOrder = async (req, res, next) => {
   try {
-    const orderItems = await Order.create(req.body);
+    let confirmedPayment = null;
+    if (req.body.paymentMethod === "Card") {
+      if (!req.body.paymentReference) {
+        return res.status(400).json({ success: false, message: "Payment reference is required" });
+      }
+      const activePaystackSecretKey = await getActivePaystackSecretKey();
+      if (!activePaystackSecretKey) {
+        return res.status(500).json({ success: false, message: "Payment gateway not configured" });
+      }
+      confirmedPayment = await getVerifiedPaystackTransaction(
+        req.body.paymentReference,
+        activePaystackSecretKey
+      );
+      const expectedAmount = Math.round(Number(req.body.totalAmount) * 100);
+      if (
+        confirmedPayment?.status !== "success" ||
+        confirmedPayment?.currency !== "NGN" ||
+        Number(confirmedPayment?.amount) !== expectedAmount ||
+        String(confirmedPayment?.reference || "") !== String(req.body.paymentReference)
+      ) {
+        return res.status(400).json({ success: false, message: "Payment could not be confirmed for this order" });
+      }
+
+      const existingOrder = await Order.findOne({ paymentReference: confirmedPayment.reference });
+      if (existingOrder) {
+        return res.status(200).json({
+          success: true,
+          message: "Order already saved for this payment",
+          order: existingOrder,
+        });
+      }
+    }
+
+    let orderItems;
+    try {
+      orderItems = await Order.create({
+        ...req.body,
+        paymentStatus: confirmedPayment ? "success" : "pending",
+        paymentReference: confirmedPayment?.reference,
+      });
+    } catch (createError) {
+      if (createError.code === 11000 && confirmedPayment?.reference) {
+        const existingOrder = await Order.findOne({ paymentReference: confirmedPayment.reference });
+        if (existingOrder) {
+          return res.status(200).json({
+            success: true,
+            message: "Order already saved for this payment",
+            order: existingOrder,
+          });
+        }
+      }
+      throw createError;
+    }
 
     // Send email confirmation
     const allPreOrder = req.body.cart.every(item => item.isPreOrder === true);

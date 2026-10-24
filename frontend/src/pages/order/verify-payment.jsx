@@ -109,8 +109,9 @@ const VerifyPayment = () => {
     const paymentReference = trxref || reference;
     if (paymentReference) {
       handlePaymentVerification(paymentReference);
+      router.replace(router.pathname, undefined, { shallow: true });
     }
-  }, [reference, trxref, handlePaymentVerification]);
+  }, [reference, trxref, handlePaymentVerification, router]);
 
   return (
     <Wrapper>

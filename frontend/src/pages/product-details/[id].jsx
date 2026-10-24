@@ -26,14 +26,18 @@ const ProductDetailsPage = ({ query, initialProduct, seo }) => {
       return;
     }
 
-    trackViewContent({
-      id: resolvedProduct._id,
-      title: resolvedProduct.title,
-      category: resolvedProduct.category?.name,
-      price: resolvedProduct.price,
-      currency: 'NGN',
-      contentType: resolvedProduct.isPreOrder ? 'product_group' : 'product',
-    });
+    const sendViewContent = () => trackViewContent({
+        id: resolvedProduct._id,
+        title: resolvedProduct.title,
+        category: resolvedProduct.category?.name,
+        price: resolvedProduct.price,
+        currency: 'NGN',
+        contentType: resolvedProduct.isPreOrder ? 'product_group' : 'product',
+      });
+
+    sendViewContent();
+    window.addEventListener('hracine:tracking-consent', sendViewContent);
+    return () => window.removeEventListener('hracine:tracking-consent', sendViewContent);
   }, [resolvedProduct]);
   
   // decide what to render

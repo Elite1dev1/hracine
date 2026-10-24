@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f7f1">
   <meta name="description" content="Learn how Hracine collects, uses, and protects your personal information.">
-  <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','1261077339018724');
-    fbq('track','PageView');
-  </script>
+  <meta name="facebook-domain-verification" content="rky7nyyigkx11ppm0qcxvhc1k29wop">
   <title>Privacy Policy — Hracine</title>
   <style>
     :root {
@@ -410,7 +406,6 @@
   </style>
 </head>
 <body>
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1261077339018724&amp;ev=PageView&amp;noscript=1" alt=""></noscript>
   <header class="topbar" id="top">
     <a class="back-link" href="/" onclick="if (history.length > 1) { event.preventDefault(); history.back(); }"><span aria-hidden="true">&#8592;</span> Back</a>
     <a class="brand" href="#top" aria-label="Hracine privacy policy home">
@@ -696,6 +691,52 @@
 
       sections.forEach((section) => observer.observe(section));
     }
+  </script>
+  <script>
+    (function () {
+      var key = 'hracine-tracking-consent';
+      var gaId = 'G-T21ZESC34P';
+      var gtmId = 'GTM-MVVQTLNK';
+      var pixelId = '1261077339018724';
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+      function start() {
+        window.gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' });
+        if (window.fbq) window.fbq('consent', 'grant');
+        if (window.__hracineStandaloneTrackingStarted) return;
+        window.__hracineStandaloneTrackingStarted = true;
+        window.gtag('js', new Date());
+        window.gtag('config', gaId, { send_page_view: false });
+        var safePageView = Array.from(new URLSearchParams(location.search).keys()).every(function (key) { return /^utm_(source|medium|campaign|term|content)$/i.test(key) || ['gclid', 'fbclid'].includes(key.toLowerCase()); });
+        if (safePageView) window.gtag('event', 'page_view', { page_path: location.pathname + location.search, page_location: location.origin + location.pathname + location.search, page_title: document.title });
+        var ga = document.createElement('script'); ga.async = true; ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId; document.head.appendChild(ga);
+        window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+        var gtm = document.createElement('script'); gtm.async = true; gtm.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtmId; document.head.appendChild(gtm);
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        window.fbq('init', pixelId); if (safePageView) window.fbq('track', 'PageView');
+      }
+      function showSettings() {
+        var existing = document.querySelector('[data-hracine-cookie-settings]'); if (existing) existing.remove();
+        var box = document.createElement('aside'); box.setAttribute('aria-label', 'Cookie preferences');
+        box.style.cssText = 'position:fixed;z-index:9999;right:16px;bottom:16px;max-width:520px;padding:16px;background:#fff;border:1px solid #e8e0dc;border-radius:10px;box-shadow:0 8px 30px #0002;color:#282323;font:14px/1.5 Arial,sans-serif';
+        box.innerHTML = '<p style="margin:0 0 12px">Hracine uses analytics and advertising cookies to understand site use and measure campaigns. Optional tracking stays off unless you allow it. You can change this choice any time.</p><button data-choice="denied" style="min-height:40px;margin-right:8px;padding:8px 12px;border:1px solid #702a27;border-radius:7px;background:#fff;color:#702a27">Reject optional</button><button data-choice="granted" style="min-height:40px;padding:8px 12px;border:1px solid #702a27;border-radius:7px;background:#702a27;color:#fff">Accept optional</button>';
+        box.addEventListener('click', function (event) {
+          var choice = event.target.getAttribute('data-choice'); if (!choice) return;
+          localStorage.setItem(key, choice); box.remove();
+          if (choice === 'granted') start(); else { window.__hracineTrackingReady = false; window.gtag('consent', 'update', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }); if (window.fbq) window.fbq('consent', 'revoke'); }
+          addSettingsButton(choice);
+        });
+        document.body.appendChild(box);
+      }
+      function addSettingsButton(choice) {
+        var button = document.createElement('button'); button.type = 'button'; button.textContent = 'Cookie settings'; button.setAttribute('data-hracine-cookie-settings', 'true');
+        button.setAttribute('aria-label', 'Cookie settings (' + choice + ')'); button.style.cssText = 'position:fixed;z-index:9998;left:12px;bottom:12px;padding:7px 10px;border:1px solid #702a27;border-radius:7px;background:#fff;color:#702a27;font:12px Arial,sans-serif';
+        button.addEventListener('click', showSettings); document.body.appendChild(button);
+      }
+      var choice = localStorage.getItem(key);
+      if (choice === 'granted') { start(); addSettingsButton(choice); } else if (choice === 'denied') addSettingsButton(choice); else showSettings();
+    })();
   </script>
 </body>
 </html>

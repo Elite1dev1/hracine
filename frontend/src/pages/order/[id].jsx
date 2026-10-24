@@ -24,11 +24,11 @@ const SingleOrder = ({ params }) => {
   useEffect(() => {
     const currentOrder = order?.order;
 
-    if (!currentOrder || !orderId) {
+    if (!currentOrder || !orderId || currentOrder.paymentStatus !== "success") {
       return;
     }
 
-    trackPurchase({
+    const sendPurchase = () => trackPurchase({
       orderId,
       value: currentOrder.totalAmount,
       currency: "NGN",
@@ -43,8 +43,10 @@ const SingleOrder = ({ params }) => {
         price: Number(item.price || 0),
         quantity: Number(item.orderQuantity || 0),
       })),
-      content_name: "Order Completed",
     });
+    sendPurchase();
+    window.addEventListener("hracine:tracking-consent", sendPurchase);
+    return () => window.removeEventListener("hracine:tracking-consent", sendPurchase);
   }, [order, orderId]);
 
   let content = null;

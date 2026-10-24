@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { trackInitiateCheckout } from "@/lib/gtm";
 import Link from "next/link";
 // internal
 import CheckoutBillingArea from "./checkout-billing-area";
@@ -13,6 +14,25 @@ const CheckoutArea = () => {
   const checkoutData = useCheckoutSubmit();
   const {handleSubmit,submitHandler,register,errors,handleCouponCode,couponRef,couponApplyMsg, allPreOrder} = checkoutData;
   const { cart_products } = useSelector((state) => state.cart);
+  useEffect(() => {
+    if (!cart_products.length) return;
+    const sendCheckout = () => trackInitiateCheckout({
+      items: cart_products.map((item) => ({
+        _id: item._id,
+        title: item.title,
+        price: Number(item.price || 0),
+        orderQuantity: Number(item.orderQuantity || 1),
+      })),
+      value: cart_products.reduce(
+        (total, item) => total + Number(item.price || 0) * Number(item.orderQuantity || 1),
+        0
+      ),
+      currency: "NGN",
+    });
+    sendCheckout();
+    window.addEventListener("hracine:tracking-consent", sendCheckout);
+    return () => window.removeEventListener("hracine:tracking-consent", sendCheckout);
+  }, [cart_products]);
   return (
     <>
       <section

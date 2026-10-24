@@ -1,11 +1,18 @@
-import { GTM_ID } from "@/lib/gtm";
-import { META_PIXEL_ID } from "@/lib/meta-pixel";
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <meta
+          name="facebook-domain-verification"
+          content="rky7nyyigkx11ppm0qcxvhc1k29wop"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});`,
+          }}
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Jost:wght@300;400;500;600;700&family=Oregano&family=Playfair+Display:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&display=swap"
           rel="stylesheet"
@@ -15,28 +22,6 @@ export default function Document() {
         <link rel="apple-touch-icon" href="/assets/img/logo/favicon.png" />
       </Head>
       <body>
-        {GTM_ID ? (
-          <noscript>
-            <iframe
-              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-              height="0"
-              width="0"
-              style={{ display: "none", visibility: "hidden" }}
-              title="gtm"
-            />
-          </noscript>
-        ) : null}
-        <noscript>
-          {/* This Facebook tracking pixel must remain a plain img for browsers without JavaScript. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
-            alt=""
-          />
-        </noscript>
         <Main />
         <NextScript />
       </body>
