@@ -74,6 +74,15 @@ const consultationSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    adminNotificationStatus: {
+      type: String,
+      enum: ["pending", "sending", "sent", "failed"],
+      default: "pending",
+    },
+    adminNotificationSentAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

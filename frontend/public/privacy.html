@@ -725,17 +725,11 @@
           var choice = event.target.getAttribute('data-choice'); if (!choice) return;
           localStorage.setItem(key, choice); box.remove();
           if (choice === 'granted') start(); else { window.__hracineTrackingReady = false; window.gtag('consent', 'update', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }); if (window.fbq) window.fbq('consent', 'revoke'); }
-          addSettingsButton(choice);
         });
         document.body.appendChild(box);
       }
-      function addSettingsButton(choice) {
-        var button = document.createElement('button'); button.type = 'button'; button.textContent = 'Cookie settings'; button.setAttribute('data-hracine-cookie-settings', 'true');
-        button.setAttribute('aria-label', 'Cookie settings (' + choice + ')'); button.style.cssText = 'position:fixed;z-index:9998;left:12px;bottom:12px;padding:7px 10px;border:1px solid #702a27;border-radius:7px;background:#fff;color:#702a27;font:12px Arial,sans-serif';
-        button.addEventListener('click', showSettings); document.body.appendChild(button);
-      }
       var choice = localStorage.getItem(key);
-      if (choice === 'granted') { start(); addSettingsButton(choice); } else if (choice === 'denied') addSettingsButton(choice); else showSettings();
+      if (choice === 'granted') start(); else if (choice !== 'denied') showSettings();
     })();
   </script>
 </body>

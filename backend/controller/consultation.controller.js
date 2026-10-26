@@ -3,6 +3,55 @@ const https = require("https");
 const Consultation = require("../model/Consultation");
 const Settings = require("../model/Settings");
 const { secret } = require("../config/secret");
+const { escapeHtml, sendAdminNotification } = require("../utils/admin-notifications");
+
+const notifyConsultationAdmins = async (consultation) => {
+  try {
+    const claimed = await Consultation.findOneAndUpdate(
+      {
+        _id: consultation._id,
+        adminNotificationStatus: { $in: ["pending", "failed"] },
+      },
+      { $set: { adminNotificationStatus: "sending" } },
+      { new: true }
+    );
+    if (!claimed) return;
+
+    const adminUrl = secret.admin_url
+      ? `${String(secret.admin_url).replace(/\/$/, "")}/consultations`
+      : "";
+    const sent = await sendAdminNotification({
+      subject: `New paid HRACINE consultation — ${claimed.name}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;color:#282323;line-height:1.6;max-width:600px">
+          <h2 style="color:#702a27">New consultation booked</h2>
+          <p><strong>Payment:</strong> Successfully verified</p>
+          <p><strong>Fee:</strong> ₦${Number(claimed.amountPaid || claimed.amountDue || 0).toLocaleString("en-NG", { minimumFractionDigits: 2 })}</p>
+          <p><strong>Name:</strong> ${escapeHtml(claimed.name)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(claimed.email)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(claimed.phone || "Not provided")}</p>
+          <p><strong>Concern:</strong> ${escapeHtml(claimed.biggestConcern)}</p>
+          <p><strong>Protective style:</strong> ${escapeHtml(claimed.protectiveStyle)}</p>
+          <p><strong>Preferred date:</strong> ${claimed.preferredDate ? new Date(claimed.preferredDate).toLocaleDateString("en-GB") : "Not provided"}</p>
+          <p><strong>Preferred time:</strong> ${escapeHtml(claimed.preferredTime)}</p>
+          ${adminUrl ? `<p><a href="${escapeHtml(adminUrl)}">View consultations in admin</a></p>` : ""}
+        </div>
+      `,
+    });
+
+    await Consultation.updateOne(
+      { _id: claimed._id, adminNotificationStatus: "sending" },
+      {
+        $set: {
+          adminNotificationStatus: sent ? "sent" : "failed",
+          adminNotificationSentAt: sent ? new Date() : null,
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Consultation admin notification failed:", error.message);
+  }
+};
 
 const getActivePaystackSecretKey = async () => {
   const settings = await Settings.getSettings();
@@ -185,6 +234,7 @@ exports.verifyRootCheckPayment = async (req, res, next) => {
     }
 
     if (consultation.paymentStatus === "paid") {
+      await notifyConsultationAdmins(consultation);
       return res.status(200).json({
         success: true,
         message: "Root Check payment already verified",
@@ -233,6 +283,7 @@ exports.verifyRootCheckPayment = async (req, res, next) => {
       ? new Date(transaction.paid_at)
       : new Date();
     await consultation.save();
+    await notifyConsultationAdmins(consultation);
 
     return res.status(200).json({
       success: true,

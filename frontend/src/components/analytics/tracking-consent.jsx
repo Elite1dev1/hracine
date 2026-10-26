@@ -9,17 +9,13 @@ import {
 
 const TrackingConsent = () => {
   const router = useRouter();
-  const [choice, setChoice] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const storedChoice = window.localStorage.getItem(TRACKING_CONSENT_KEY);
     if (storedChoice === "granted") {
-      setChoice("granted");
       startTrackingScripts();
-    } else if (storedChoice === "denied") {
-      setChoice("denied");
-    } else {
+    } else if (storedChoice !== "denied") {
       setIsOpen(true);
     }
   }, []);
@@ -34,13 +30,12 @@ const TrackingConsent = () => {
 
   const choose = (nextChoice) => {
     window.localStorage.setItem(TRACKING_CONSENT_KEY, nextChoice);
-    setChoice(nextChoice);
     setIsOpen(false);
     if (nextChoice === "granted") startTrackingScripts();
     else revokeTrackingConsent();
   };
 
-  if (!isOpen && !choice) return null;
+  if (!isOpen) return null;
 
   return (
     <aside
@@ -62,30 +57,19 @@ const TrackingConsent = () => {
         font: "14px/1.5 Arial, sans-serif",
       }}
     >
-      {isOpen ? (
-        <>
-          <p style={{ margin: "0 0 12px" }}>
-            Hracine uses analytics and advertising cookies to understand site use and measure campaigns. Optional tracking stays off unless you allow it. You can change this choice any time.
-          </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button type="button" onClick={() => choose("denied")} style={buttonStyle(false)}>
-              Reject optional
-            </button>
-            <button type="button" onClick={() => choose("granted")} style={buttonStyle(true)}>
-              Accept optional
-            </button>
-          </div>
-        </>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          aria-label={`Cookie settings (${choice === "granted" ? "accepted" : "rejected"})`}
-          style={{ ...buttonStyle(false), padding: "7px 10px", fontSize: 12 }}
-        >
-          Cookie settings
-        </button>
-      )}
+      <>
+        <p style={{ margin: "0 0 12px" }}>
+          Hracine uses analytics and advertising cookies to understand site use and measure campaigns. Optional tracking stays off unless you allow it.
+        </p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <button type="button" onClick={() => choose("denied")} style={buttonStyle(false)}>
+            Reject optional
+          </button>
+          <button type="button" onClick={() => choose("granted")} style={buttonStyle(true)}>
+            Accept optional
+          </button>
+        </div>
+      </>
     </aside>
   );
 };

@@ -3,6 +3,7 @@ const https = require("https");
 const Order = require("../model/Order");
 const Settings = require("../model/Settings");
 const { transporter } = require("../config/email");
+const { escapeHtml, sendAdminNotification } = require("../utils/admin-notifications");
 
 const getActivePaystackSecretKey = async () => {
   const settings = await Settings.getSettings();
@@ -265,6 +266,7 @@ exports.verifyPayment = async (req, res, next) => {
 exports.addOrder = async (req, res, next) => {
   try {
     let confirmedPayment = null;
+    let paymentMode = "not_applicable";
     if (req.body.paymentMethod === "Card") {
       if (!req.body.paymentReference) {
         return res.status(400).json({ success: false, message: "Payment reference is required" });
@@ -277,6 +279,15 @@ exports.addOrder = async (req, res, next) => {
         req.body.paymentReference,
         activePaystackSecretKey
       );
+      paymentMode = confirmedPayment.domain === "live"
+        ? "live"
+        : confirmedPayment.domain === "test"
+          ? "test"
+          : activePaystackSecretKey.startsWith("sk_live_")
+            ? "live"
+            : activePaystackSecretKey.startsWith("sk_test_")
+              ? "test"
+              : "unknown";
       const expectedAmount = Math.round(Number(req.body.totalAmount) * 100);
       if (
         confirmedPayment?.status !== "success" ||
@@ -303,6 +314,7 @@ exports.addOrder = async (req, res, next) => {
         ...req.body,
         paymentStatus: confirmedPayment ? "success" : "pending",
         paymentReference: confirmedPayment?.reference,
+        paymentMode,
       });
     } catch (createError) {
       if (createError.code === 11000 && confirmedPayment?.reference) {
@@ -352,6 +364,40 @@ exports.addOrder = async (req, res, next) => {
         }
       });
     }
+
+    const paymentModeLabel = paymentMode === "test"
+      ? "TEST PAYMENT — no real charge"
+      : paymentMode === "live"
+        ? "LIVE PAYMENT — real charge"
+        : paymentMode === "unknown"
+          ? "Payment verified — mode could not be determined"
+          : `Not applicable (${req.body.paymentMethod || "unspecified payment method"})`;
+    const orderLines = (Array.isArray(req.body.cart) ? req.body.cart : [])
+      .map((item) => {
+        const name = escapeHtml(item?.title || item?.name || "Product");
+        const quantity = Number(item?.quantity) || 1;
+        return `<li>${name} × ${quantity}</li>`;
+      })
+      .join("");
+    const orderLink = secret.admin_url
+      ? `${String(secret.admin_url).replace(/\/$/, "")}/orders`
+      : "";
+    await sendAdminNotification({
+      subject: `${paymentMode === "test" ? "[TEST PAYMENT] " : paymentMode === "live" ? "[LIVE PAYMENT] " : ""}New HRACINE order #${orderItems.invoice}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;color:#282323;line-height:1.6;max-width:600px">
+          <h2 style="color:#702a27">New order received</h2>
+          <p><strong>Order:</strong> #${escapeHtml(orderItems.invoice || orderItems._id)}</p>
+          <p><strong>Payment:</strong> ${escapeHtml(paymentModeLabel)}</p>
+          <p><strong>Status:</strong> ${escapeHtml(orderItems.paymentStatus)}</p>
+          <p><strong>Total:</strong> ₦${Number(orderItems.totalAmount || 0).toLocaleString("en-NG", { minimumFractionDigits: 2 })}</p>
+          <p><strong>Customer:</strong> ${escapeHtml(orderItems.name)} (${escapeHtml(orderItems.email)})</p>
+          <p><strong>Phone:</strong> ${escapeHtml(orderItems.contact)}</p>
+          <p><strong>Items:</strong></p><ul>${orderLines || "<li>Order items unavailable</li>"}</ul>
+          ${orderLink ? `<p><a href="${escapeHtml(orderLink)}">View orders in admin</a></p>` : ""}
+        </div>
+      `,
+    });
 
     res.status(200).json({
       success: true,

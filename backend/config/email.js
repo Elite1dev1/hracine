@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
   host: secret.email_host,
   service: secret.email_service, //comment this line if you use custom server/domain
   port: secret.email_port,
-  secure: true,
+  secure: Number(secret.email_port) === 465,
   auth: {
     user: secret.email_user,
     pass: secret.email_pass,

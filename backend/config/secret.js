@@ -16,6 +16,7 @@ module.exports.secret = {
   email_pass: process.env.EMAIL_PASS,
   email_host: process.env.HOST,
   email_port: process.env.EMAIL_PORT, 
+  admin_notification_email: process.env.ADMIN_NOTIFICATION_EMAIL,
 
   cloudinary_name: process.env.CLOUDINARY_NAME, 
   cloudinary_api_key: process.env.CLOUDINARY_API_KEY, 
