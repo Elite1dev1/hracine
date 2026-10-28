@@ -1,49 +1,26 @@
-/**
- * Currency utility functions for Naira (NGN)
- */
-
-/**
- * Format a number as Nigerian Naira currency
- * @param {number} amount - The amount to format
- * @param {number} decimals - Number of decimal places (default: 2)
- * @returns {string} Formatted currency string (e.g., "₦1,234.56")
- */
+/** Format a value as Nigerian Naira. */
 export const formatCurrency = (amount, decimals = 2) => {
-  if (amount === null || amount === undefined || isNaN(amount)) {
-    return '₦0.00';
-  }
-  
-  const numAmount = Number(amount);
-  return `₦${numAmount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+  const value = Number(amount);
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(Number.isFinite(value) ? value : 0);
 };
 
-/**
- * Format a number as Nigerian Naira currency without symbol (for calculations)
- * @param {number} amount - The amount to format
- * @param {number} decimals - Number of decimal places (default: 2)
- * @returns {string} Formatted number string (e.g., "1,234.56")
- */
+/** Format a number without a currency symbol. */
 export const formatAmount = (amount, decimals = 2) => {
-  if (amount === null || amount === undefined || isNaN(amount)) {
-    return '0.00';
-  }
-  
-  const numAmount = Number(amount);
-  return numAmount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const value = Number(amount);
+  return new Intl.NumberFormat('en-NG', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(Number.isFinite(value) ? value : 0);
 };
 
-/**
- * Get currency symbol
- * @returns {string} Currency symbol (₦)
- */
-export const getCurrencySymbol = () => {
-  return '₦';
-};
+export const getCurrencySymbol = () => new Intl.NumberFormat('en-NG', {
+  style: 'currency',
+  currency: 'NGN',
+}).formatToParts(0).find((part) => part.type === 'currency')?.value || 'NGN';
 
-/**
- * Get currency code
- * @returns {string} Currency code (NGN)
- */
-export const getCurrencyCode = () => {
-  return 'NGN';
-};
+export const getCurrencyCode = () => 'NGN';

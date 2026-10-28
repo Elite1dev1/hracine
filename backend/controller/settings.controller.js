@@ -28,15 +28,11 @@ const mapPublicSettings = (settings) => ({
   updatedAt: settings.updatedAt,
 });
 
-const mapAdminSettings = (settings, includePaystackSecrets = false) => ({
+const mapAdminSettings = (settings) => ({
   ...mapPublicSettings(settings),
   paystackMode: settings.paystackMode || "test",
-  ...(includePaystackSecrets
-    ? {
-        paystackTestApiKey: settings.paystackTestApiKey || "",
-        paystackLiveApiKey: settings.paystackLiveApiKey || "",
-      }
-    : {}),
+  paystackTestApiKeyConfigured: Boolean(settings.paystackTestApiKey),
+  paystackLiveApiKeyConfigured: Boolean(settings.paystackLiveApiKey),
 });
 
 // Get public settings
@@ -56,10 +52,9 @@ const getPublicSettings = async (req, res, next) => {
 const getAdminSettings = async (req, res, next) => {
   try {
     const settings = await Settings.getSettings();
-    const canViewPaystack = isSuperAdmin(req);
     res.status(200).json({
       success: true,
-      data: mapAdminSettings(settings, canViewPaystack),
+      data: mapAdminSettings(settings),
     });
   } catch (error) {
     next(error);
@@ -117,27 +112,22 @@ const updateAdminSettings = async (req, res, next) => {
     let paystackLiveApiKey;
     let paystackMode;
     if (hasPaystackPayload) {
-      paystackTestApiKey = String(req.body?.paystackTestApiKey || "").trim();
-      paystackLiveApiKey = String(req.body?.paystackLiveApiKey || "").trim();
-      paystackMode = String(req.body?.paystackMode || "")
-        .trim()
-        .toLowerCase();
+      const rawTestKey = req.body?.paystackTestApiKey;
+      const rawLiveKey = req.body?.paystackLiveApiKey;
+      paystackTestApiKey = typeof rawTestKey === "string" ? rawTestKey.trim() : "";
+      paystackLiveApiKey = typeof rawLiveKey === "string" ? rawLiveKey.trim() : "";
+      paystackMode = typeof req.body?.paystackMode === "string"
+        ? req.body.paystackMode.trim().toLowerCase()
+        : "";
 
-      if (!paystackTestApiKey || !paystackLiveApiKey || !paystackMode) {
-        return res.status(400).json({
-          success: false,
-          message: "Paystack mode, test API key, and live API key are required",
-        });
-      }
-
-      if (!["test", "live"].includes(paystackMode)) {
+      if (paystackMode && !["test", "live"].includes(paystackMode)) {
         return res.status(400).json({
           success: false,
           message: "Paystack mode must be either test or live",
         });
       }
 
-      if (!PAYSTACK_SECRET_KEY_REGEX.test(paystackTestApiKey)) {
+      if (paystackTestApiKey && !PAYSTACK_SECRET_KEY_REGEX.test(paystackTestApiKey)) {
         return res.status(400).json({
           success: false,
           message:
@@ -145,7 +135,7 @@ const updateAdminSettings = async (req, res, next) => {
         });
       }
 
-      if (!PAYSTACK_SECRET_KEY_REGEX.test(paystackLiveApiKey)) {
+      if (paystackLiveApiKey && !PAYSTACK_SECRET_KEY_REGEX.test(paystackLiveApiKey)) {
         return res.status(400).json({
           success: false,
           message:
@@ -153,14 +143,14 @@ const updateAdminSettings = async (req, res, next) => {
         });
       }
 
-      if (!paystackTestApiKey.startsWith("sk_test_")) {
+      if (paystackTestApiKey && !paystackTestApiKey.startsWith("sk_test_")) {
         return res.status(400).json({
           success: false,
           message: "Test API key must start with sk_test_",
         });
       }
 
-      if (!paystackLiveApiKey.startsWith("sk_live_")) {
+      if (paystackLiveApiKey && !paystackLiveApiKey.startsWith("sk_live_")) {
         return res.status(400).json({
           success: false,
           message: "Live API key must start with sk_live_",
@@ -176,16 +166,26 @@ const updateAdminSettings = async (req, res, next) => {
     settings.sevenDayDeliveryPrice = sevenDayDeliveryPrice;
     settings.rootCheckFee = rootCheckFee;
     if (hasPaystackPayload) {
-      settings.paystackTestApiKey = paystackTestApiKey;
-      settings.paystackLiveApiKey = paystackLiveApiKey;
-      settings.paystackMode = paystackMode;
+      if (paystackTestApiKey) settings.paystackTestApiKey = paystackTestApiKey;
+      if (paystackLiveApiKey) settings.paystackLiveApiKey = paystackLiveApiKey;
+      if (paystackMode) settings.paystackMode = paystackMode;
+
+      const activeKey = settings.paystackMode === "live"
+        ? settings.paystackLiveApiKey
+        : settings.paystackTestApiKey;
+      if (!activeKey) {
+        return res.status(400).json({
+          success: false,
+          message: `Configure the ${settings.paystackMode} API key before selecting this mode`,
+        });
+      }
     }
     await settings.save();
 
     res.status(200).json({
       success: true,
       message: "Settings updated successfully",
-      data: mapAdminSettings(settings, isSuperAdmin(req)),
+      data: mapAdminSettings(settings),
     });
   } catch (error) {
     next(error);

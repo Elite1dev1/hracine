@@ -1,426 +1,91 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
 import AdminImage from '@/components/admin/AdminImage';
 import AdminLayout from '@/layout/admin/AdminLayout';
-import {
-  useAdminGetAllOrdersQuery,
-  useAdminUpdateOrderStatusMutation,
-} from '@/redux/features/admin/adminApi';
+import { useAdminGetAllOrdersQuery, useAdminUpdateOrderStatusMutation } from '@/redux/features/admin/adminApi';
+import { formatCurrency } from '@/utils/currency';
 import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import ReactModal from 'react-modal';
+
+const PAGE_SIZE = 10;
+const STATUS_OPTIONS = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'processing', label: 'Processing' },
+  { value: 'delivered', label: 'Delivered' },
+  { value: 'cancel', label: 'Cancelled' },
+];
+const STATUS_LABELS = { pending: 'Pending', processing: 'Processing', delivered: 'Delivered', cancel: 'Cancelled' };
+const dateFormat = (date, includeTime = false) => date ? new Date(date).toLocaleString('en-NG', includeTime ? { dateStyle: 'medium', timeStyle: 'short' } : { dateStyle: 'medium' }) : 'Date unavailable';
+const Field = ({ label, value }) => <div className="admin-detail-field"><span>{label}</span><strong>{value || 'Not provided'}</strong></div>;
+
+const OrderDetailsModal = ({ order, onClose }) => {
+  if (!order) return null;
+  const items = Array.isArray(order.cart) ? order.cart : [];
+  return <ReactModal isOpen onRequestClose={onClose} contentLabel={`Order details for invoice ${order.invoice || ''}`} className="admin-order-modal" overlayClassName="admin-order-overlay" bodyOpenClassName="ReactModal__Body--open" ariaHideApp={false}>
+    <header className="admin-modal-header">
+      <div><span className="admin-eyebrow">ORDER DETAILS</span><h2>Invoice #{order.invoice}</h2><p>Placed {dateFormat(order.createdAt, true)}</p></div>
+      <div className="admin-modal-header-actions"><span className={`admin-status-badge ${order.status || 'pending'}`}>{STATUS_LABELS[order.status] || order.status || 'Pending'}</span><button className="admin-icon-button" type="button" onClick={onClose} aria-label="Close order details">×</button></div>
+    </header>
+    <div className="admin-modal-content">
+      <div className="admin-detail-grid">
+        <section className="admin-detail-card"><h3>Customer information</h3><div className="admin-detail-fields"><Field label="Name" value={order.name} /><Field label="Email" value={order.email} /><Field label="Phone" value={order.contact} /></div></section>
+        <section className="admin-detail-card"><h3>Delivery address</h3><div className="admin-detail-fields"><Field label="Street address" value={order.address} /><Field label="City" value={order.city} /><Field label="State" value={order.state} /><Field label="Country" value={order.country} /><Field label="Postal code" value={order.zipCode} /><Field label="Shipping method" value={order.shippingOption} /></div></section>
+      </div>
+      <section className="admin-detail-card admin-items-card"><div className="admin-detail-title"><h3>Order items</h3><span>{items.length} {items.length === 1 ? 'item' : 'items'}</span></div>
+        <div className="admin-table-scroll"><table className="admin-table admin-items-table"><thead><tr><th>Product</th><th>Quantity</th><th>Unit price</th><th className="numeric">Line total</th></tr></thead><tbody>
+          {items.length ? items.map((item, index) => { const image = item.img || item.imageURLs?.[0]?.img; const quantity = Number(item.orderQuantity || item.quantity || 1); const price = Number(item.price || item.salePrice || 0); return <tr key={item._id || `${item.name || item.title}-${index}`}><td><div className="admin-product-name">{image ? <AdminImage src={image} alt={item.name || item.title || 'Product'} /> : <span className="admin-product-placeholder">—</span>}<div><strong>{item.name || item.title || 'Product'}</strong>{item.sku && <small>SKU: {item.sku}</small>}</div></div></td><td>{quantity}</td><td>{formatCurrency(price)}</td><td className="numeric">{formatCurrency(price * quantity)}</td></tr>; }) : <tr><td colSpan="4" className="admin-inline-empty">No items found for this order.</td></tr>}
+        </tbody></table></div>
+      </section>
+      <div className="admin-detail-grid admin-bottom-grid">
+        <section className="admin-detail-card admin-payment-card"><h3>Payment summary</h3><div className="admin-summary-row"><span>Subtotal</span><strong>{formatCurrency(order.subTotal)}</strong></div><div className="admin-summary-row"><span>Shipping cost</span><strong>{formatCurrency(order.shippingCost)}</strong></div>{Number(order.discount) > 0 && <div className="admin-summary-row admin-discount-row"><span>Discount</span><strong>−{formatCurrency(order.discount)}</strong></div>}<div className="admin-summary-row admin-total-row"><span>Total amount</span><strong>{formatCurrency(order.totalAmount)}</strong></div><div className="admin-summary-meta"><span>Payment method</span><strong>{order.paymentMethod || 'Not provided'}</strong></div></section>
+        <section className="admin-detail-card admin-current-status"><h3>Current order status</h3><span className={`admin-status-badge ${order.status || 'pending'}`}>{STATUS_LABELS[order.status] || order.status || 'Pending'}</span><p>Status shown reflects the latest order information available.</p>{order.orderNote && <div className="admin-order-note"><span>Order note</span><p>{order.orderNote}</p></div>}</section>
+      </div>
+    </div>
+    <footer className="admin-modal-footer"><button className="admin-button secondary" type="button" onClick={onClose}>Close</button><Link className="admin-button primary" href={`/order/${order._id}`}>Open order page</Link></footer>
+  </ReactModal>;
+};
 
 const AdminOrdersPage = () => {
   const { data, isLoading, error } = useAdminGetAllOrdersQuery();
   const [updateOrderStatus, { isLoading: isUpdating }] = useAdminUpdateOrderStatusMutation();
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
   const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      await updateOrderStatus({ id: orderId, status: newStatus }).unwrap();
-      toast.success('Order status updated successfully');
-    } catch (error) {
-      toast.error(error?.data?.message || 'Failed to update order status');
-    }
+    try { await updateOrderStatus({ id: orderId, status: newStatus }).unwrap(); toast.success('Order status updated successfully'); }
+    catch (updateError) { toast.error(updateError?.data?.message || 'Failed to update order status'); }
   };
+  const orders = useMemo(() => data?.data || [], [data]);
+  const filteredOrders = useMemo(() => orders.filter((order) => {
+    const term = searchTerm.trim().toLowerCase();
+    const matchesSearch = !term || order.name?.toLowerCase().includes(term) || order.email?.toLowerCase().includes(term) || String(order.invoice || '').toLowerCase().includes(term);
+    return matchesSearch && (statusFilter === 'all' || order.status === statusFilter);
+  }), [orders, searchTerm, statusFilter]);
+  const pageCount = Math.max(1, Math.ceil(filteredOrders.length / PAGE_SIZE));
+  const visibleOrders = filteredOrders.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const handleViewOrder = (order) => {
-    setSelectedOrder(order);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedOrder(null);
-  };
-
-  if (isLoading) {
-    return (
-      <AdminLayout>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-          <ClipLoader size={50} color="#3498db" />
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  const orders = data?.data || [];
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.invoice?.toString().includes(searchTerm)
-  );
-
-  return (
-    <AdminLayout>
-      <div>
-        <h1 style={{ marginBottom: '20px', color: '#2c3e50' }}>Orders Management</h1>
-
-        <div style={{ marginBottom: '20px' }}>
-          <input
-            type="text"
-            placeholder="Search orders by name, email, or invoice..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #ddd',
-              borderRadius: '5px',
-              fontSize: '16px',
-            }}
-          />
-        </div>
-
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Invoice</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Customer</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Email</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Total</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Status</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Date</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order) => (
-                <tr key={order._id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                  <td style={{ padding: '12px' }}>#{order.invoice}</td>
-                  <td style={{ padding: '12px' }}>{order.name}</td>
-                  <td style={{ padding: '12px' }}>{order.email}</td>
-                  <td style={{ padding: '12px' }}>₦{order.totalAmount?.toFixed(2)}</td>
-                  <td style={{ padding: '12px' }}>
-                    <span
-                      style={{
-                        padding: '5px 10px',
-                        borderRadius: '5px',
-                        fontSize: '12px',
-                        backgroundColor:
-                          order.status === 'delivered'
-                            ? '#d4edda'
-                            : order.status === 'processing'
-                            ? '#d1ecf1'
-                            : order.status === 'cancel'
-                            ? '#f8d7da'
-                            : '#fff3cd',
-                        color:
-                          order.status === 'delivered'
-                            ? '#155724'
-                            : order.status === 'processing'
-                            ? '#0c5460'
-                            : order.status === 'cancel'
-                            ? '#721c24'
-                            : '#856404',
-                      }}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '12px' }}>
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </td>
-                  <td style={{ padding: '12px' }}>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <select
-                        value={order.status}
-                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        disabled={isUpdating}
-                        style={{
-                          padding: '5px 10px',
-                          border: '1px solid #ddd',
-                          borderRadius: '3px',
-                          cursor: isUpdating ? 'not-allowed' : 'pointer',
-                        }}
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancel">Cancel</option>
-                      </select>
-                      <button
-                        onClick={() => handleViewOrder(order)}
-                        style={{
-                          padding: '5px 15px',
-                          backgroundColor: '#3498db',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '3px',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                        }}
-                        onMouseOver={(e) => (e.target.style.backgroundColor = '#2980b9')}
-                        onMouseOut={(e) => (e.target.style.backgroundColor = '#3498db')}
-                      >
-                        View
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {filteredOrders.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '50px', color: '#7f8c8d' }}>
-            No orders found
+  return <AdminLayout>
+    <main className="admin-orders-page">
+      <header className="admin-page-heading admin-orders-heading"><div><span className="admin-eyebrow">FULFILMENT</span><h1>Orders Management</h1><p>Review customer orders, update their status, and open order details.</p></div><span className="admin-order-count">{orders.length} {orders.length === 1 ? 'order' : 'orders'}</span></header>
+      {isLoading ? <div className="admin-state"><ClipLoader size={38} color="#85312C" /><span>Loading orders…</span></div> : error ? <div className="admin-alert">Orders could not be loaded. Please refresh to try again.</div> : <>
+        <section className="admin-card admin-orders-card">
+          <div className="admin-order-toolbar"><label className="admin-search-control"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span><input type="search" value={searchTerm} onChange={(event) => { setSearchTerm(event.target.value); setPage(1); }} placeholder="Search name, email, or invoice" aria-label="Search orders by customer name, email, or invoice" /></label>
+            <label className="admin-filter-control"><span>Status</span><select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); }} aria-label="Filter orders by status"><option value="all">All statuses</option>{STATUS_OPTIONS.map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}</select></label>
+            {(searchTerm || statusFilter !== 'all') && <button type="button" className="admin-reset-button" onClick={() => { setSearchTerm(''); setStatusFilter('all'); setPage(1); }}>Reset filters</button>}
           </div>
-        )}
-
-        {/* Order Details Modal */}
-        <ReactModal
-          isOpen={isModalOpen}
-          onRequestClose={closeModal}
-          style={{
-            content: {
-              top: '50%',
-              left: '50%',
-              right: 'auto',
-              bottom: 'auto',
-              marginRight: '-50%',
-              transform: 'translate(-50%, -50%)',
-              maxWidth: '800px',
-              width: '90%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              padding: '30px',
-              borderRadius: '10px',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            },
-            overlay: {
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          }}
-          contentLabel="Order Details"
-        >
-          {selectedOrder && (
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h2 style={{ margin: 0, color: '#2c3e50' }}>Order Details - Invoice #{selectedOrder.invoice}</h2>
-                <button
-                  onClick={closeModal}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '24px',
-                    cursor: 'pointer',
-                    color: '#7f8c8d',
-                    padding: '0',
-                    width: '30px',
-                    height: '30px',
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-
-              <div style={{ display: 'grid', gap: '20px' }}>
-                {/* Customer Information */}
-                <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
-                  <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#2c3e50', fontSize: '18px' }}>Customer Information</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-                    <div>
-                      <strong>Name:</strong> {selectedOrder.name}
-                    </div>
-                    <div>
-                      <strong>Email:</strong> {selectedOrder.email}
-                    </div>
-                    <div>
-                      <strong>Contact:</strong> {selectedOrder.contact}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Delivery Address */}
-                <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
-                  <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#2c3e50', fontSize: '18px' }}>Delivery Address</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-                    <div>
-                      <strong>Address:</strong> {selectedOrder.address}
-                    </div>
-                    <div>
-                      <strong>City:</strong> {selectedOrder.city}
-                    </div>
-                    <div>
-                      <strong>Country:</strong> {selectedOrder.country}
-                    </div>
-                    <div>
-                      <strong>Zip Code:</strong> {selectedOrder.zipCode}
-                    </div>
-                    {selectedOrder.shippingOption && (
-                      <div>
-                        <strong>Shipping Option:</strong> {selectedOrder.shippingOption}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Order Items */}
-                <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
-                  <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#2c3e50', fontSize: '18px' }}>Order Items</h3>
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                      <thead>
-                        <tr style={{ backgroundColor: '#e9ecef', borderBottom: '2px solid #dee2e6' }}>
-                          <th style={{ padding: '10px', textAlign: 'left' }}>Image</th>
-                          <th style={{ padding: '10px', textAlign: 'left' }}>Product</th>
-                          <th style={{ padding: '10px', textAlign: 'left' }}>Quantity</th>
-                          <th style={{ padding: '10px', textAlign: 'right' }}>Price</th>
-                          <th style={{ padding: '10px', textAlign: 'right' }}>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {selectedOrder.cart && selectedOrder.cart.length > 0 ? (
-                          selectedOrder.cart.map((item, index) => {
-                            const productImage = item.img || item.imageURLs?.[0]?.img || '/assets/img/product/product-1.jpg';
-                            return (
-                              <tr key={index} style={{ borderBottom: '1px solid #dee2e6' }}>
-                                <td style={{ padding: '10px' }}>
-                                  <div style={{ 
-                                    width: '60px', 
-                                    height: '60px', 
-                                    position: 'relative',
-                                    borderRadius: '5px',
-                                    overflow: 'hidden',
-                                    backgroundColor: '#f8f9fa',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                  }}>
-                                    {productImage ? (
-                                      <AdminImage
-                                        src={productImage}
-                                        alt={item.name || item.title || 'Product'}
-                                        style={{ 
-                                          width: '100%', 
-                                          height: '100%', 
-                                          objectFit: 'cover',
-                                          display: 'block'
-                                        }}
-                                        onError={(e) => {
-                                          e.target.style.display = 'none';
-                                          e.target.nextSibling.style.display = 'flex';
-                                        }}
-                                      />
-                                    ) : null}
-                                    <div style={{ 
-                                      display: productImage ? 'none' : 'flex',
-                                      width: '100%', 
-                                      height: '100%', 
-                                      alignItems: 'center', 
-                                      justifyContent: 'center',
-                                      fontSize: '24px',
-                                      color: '#6c757d'
-                                    }}>
-                                      📦
-                                    </div>
-                                  </div>
-                                </td>
-                                <td style={{ padding: '10px' }}>
-                                  <div>
-                                    <strong>{item.name || item.title || 'Product'}</strong>
-                                    {item.sku && <div style={{ fontSize: '12px', color: '#7f8c8d' }}>SKU: {item.sku}</div>}
-                                  </div>
-                                </td>
-                                <td style={{ padding: '10px' }}>{item.orderQuantity || item.quantity || 1}</td>
-                                <td style={{ padding: '10px', textAlign: 'right' }}>
-                                  ₦{(item.price || item.salePrice || 0).toFixed(2)}
-                                </td>
-                                <td style={{ padding: '10px', textAlign: 'right' }}>
-                                  ₦{((item.price || item.salePrice || 0) * (item.orderQuantity || item.quantity || 1)).toFixed(2)}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        ) : (
-                          <tr>
-                            <td colSpan="5" style={{ padding: '10px', textAlign: 'center', color: '#7f8c8d' }}>
-                              No items found
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                {/* Payment & Order Summary */}
-                <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
-                  <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#2c3e50', fontSize: '18px' }}>Payment & Order Summary</h3>
-                  <div style={{ display: 'grid', gap: '10px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <strong>Subtotal:</strong>
-                      <span>₦{selectedOrder.subTotal?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <strong>Shipping Cost:</strong>
-                      <span>₦{selectedOrder.shippingCost?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    {selectedOrder.discount > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#28a745' }}>
-                        <strong>Discount:</strong>
-                        <span>-₦{selectedOrder.discount?.toFixed(2) || '0.00'}</span>
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 'bold', paddingTop: '10px', borderTop: '2px solid #dee2e6' }}>
-                      <strong>Total Amount:</strong>
-                      <span>₦{selectedOrder.totalAmount?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    <div style={{ marginTop: '10px' }}>
-                      <strong>Payment Method:</strong> {selectedOrder.paymentMethod || 'N/A'}
-                    </div>
-                    <div>
-                      <strong>Order Status:</strong>{' '}
-                      <span
-                        style={{
-                          padding: '5px 10px',
-                          borderRadius: '5px',
-                          fontSize: '12px',
-                          backgroundColor:
-                            selectedOrder.status === 'delivered'
-                              ? '#d4edda'
-                              : selectedOrder.status === 'processing'
-                              ? '#d1ecf1'
-                              : selectedOrder.status === 'cancel'
-                              ? '#f8d7da'
-                              : '#fff3cd',
-                          color:
-                            selectedOrder.status === 'delivered'
-                              ? '#155724'
-                              : selectedOrder.status === 'processing'
-                              ? '#0c5460'
-                              : selectedOrder.status === 'cancel'
-                              ? '#721c24'
-                              : '#856404',
-                          textTransform: 'capitalize',
-                        }}
-                      >
-                        {selectedOrder.status}
-                      </span>
-                    </div>
-                    <div>
-                      <strong>Order Date:</strong> {new Date(selectedOrder.createdAt).toLocaleString()}
-                    </div>
-                    {selectedOrder.orderNote && (
-                      <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#fff', borderRadius: '5px' }}>
-                        <strong>Order Note:</strong>
-                        <div style={{ marginTop: '5px', color: '#495057' }}>{selectedOrder.orderNote}</div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </ReactModal>
-      </div>
-    </AdminLayout>
-  );
+          <div className="admin-table-scroll"><table className="admin-table admin-orders-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+            {visibleOrders.map((order) => <tr key={order._id}><td><span className="admin-invoice-number">#{order.invoice}</span></td><td><div className="admin-customer-cell"><strong>{order.name || 'Customer'}</strong><span>{order.email || 'Email unavailable'}</span></div></td><td className="admin-order-total">{formatCurrency(order.totalAmount)}</td><td><span className={`admin-status-badge ${order.status || 'pending'}`}>{STATUS_LABELS[order.status] || order.status || 'Pending'}</span></td><td><time dateTime={order.createdAt}>{dateFormat(order.createdAt)}</time></td><td><div className="admin-order-actions"><select value={order.status || 'pending'} onChange={(event) => handleStatusChange(order._id, event.target.value)} disabled={isUpdating} aria-label={`Update status for invoice ${order.invoice}`}><option value={order.status} disabled>{STATUS_LABELS[order.status] || order.status || 'Pending'}</option>{STATUS_OPTIONS.filter((status) => status.value !== order.status).map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}</select><button type="button" className="admin-view-button" onClick={() => setSelectedOrder(order)}>View details</button></div></td></tr>)}
+            {!visibleOrders.length && <tr><td colSpan="6"><div className="admin-empty-state"><strong>No orders found</strong><span>Try another search or reset the filters.</span></div></td></tr>}
+          </tbody></table></div>
+          {filteredOrders.length > 0 && <footer className="admin-pagination"><span>Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filteredOrders.length)} of {filteredOrders.length}</span><div><button type="button" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1} aria-label="Previous page">‹</button><span>Page {page} of {pageCount}</span><button type="button" onClick={() => setPage((current) => Math.min(pageCount, current + 1))} disabled={page === pageCount} aria-label="Next page">›</button></div></footer>}
+        </section>
+      </>}
+      <OrderDetailsModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
+    </main>
+  </AdminLayout>;
 };
 
 export default AdminOrdersPage;
